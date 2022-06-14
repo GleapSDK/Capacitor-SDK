@@ -1,0 +1,253 @@
+{
+  "api": {
+    "name": "GleapPlugin",
+    "slug": "gleapplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "initialize",
+        "signature": "(options: { API_KEY: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ API_KEY: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Initialize Gleap with an API key",
+        "complexTypes": [],
+        "slug": "initialize"
+      },
+      {
+        "name": "setUserIdentity",
+        "signature": "(options: { userId: string; userName?: string; userEmail?: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ userId: string; userName?: string | undefined; userEmail?: string | undefined; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Set user identity",
+        "complexTypes": [],
+        "slug": "setuseridentity"
+      },
+      {
+        "name": "clearUserIdentity",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Clear user identity",
+        "complexTypes": [],
+        "slug": "clearuseridentity"
+      },
+      {
+        "name": "addCustomData",
+        "signature": "(options: { dataKey: string; dataValue: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ dataKey: string; dataValue: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Add custom data to logging",
+        "complexTypes": [],
+        "slug": "addcustomdata"
+      },
+      {
+        "name": "appendCustomData",
+        "signature": "(options: { dataKey: string; dataValue: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ dataKey: string; dataValue: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Append custom data",
+        "complexTypes": [],
+        "slug": "appendcustomdata"
+      },
+      {
+        "name": "removeCustomData",
+        "signature": "(options: { dataKey: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ dataKey: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Append custom data",
+        "complexTypes": [],
+        "slug": "removecustomdata"
+      },
+      {
+        "name": "clearCustomData",
+        "signature": "(options: { dataKey: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ dataKey: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Clear custom data",
+        "complexTypes": [],
+        "slug": "clearcustomdata"
+      },
+      {
+        "name": "logEvent",
+        "signature": "(options: { logEventSubject: string; logEventData?: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ logEventSubject: string; logEventData?: string | undefined; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Log event to Gleap",
+        "complexTypes": [],
+        "slug": "logevent"
+      },
+      {
+        "name": "sendSilentBugReport",
+        "signature": "(options: { silentBugReportInfo: string; silentBugReportSeverity: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ silentBugReportInfo: string; silentBugReportSeverity: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Log event to Gleap",
+        "complexTypes": [],
+        "slug": "sendsilentbugreport"
+      },
+      {
+        "name": "openWidget",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Open Widget",
+        "complexTypes": [],
+        "slug": "openwidget"
+      },
+      {
+        "name": "startFeedbackFlow",
+        "signature": "(options: { feedbackType?: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ feedbackType?: string | undefined; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Start Feedback flow",
+        "complexTypes": [],
+        "slug": "startfeedbackflow"
+      },
+      {
+        "name": "setLanguage",
+        "signature": "(options: { languageCode: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ languageCode: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "0.0.1"
+          }
+        ],
+        "docs": "Set Language",
+        "complexTypes": [],
+        "slug": "setlanguage"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [],
+  "enums": []
+}
