@@ -11,10 +11,10 @@ end
 
 target 'Plugin' do
   capacitor_pods
-  pod 'Gleap', '>= 6.4.5'
+  pod 'Gleap', '>= 7.0.2'
 end
 
 target 'PluginTests' do
   capacitor_pods
-  pod 'Gleap', '>= 6.4.5'
+  pod 'Gleap', '>= 7.0.2'
 end

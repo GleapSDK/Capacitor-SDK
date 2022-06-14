@@ -188,29 +188,28 @@ public class GleapPlugin: CAPPlugin {
         ])
     }
     
-    @objc func sendSilentBugReport(_ call: CAPPluginCall) {
-        
-        let silentBugReportSeverity = call.getString("silentBugReportSeverity") ?? "low"
+    @objc func sendSilentCrashReport(_ call: CAPPluginCall) {
+        let dataExclusion = call.getObject("dataExclusion") ?? [:]
+        let severity = call.getString("severity") ?? "low"
         
         // If logEventSubject is empty, then pass back error
-        guard let silentBugReportInfo = call.options["silentBugReportInfo"] as? String else {
+        guard let description = call.options["description"] as? String else {
             call.reject("No silent bug report description provided")
             return;
         }
         
-        // If severity is set then apply the right gleap severity
-        if (silentBugReportSeverity == "high") {
-            Gleap.sendSilentBugReport(with: silentBugReportInfo, andSeverity: HIGH)
-        } else if (silentBugReportSeverity == "medium") {
-            Gleap.sendSilentBugReport(with: silentBugReportInfo, andSeverity: MEDIUM)
+        var bugSeverityType = MEDIUM
+        if (severity == "high") {
+            bugSeverityType = HIGH
         } else {
-            Gleap.sendSilentBugReport(with: silentBugReportInfo, andSeverity: LOW)
+            bugSeverityType = LOW
         }
         
-        // Provide feedback that it has been success
-        call.resolve([
-            "sendSilentBugReport": true
-        ])
+        Gleap.sendSilentCrashReport(with: description, andSeverity:  bugSeverityType, andDataExclusion:  dataExclusion) { success in
+            call.resolve([
+                "sendSilentCrashReport": success
+            ])
+        }
     }
     
     @objc func openWidget(_ call: CAPPluginCall) {
@@ -225,21 +224,10 @@ public class GleapPlugin: CAPPlugin {
     }
     
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {
+        let feedbackFlow = call.getString("feedbackFlow") ?? "bugreporting"
+        let showBackButton = call.getBool("showBackButton") ?? false
         
-        let feedbackType = call.getString("feedbackType") ?? ""
-        
-        // If severity is set then apply the right gleap severity
-        if (feedbackType == "bugreporting") {
-            Gleap.startFeedbackFlow(feedbackType)
-        } else if (feedbackType == "featurerequests") {
-            Gleap.startFeedbackFlow(feedbackType)
-        } else if (feedbackType == "rating") {
-            Gleap.startFeedbackFlow(feedbackType)
-        } else if (feedbackType == "contact") {
-            Gleap.startFeedbackFlow(feedbackType)
-        } else {
-            Gleap.startFeedbackFlow()
-        }
+        Gleap.startFeedbackFlow(feedbackFlow, showBackButton: showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([
