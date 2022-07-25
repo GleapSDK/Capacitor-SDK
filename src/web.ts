@@ -45,8 +45,8 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  async startFeedbackFlow(_options: { feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ startFeedbackFlow: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  startFeedbackFlow(_options: { feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ startedFeedbackFlow: boolean; }> {
+    throw new Error('Method not implemented.');
   }
 
   async setLanguage(_options: { languageCode: string }): Promise<{ setLanguage: string; }> {
@@ -94,6 +94,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
   }
 
   async removeAllAttachments(): Promise<{ allAttachmentsRemoved: boolean; }> {
+    throw new Error('Method not implemented.');
+  }
+
+  async attachCustomData(_options: { data: any; }): Promise<{ attachedCustomData: boolean; }> {
     throw new Error('Method not implemented.');
   }
 }

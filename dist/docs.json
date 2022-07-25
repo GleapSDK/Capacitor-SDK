@@ -84,13 +84,13 @@
         "slug": "log"
       },
       {
-        "name": "addCustomData",
-        "signature": "(options: { key: string; value: string; }) => any",
+        "name": "attachCustomData",
+        "signature": "(options: { data: any; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ key: string; value: string; }"
+            "type": "{ data: any; }"
           }
         ],
         "returns": "any",
@@ -102,7 +102,7 @@
         ],
         "docs": "Add custom data",
         "complexTypes": [],
-        "slug": "addcustomdata"
+        "slug": "attachcustomdata"
       },
       {
         "name": "setCustomData",

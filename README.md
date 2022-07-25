@@ -17,7 +17,7 @@ npx cap sync
 * [`identify(...)`](#identify)
 * [`clearIdentity()`](#clearidentity)
 * [`log(...)`](#log)
-* [`addCustomData(...)`](#addcustomdata)
+* [`attachCustomData(...)`](#attachcustomdata)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
@@ -112,17 +112,17 @@ Submit a custom log message with the given level
 --------------------
 
 
-### addCustomData(...)
+### attachCustomData(...)
 
 ```typescript
-addCustomData(options: { key: string; value: string; }) => any
+attachCustomData(options: { data: any; }) => any
 ```
 
 Add custom data
 
-| Param         | Type                                         |
-| ------------- | -------------------------------------------- |
-| **`options`** | <code>{ key: string; value: string; }</code> |
+| Param         | Type                        |
+| ------------- | --------------------------- |
+| **`options`** | <code>{ data: any; }</code> |
 
 **Returns:** <code>any</code>
 

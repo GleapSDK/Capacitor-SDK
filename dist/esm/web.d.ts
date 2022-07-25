@@ -55,7 +55,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         feedbackFlow?: string | undefined;
         showBackButton?: boolean | undefined;
     }): Promise<{
-        startFeedbackFlow: boolean;
+        startedFeedbackFlow: boolean;
     }>;
     setLanguage(_options: {
         languageCode: string;
@@ -113,5 +113,10 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     removeAllAttachments(): Promise<{
         allAttachmentsRemoved: boolean;
+    }>;
+    attachCustomData(_options: {
+        data: any;
+    }): Promise<{
+        attachedCustomData: boolean;
     }>;
 }

@@ -37,8 +37,8 @@ var capacitorGleap = (function (exports, core) {
         async openWidget() {
             throw this.unimplemented('Not implemented on web.');
         }
-        async startFeedbackFlow(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        startFeedbackFlow(_options) {
+            throw new Error('Method not implemented.');
         }
         async setLanguage(_options) {
             throw this.unimplemented('Not implemented on web.');
@@ -74,6 +74,9 @@ var capacitorGleap = (function (exports, core) {
             throw new Error('Method not implemented.');
         }
         async removeAllAttachments() {
+            throw new Error('Method not implemented.');
+        }
+        async attachCustomData(_options) {
             throw new Error('Method not implemented.');
         }
     }

@@ -236,7 +236,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         
         // Provide feedback that it has been success
         call.resolve([
-            "allAttachmentsRemoved": true
+            "attachmentAdded": true
         ])
     }
     
@@ -319,7 +319,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         
         // Provide feedback that it has been success
         call.resolve([
-            "startFeedbackFlow": true
+            "startedFeedbackFlow": true
         ])
     }
     

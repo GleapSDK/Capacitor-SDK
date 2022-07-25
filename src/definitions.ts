@@ -208,7 +208,7 @@ export interface GleapPlugin {
     feedbackFlow?: string;
     showBackButton?: boolean;
   }): Promise<{
-    startFeedbackFlow: boolean;
+    startedFeedbackFlow: boolean;
   }>;
 
   /**
