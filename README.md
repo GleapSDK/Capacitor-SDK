@@ -14,17 +14,26 @@ npx cap sync
 <docgen-index>
 
 * [`initialize(...)`](#initialize)
-* [`setUserIdentity(...)`](#setuseridentity)
-* [`clearUserIdentity()`](#clearuseridentity)
+* [`identify(...)`](#identify)
+* [`clearIdentity()`](#clearidentity)
+* [`log(...)`](#log)
 * [`addCustomData(...)`](#addcustomdata)
-* [`appendCustomData(...)`](#appendcustomdata)
+* [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
-* [`clearCustomData(...)`](#clearcustomdata)
+* [`clearCustomData()`](#clearcustomdata)
 * [`logEvent(...)`](#logevent)
-* [`sendSilentBugReport(...)`](#sendsilentbugreport)
-* [`openWidget()`](#openwidget)
+* [`setEventCallback(...)`](#seteventcallback)
+* [`sendSilentCrashReport(...)`](#sendsilentcrashreport)
+* [`preFillForm(...)`](#prefillform)
+* [`addAttachment(...)`](#addattachment)
+* [`removeAllAttachments()`](#removeallattachments)
+* [`open()`](#open)
+* [`close()`](#close)
+* [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
 * [`setLanguage(...)`](#setlanguage)
+* [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
+* [`enableDebugConsoleLog()`](#enabledebugconsolelog)
 
 </docgen-index>
 
@@ -45,41 +54,60 @@ Initialize Gleap with an API key
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### setUserIdentity(...)
+### identify(...)
 
 ```typescript
-setUserIdentity(options: { userId: string; userName?: string; userEmail?: string; }) => any
+identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => any
 ```
 
 Set user identity
 
-| Param         | Type                                                                    |
-| ------------- | ----------------------------------------------------------------------- |
-| **`options`** | <code>{ userId: string; userName?: string; userEmail?: string; }</code> |
+| Param         | Type                                                                                                               |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### clearUserIdentity()
+### clearIdentity()
 
 ```typescript
-clearUserIdentity() => any
+clearIdentity() => any
 ```
 
 Clear user identity
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
+
+--------------------
+
+
+### log(...)
+
+```typescript
+log(options: { message: string; logLevel?: "ERROR" | "WARNING" | "INFO"; }) => any
+```
+
+Submit a custom log message with the given level
+
+| Param         | Type                                                                         |
+| ------------- | ---------------------------------------------------------------------------- |
+| **`options`** | <code>{ message: string; logLevel?: "ERROR" \| "WARNING" \| "INFO"; }</code> |
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
 
 --------------------
 
@@ -87,37 +115,37 @@ Clear user identity
 ### addCustomData(...)
 
 ```typescript
-addCustomData(options: { dataKey: string; dataValue: string; }) => any
+addCustomData(options: { key: string; value: string; }) => any
 ```
 
-Add custom data to logging
+Add custom data
 
-| Param         | Type                                                 |
-| ------------- | ---------------------------------------------------- |
-| **`options`** | <code>{ dataKey: string; dataValue: string; }</code> |
+| Param         | Type                                         |
+| ------------- | -------------------------------------------- |
+| **`options`** | <code>{ key: string; value: string; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### appendCustomData(...)
+### setCustomData(...)
 
 ```typescript
-appendCustomData(options: { dataKey: string; dataValue: string; }) => any
+setCustomData(options: { key: string; value: string; }) => any
 ```
 
-Append custom data
+Set custom data
 
-| Param         | Type                                                 |
-| ------------- | ---------------------------------------------------- |
-| **`options`** | <code>{ dataKey: string; dataValue: string; }</code> |
+| Param         | Type                                         |
+| ------------- | -------------------------------------------- |
+| **`options`** | <code>{ key: string; value: string; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
@@ -125,37 +153,33 @@ Append custom data
 ### removeCustomData(...)
 
 ```typescript
-removeCustomData(options: { dataKey: string; }) => any
+removeCustomData(options: { key: string; }) => any
 ```
 
-Append custom data
+Remove custom data by key
 
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ dataKey: string; }</code> |
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ key: string; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### clearCustomData(...)
+### clearCustomData()
 
 ```typescript
-clearCustomData(options: { dataKey: string; }) => any
+clearCustomData() => any
 ```
 
 Clear custom data
 
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ dataKey: string; }</code> |
-
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
@@ -163,52 +187,152 @@ Clear custom data
 ### logEvent(...)
 
 ```typescript
-logEvent(options: { logEventSubject: string; logEventData?: string; }) => any
+logEvent(options: { name: string; data?: any; }) => any
 ```
 
 Log event to Gleap
 
-| Param         | Type                                                             |
-| ------------- | ---------------------------------------------------------------- |
-| **`options`** | <code>{ logEventSubject: string; logEventData?: string; }</code> |
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ name: string; data?: any; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### sendSilentBugReport(...)
+### setEventCallback(...)
 
 ```typescript
-sendSilentBugReport(options: { silentBugReportInfo: string; silentBugReportSeverity: string; }) => any
+setEventCallback(callback: GleapEventCallback) => any
+```
+
+| Param          | Type                                               |
+| -------------- | -------------------------------------------------- |
+| **`callback`** | <code>(name: string, data?: any) =&gt; void</code> |
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### sendSilentCrashReport(...)
+
+```typescript
+sendSilentCrashReport(options: { description: string; severity?: "LOW" | "MEDIUM" | "HIGH"; dataExclusion?: { customData?: Boolean; metaData?: Boolean; attachments?: Boolean; consoleLog?: Boolean; networkLogs?: Boolean; customEventLog?: Boolean; screenshot?: Boolean; replays?: Boolean; }; }) => any
 ```
 
 Log event to Gleap
 
-| Param         | Type                                                                           |
-| ------------- | ------------------------------------------------------------------------------ |
-| **`options`** | <code>{ silentBugReportInfo: string; silentBugReportSeverity: string; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData?: any; metaData?: any; attachments?: any; consoleLog?: any; networkLogs?: any; customEventLog?: any; screenshot?: any; replays?: any; }; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
 
-### openWidget()
+### preFillForm(...)
 
 ```typescript
-openWidget() => any
+preFillForm(options: { data: any; }) => any
 ```
 
-Open Widget
+Prefills the widget's form data
+
+| Param         | Type                        |
+| ------------- | --------------------------- |
+| **`options`** | <code>{ data: any; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
+
+--------------------
+
+
+### addAttachment(...)
+
+```typescript
+addAttachment(options: { base64data: string; name: string; }) => any
+```
+
+Add attachment as bas64 string
+
+| Param         | Type                                               |
+| ------------- | -------------------------------------------------- |
+| **`options`** | <code>{ base64data: string; name: string; }</code> |
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### removeAllAttachments()
+
+```typescript
+removeAllAttachments() => any
+```
+
+All attachments removed
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### open()
+
+```typescript
+open() => any
+```
+
+Open widget
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### close()
+
+```typescript
+close() => any
+```
+
+Close widget
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### isOpened()
+
+```typescript
+isOpened() => any
+```
+
+Check widget status code
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
 
 --------------------
 
@@ -216,18 +340,18 @@ Open Widget
 ### startFeedbackFlow(...)
 
 ```typescript
-startFeedbackFlow(options: { feedbackType?: string; }) => any
+startFeedbackFlow(options: { feedbackFlow?: string; showBackButton?: boolean; }) => any
 ```
 
 Start Feedback flow
 
-| Param         | Type                                    |
-| ------------- | --------------------------------------- |
-| **`options`** | <code>{ feedbackType?: string; }</code> |
+| Param         | Type                                                              |
+| ------------- | ----------------------------------------------------------------- |
+| **`options`** | <code>{ feedbackFlow?: string; showBackButton?: boolean; }</code> |
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
 
 --------------------
 
@@ -246,7 +370,37 @@ Set Language
 
 **Returns:** <code>any</code>
 
-**Since:** 0.0.1
+**Since:** 7.0.0
+
+--------------------
+
+
+### disableConsoleLogOverwrite()
+
+```typescript
+disableConsoleLogOverwrite() => any
+```
+
+Disable console log overwrite
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
+
+--------------------
+
+
+### enableDebugConsoleLog()
+
+```typescript
+enableDebugConsoleLog() => any
+```
+
+Enable debug console log
+
+**Returns:** <code>any</code>
+
+**Since:** 7.0.0
 
 --------------------
 

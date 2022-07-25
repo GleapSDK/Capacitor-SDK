@@ -47,7 +47,7 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void setUserIdentity(PluginCall call) {
+    public void identify(PluginCall call) {
 
         String userId = call.getString("userId");
         String userName = call.getString("userName");
@@ -89,12 +89,12 @@ public class GleapPlugin extends Plugin {
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("setUserIdentity", true);
+        ret.put("identify", true);
         call.resolve(ret);
     }
 
     @PluginMethod()
-    public void clearUserIdentity(PluginCall call) {
+    public void clearIdentity(PluginCall call) {
 
         // Clear User Identity in Gleap
         implementation.clearIdentity();
@@ -108,23 +108,23 @@ public class GleapPlugin extends Plugin {
     @PluginMethod()
     public void addCustomData(PluginCall call) {
 
-        String dataKey = call.getString("dataKey");
-        String dataValue = call.getString("dataValue");
+        String key = call.getString("key");
+        String value = call.getString("value");
 
-        // If dataKey is empty, then pass back error
-        if (!call.getData().has("dataKey")) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("key")) {
             call.reject("Must provide a data key");
             return;
         }
 
-        // If dataValue is empty, then pass back error
-        if (!call.getData().has("dataValue")) {
+        // If value is empty, then pass back error
+        if (!call.getData().has("value")) {
             call.reject("Must provide a data value");
             return;
         }
 
         // Set custom data
-        implementation.setCustomData(dataKey, dataValue);
+        implementation.setCustomData(key, value);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -133,7 +133,7 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void appendCustomData(PluginCall call) {
+    public void setCustomData(PluginCall call) {
 
         JSObject customData = call.getObject("customData");
 
@@ -144,30 +144,30 @@ public class GleapPlugin extends Plugin {
         }
 
         // Append custom data
-        implementation.appendCustomData(customData);
+        implementation.setCustomData(customData);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("appendCustomData", true);
+        ret.put("setCustomData", true);
         call.resolve(ret);
     }
 
     @PluginMethod()
     public void removeCustomData(PluginCall call) {
 
-        String dataKey = call.getString("dataKey");
+        String key = call.getString("key");
 
-        // If dataKey is empty, then pass back error
-        if (!call.getData().has("dataKey")) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("key")) {
             call.reject("Must provide a data key");
             return;
         }
 
-        implementation.removeCustomDataForKey(dataKey);
+        implementation.removeCustomDataForKey(key);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("removeCustomData", dataKey);
+        ret.put("removeCustomData", key);
         call.resolve(ret);
     }
 

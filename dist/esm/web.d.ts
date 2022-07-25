@@ -1,48 +1,46 @@
 import { WebPlugin } from '@capacitor/core';
-import type { GleapPlugin } from './definitions';
+import type { GleapEventCallback, GleapPlugin } from './definitions';
 export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     initialize(_options: {
         API_KEY: string;
     }): Promise<{
         initialized: boolean;
     }>;
-    setUserIdentity(_options: {
+    identify(_options: {
         userId: string;
         userName?: string;
         userEmail?: string;
     }): Promise<{
-        setUserIdentity: boolean;
+        identify: boolean;
     }>;
-    clearUserIdentity(): Promise<{
+    clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;
     addCustomData(_options: {
-        dataKey: string;
-        dataValue: string;
+        key: string;
+        value: string;
     }): Promise<{
-        addCustomData: boolean;
+        addedCustomData: boolean;
     }>;
-    appendCustomData(_options: {
-        dataKey: string;
-        dataValue: string;
+    setCustomData(_options: {
+        key: string;
+        value: string;
     }): Promise<{
-        appendCustomData: boolean;
+        setCustomData: boolean;
     }>;
     removeCustomData(_options: {
-        dataKey: string;
+        key: string;
     }): Promise<{
-        removeCustomData: boolean;
+        removedCustomData: boolean;
     }>;
-    clearCustomData(_options: {
-        dataKey: string;
-    }): Promise<{
-        clearCustomData: boolean;
+    clearCustomData(): Promise<{
+        clearedCustomData: boolean;
     }>;
     logEvent(_options: {
-        logEventSubject: string;
-        logEventData?: string;
+        name: string;
+        data?: any;
     }): Promise<{
-        logEvent: boolean;
+        loggedEvent: boolean;
     }>;
     sendSilentBugReport(_options: {
         silentBugReportInfo: string;
@@ -54,7 +52,8 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         openWidget: boolean;
     }>;
     startFeedbackFlow(_options: {
-        feedbackType?: string;
+        feedbackFlow?: string | undefined;
+        showBackButton?: boolean | undefined;
     }): Promise<{
         startFeedbackFlow: boolean;
     }>;
@@ -62,5 +61,57 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         languageCode: string;
     }): Promise<{
         setLanguage: string;
+    }>;
+    log(_options: {
+        message: string;
+        logLevel?: 'ERROR' | 'WARNING' | 'INFO' | undefined;
+    }): Promise<{
+        logged: boolean;
+    }>;
+    setEventCallback(_callback: GleapEventCallback): Promise<string>;
+    sendSilentCrashReport(_options: {
+        description: string;
+        severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
+        dataExclusion?: {
+            customData?: Boolean | undefined;
+            metaData?: Boolean | undefined;
+            attachments?: Boolean | undefined;
+            consoleLog?: Boolean | undefined;
+            networkLogs?: Boolean | undefined;
+            customEventLog?: Boolean | undefined;
+            screenshot?: Boolean | undefined;
+            replays?: Boolean | undefined;
+        } | undefined;
+    }): Promise<{
+        sentSilentBugReport: boolean;
+    }>;
+    open(): Promise<{
+        openedWidget: boolean;
+    }>;
+    close(): Promise<{
+        closedWidget: boolean;
+    }>;
+    isOpened(): Promise<{
+        isOpened: boolean;
+    }>;
+    disableConsoleLogOverwrite(): Promise<{
+        consoleLogDisabled: boolean;
+    }>;
+    enableDebugConsoleLog(): Promise<{
+        debugConsoleLogEnabled: boolean;
+    }>;
+    preFillForm(_options: {
+        data: any;
+    }): Promise<{
+        preFilledForm: boolean;
+    }>;
+    addAttachment(_options: {
+        base64data: string;
+        name: string;
+    }): Promise<{
+        attachmentAdded: boolean;
+    }>;
+    removeAllAttachments(): Promise<{
+        allAttachmentsRemoved: boolean;
     }>;
 }

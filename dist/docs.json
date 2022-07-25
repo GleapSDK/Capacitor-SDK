@@ -19,7 +19,7 @@
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Initialize Gleap with an API key",
@@ -27,119 +27,134 @@
         "slug": "initialize"
       },
       {
-        "name": "setUserIdentity",
-        "signature": "(options: { userId: string; userName?: string; userEmail?: string; }) => any",
+        "name": "identify",
+        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ userId: string; userName?: string | undefined; userEmail?: string | undefined; }"
+            "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Set user identity",
         "complexTypes": [],
-        "slug": "setuseridentity"
+        "slug": "identify"
       },
       {
-        "name": "clearUserIdentity",
+        "name": "clearIdentity",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Clear user identity",
         "complexTypes": [],
-        "slug": "clearuseridentity"
+        "slug": "clearidentity"
       },
       {
-        "name": "addCustomData",
-        "signature": "(options: { dataKey: string; dataValue: string; }) => any",
+        "name": "log",
+        "signature": "(options: { message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\"; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ dataKey: string; dataValue: string; }"
+            "type": "{ message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\" | undefined; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
-        "docs": "Add custom data to logging",
+        "docs": "Submit a custom log message with the given level",
+        "complexTypes": [],
+        "slug": "log"
+      },
+      {
+        "name": "addCustomData",
+        "signature": "(options: { key: string; value: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ key: string; value: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Add custom data",
         "complexTypes": [],
         "slug": "addcustomdata"
       },
       {
-        "name": "appendCustomData",
-        "signature": "(options: { dataKey: string; dataValue: string; }) => any",
+        "name": "setCustomData",
+        "signature": "(options: { key: string; value: string; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ dataKey: string; dataValue: string; }"
+            "type": "{ key: string; value: string; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
-        "docs": "Append custom data",
+        "docs": "Set custom data",
         "complexTypes": [],
-        "slug": "appendcustomdata"
+        "slug": "setcustomdata"
       },
       {
         "name": "removeCustomData",
-        "signature": "(options: { dataKey: string; }) => any",
+        "signature": "(options: { key: string; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ dataKey: string; }"
+            "type": "{ key: string; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
-        "docs": "Append custom data",
+        "docs": "Remove custom data by key",
         "complexTypes": [],
         "slug": "removecustomdata"
       },
       {
         "name": "clearCustomData",
-        "signature": "(options: { dataKey: string; }) => any",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ dataKey: string; }"
-          }
-        ],
+        "signature": "() => any",
+        "parameters": [],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Clear custom data",
@@ -148,19 +163,19 @@
       },
       {
         "name": "logEvent",
-        "signature": "(options: { logEventSubject: string; logEventData?: string; }) => any",
+        "signature": "(options: { name: string; data?: any; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ logEventSubject: string; logEventData?: string | undefined; }"
+            "type": "{ name: string; data?: any; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Log event to Gleap",
@@ -168,56 +183,169 @@
         "slug": "logevent"
       },
       {
-        "name": "sendSilentBugReport",
-        "signature": "(options: { silentBugReportInfo: string; silentBugReportSeverity: string; }) => any",
+        "name": "setEventCallback",
+        "signature": "(callback: GleapEventCallback) => any",
         "parameters": [
           {
-            "name": "options",
+            "name": "callback",
             "docs": "",
-            "type": "{ silentBugReportInfo: string; silentBugReportSeverity: string; }"
+            "type": "(name: string, data?: any) => void"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "",
+        "complexTypes": [
+          "GleapEventCallback",
+          "CallbackID"
+        ],
+        "slug": "seteventcallback"
+      },
+      {
+        "name": "sendSilentCrashReport",
+        "signature": "(options: { description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\"; dataExclusion?: { customData?: Boolean; metaData?: Boolean; attachments?: Boolean; consoleLog?: Boolean; networkLogs?: Boolean; customEventLog?: Boolean; screenshot?: Boolean; replays?: Boolean; }; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData?: any; metaData?: any; attachments?: any; consoleLog?: any; networkLogs?: any; customEventLog?: any; screenshot?: any; replays?: any; } | undefined; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
           }
         ],
         "docs": "Log event to Gleap",
-        "complexTypes": [],
-        "slug": "sendsilentbugreport"
+        "complexTypes": [
+          "Boolean"
+        ],
+        "slug": "sendsilentcrashreport"
       },
       {
-        "name": "openWidget",
+        "name": "preFillForm",
+        "signature": "(options: { data: any; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ data: any; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Prefills the widget's form data",
+        "complexTypes": [],
+        "slug": "prefillform"
+      },
+      {
+        "name": "addAttachment",
+        "signature": "(options: { base64data: string; name: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ base64data: string; name: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Add attachment as bas64 string",
+        "complexTypes": [],
+        "slug": "addattachment"
+      },
+      {
+        "name": "removeAllAttachments",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
-        "docs": "Open Widget",
+        "docs": "All attachments removed",
         "complexTypes": [],
-        "slug": "openwidget"
+        "slug": "removeallattachments"
+      },
+      {
+        "name": "open",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Open widget",
+        "complexTypes": [],
+        "slug": "open"
+      },
+      {
+        "name": "close",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Close widget",
+        "complexTypes": [],
+        "slug": "close"
+      },
+      {
+        "name": "isOpened",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Check widget status code",
+        "complexTypes": [],
+        "slug": "isopened"
       },
       {
         "name": "startFeedbackFlow",
-        "signature": "(options: { feedbackType?: string; }) => any",
+        "signature": "(options: { feedbackFlow?: string; showBackButton?: boolean; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ feedbackType?: string | undefined; }"
+            "type": "{ feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }"
           }
         ],
         "returns": "any",
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Start Feedback flow",
@@ -238,12 +366,42 @@
         "tags": [
           {
             "name": "since",
-            "text": "0.0.1"
+            "text": "7.0.0"
           }
         ],
         "docs": "Set Language",
         "complexTypes": [],
         "slug": "setlanguage"
+      },
+      {
+        "name": "disableConsoleLogOverwrite",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Disable console log overwrite",
+        "complexTypes": [],
+        "slug": "disableconsolelogoverwrite"
+      },
+      {
+        "name": "enableDebugConsoleLog",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "7.0.0"
+          }
+        ],
+        "docs": "Enable debug console log",
+        "complexTypes": [],
+        "slug": "enabledebugconsolelog"
       }
     ],
     "properties": []

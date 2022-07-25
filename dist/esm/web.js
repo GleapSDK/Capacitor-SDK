@@ -4,22 +4,22 @@ export class GleapWeb extends WebPlugin {
     async initialize(_options) {
         throw this.unimplemented('Not implemented on web.');
     }
-    async setUserIdentity(_options) {
+    async identify(_options) {
         throw this.unimplemented('Not implemented on web.');
     }
-    async clearUserIdentity() {
+    async clearIdentity() {
         throw this.unimplemented('Not implemented on web.');
     }
     async addCustomData(_options) {
         throw this.unimplemented('Not implemented on web.');
     }
-    async appendCustomData(_options) {
+    async setCustomData(_options) {
         throw this.unimplemented('Not implemented on web.');
     }
     async removeCustomData(_options) {
         throw this.unimplemented('Not implemented on web.');
     }
-    async clearCustomData(_options) {
+    async clearCustomData() {
         throw this.unimplemented('Not implemented on web.');
     }
     async logEvent(_options) {
@@ -36,6 +36,39 @@ export class GleapWeb extends WebPlugin {
     }
     async setLanguage(_options) {
         throw this.unimplemented('Not implemented on web.');
+    }
+    async log(_options) {
+        throw new Error('Method not implemented.');
+    }
+    async setEventCallback(_callback) {
+        throw new Error('Method not implemented.');
+    }
+    async sendSilentCrashReport(_options) {
+        throw new Error('Method not implemented.');
+    }
+    async open() {
+        throw new Error('Method not implemented.');
+    }
+    async close() {
+        throw new Error('Method not implemented.');
+    }
+    async isOpened() {
+        throw new Error('Method not implemented.');
+    }
+    async disableConsoleLogOverwrite() {
+        throw new Error('Method not implemented.');
+    }
+    async enableDebugConsoleLog() {
+        throw new Error('Method not implemented.');
+    }
+    async preFillForm(_options) {
+        throw new Error('Method not implemented.');
+    }
+    async addAttachment(_options) {
+        throw new Error('Method not implemented.');
+    }
+    async removeAllAttachments() {
+        throw new Error('Method not implemented.');
     }
 }
 //# sourceMappingURL=web.js.map
