@@ -1,7 +1,7 @@
 {
   "name": "capacitor-gleap-plugin",
   "version": "7.0.0",
-  "description": "Capacitor gleap.io integration",
+  "description": "Gleap SDK for Capacitor is the easiest way to integrate Gleap into your Ionic apps! Achieve better app quality with comprehensive in-app bug reporting & customer feedback for your web-apps and websites. Many thanks to Stephan Nagel (congrapp) for his work on the Gleap capacitor plugin.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -13,19 +13,23 @@
     "ios/Plugin/",
     "CapacitorGleapPlugin.podspec"
   ],
-  "author": "Congrapp BV",
+  "author": "Gleap GmbH",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/congrapp/capacitor-gleap-plugin.git"
+    "url": "git+https://github.com/GleapSDK/Capacitor.git"
   },
   "bugs": {
-    "url": "https://bitbucket.org/congrapp/capacitor-gleap-plugin/issues"
+    "url": "https://github.com/GleapSDK/Capacitor/issues"
   },
   "keywords": [
     "capacitor",
     "plugin",
-    "native"
+    "native",
+    "gleap",
+    "bugreporting",
+    "customerfeedback",
+    "inappbugreporting"
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
