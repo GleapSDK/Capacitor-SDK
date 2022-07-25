@@ -1,103 +1,194 @@
 import { WebPlugin } from '@capacitor/core';
+import Gleap from 'gleap';
 
 import type { GleapEventCallback, GleapPlugin } from './definitions';
 
 export class GleapWeb extends WebPlugin implements GleapPlugin {
-  // All web functionality has been disabled - needs to be developed
+  static callbacks: {[key: string]: GleapEventCallback} = {};
+  static initialized = false;
 
-  async initialize(_options: { API_KEY: string }): Promise<{ initialized: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async initialize(options: { API_KEY: string }): Promise<{ initialized: boolean; }> {
+    if (GleapWeb.initialized) {
+      return { initialized: true };
+    }
+
+    Gleap.initialize(options.API_KEY);
+
+    GleapWeb.initialized = true;
+    this.registerCallbackListeners();
+
+    return { initialized: true };
   }
 
-  async identify(_options: { userId: string, userName?: string, userEmail?: string }): Promise<{ identify: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  registerCallbackListeners(): void {
+    Gleap.on("open", () => {
+      this.notifyCallbacks("open", {});
+    });
+
+    Gleap.on("close", () => {
+      this.notifyCallbacks("close", {});
+    });
+
+    Gleap.on("feedback-sent", (formData) => {
+      this.notifyCallbacks("feedback-sent", formData);
+    });
+
+    Gleap.on("flow-started", (flow) => {
+      this.notifyCallbacks("flow-started", flow);
+    });
+
+    Gleap.on("error-while-sending", () => {
+      this.notifyCallbacks("error-while-sending", {});
+    });
+
+    Gleap.registerCustomAction((customAction) => {
+      this.notifyCallbacks("custom-action-called", customAction);
+    });
+  }
+
+  notifyCallbacks(event: string, data: any): void {
+    if (!GleapWeb.callbacks) {
+      return;
+    }
+
+    for (var callbackId in GleapWeb.callbacks) {
+      GleapWeb.callbacks[callbackId](event, data);
+    }
+  }
+
+  async identify(options: { userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }): Promise<{ identify: boolean; }> {
+    var userData = {
+      name: options.name,
+      email: options.email,
+      phone: options.phone,
+      value: options.value,
+    };
+    if (options.userHash) {
+      Gleap.identify(options.userId, userData, options.userHash);
+    } else {
+      Gleap.identify(options.userId, userData);
+    }
+
+    return { identify: true };
   }
 
   async clearIdentity(): Promise<{ clearIdentity: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+    Gleap.clearIdentity();
+
+    return { clearIdentity: true };
   }
 
-  async addCustomData(_options: { key: string; value: string; }): Promise<{ addedCustomData: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async attachCustomData(options: { data: any; }): Promise<{ attachedCustomData: boolean; }> {
+    Gleap.attachCustomData(options.data);
+
+    return { attachedCustomData: true };
   }
 
-  async setCustomData(_options: { key: string, value: string }): Promise<{ setCustomData: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async setCustomData(options: { key: string, value: string }): Promise<{ setCustomData: boolean; }> {
+    Gleap.setCustomData(options.key, options.value);
+
+    return { setCustomData: true };
   }
 
-  async removeCustomData(_options: { key: string; }): Promise<{ removedCustomData: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async removeCustomData(options: { key: string; }): Promise<{ removedCustomData: boolean; }> {
+    Gleap.removeCustomData(options.key);
+
+    return { removedCustomData: true };
   }
 
   async clearCustomData(): Promise<{ clearedCustomData: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+    Gleap.clearCustomData();
+
+    return { clearedCustomData: true };
   }
 
-  async logEvent(_options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async logEvent(options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
+    Gleap.logEvent(options.name, options.data);
+
+    return { loggedEvent: true };
   }
 
-  async sendSilentBugReport(_options: { silentBugReportInfo: string, silentBugReportSeverity: string }): Promise<{ sendSilentBugReport: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async startFeedbackFlow(options: { feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ startedFeedbackFlow: boolean; }> {
+    if (!options.feedbackFlow) {
+
+    }
+
+    Gleap.startFeedbackFlow(options.feedbackFlow ?? "bugreporting", options.showBackButton);
+
+    return { startedFeedbackFlow: true };
   }
 
-  async openWidget(): Promise<{ openWidget: boolean; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async setLanguage(options: { languageCode: string }): Promise<{ setLanguage: string; }> {
+    Gleap.setLanguage(options.languageCode);
+
+    return { setLanguage: options.languageCode };
   }
 
-  startFeedbackFlow(_options: { feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ startedFeedbackFlow: boolean; }> {
-    throw new Error('Method not implemented.');
+  async log(options: { message: string; logLevel?: 'ERROR' | 'WARNING' | 'INFO' | undefined; }): Promise<{ logged: boolean; }> {
+    Gleap.log(options.message, options.logLevel);
+
+    return { logged: true };
   }
 
-  async setLanguage(_options: { languageCode: string }): Promise<{ setLanguage: string; }> {
-    throw this.unimplemented('Not implemented on web.');
+  async setEventCallback(callback: GleapEventCallback): Promise<string> {
+    var callbackId = this.makeid(10);
+    GleapWeb.callbacks[callbackId] = callback;
+    return callbackId;
   }
 
-  async log(_options: { message: string; logLevel?: 'ERROR' | 'WARNING' | 'INFO' | undefined; }): Promise<{ logged: boolean; }> {
-    throw new Error('Method not implemented.');
+  async sendSilentCrashReport(options: { description: string; severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; } | undefined; }): Promise<{ sentSilentBugReport: boolean; }> {
+    Gleap.sendSilentCrashReport(options.description, options.severity, options.dataExclusion);
+
+    return { sentSilentBugReport: true };
   }
-  
-  async setEventCallback(_callback: GleapEventCallback): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-  
-  async sendSilentCrashReport(_options: { description: string; severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined; dataExclusion?: { customData?: Boolean | undefined; metaData?: Boolean | undefined; attachments?: Boolean | undefined; consoleLog?: Boolean | undefined; networkLogs?: Boolean | undefined; customEventLog?: Boolean | undefined; screenshot?: Boolean | undefined; replays?: Boolean | undefined; } | undefined; }): Promise<{ sentSilentBugReport: boolean; }> {
-    throw new Error('Method not implemented.');
-  }
-  
+
   async open(): Promise<{ openedWidget: boolean; }> {
-    throw new Error('Method not implemented.');
-  }
-  
-  async close(): Promise<{ closedWidget: boolean; }> {
-    throw new Error('Method not implemented.');
-  }
-  
-  async isOpened(): Promise<{ isOpened: boolean; }> {
-    throw new Error('Method not implemented.');
-  }
-  
-  async disableConsoleLogOverwrite(): Promise<{ consoleLogDisabled: boolean; }> {
-    throw new Error('Method not implemented.');
-  }
-  
-  async enableDebugConsoleLog(): Promise<{ debugConsoleLogEnabled: boolean; }> {
-    throw new Error('Method not implemented.');
+    Gleap.open();
+
+    return { openedWidget: true };
   }
 
-  async preFillForm(_options: { data: any; }): Promise<{ preFilledForm: boolean; }> {
-    throw new Error('Method not implemented.');
+  async close(): Promise<{ closedWidget: boolean; }> {
+    Gleap.close();
+
+    return { closedWidget: true };
+  }
+
+  async isOpened(): Promise<{ isOpened: boolean; }> {
+    return { isOpened: Gleap.isOpened() };
+  }
+
+  async disableConsoleLogOverwrite(): Promise<{ consoleLogDisabled: boolean; }> {
+    Gleap.disableConsoleLogOverwrite();
+
+    return { consoleLogDisabled: true };
+  }
+
+  async enableDebugConsoleLog(): Promise<{ debugConsoleLogEnabled: boolean; }> {
+    return { debugConsoleLogEnabled: true };
+  }
+
+  async preFillForm(options: { data: any; }): Promise<{ preFilledForm: boolean; }> {
+    Gleap.preFillForm(options.data);
+
+    return { preFilledForm: true };
   }
 
   async addAttachment(_options: { base64data: string; name: string; }): Promise<{ attachmentAdded: boolean; }> {
-    throw new Error('Method not implemented.');
+    throw this.unavailable('addAttachment not available for browsers');
   }
 
   async removeAllAttachments(): Promise<{ allAttachmentsRemoved: boolean; }> {
-    throw new Error('Method not implemented.');
+    throw this.unavailable('removeAllAttachments not available for browsers');
   }
 
-  async attachCustomData(_options: { data: any; }): Promise<{ attachedCustomData: boolean; }> {
-    throw new Error('Method not implemented.');
+  private makeid(length: number): string {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 }

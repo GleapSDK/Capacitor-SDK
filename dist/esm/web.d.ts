@@ -1,34 +1,42 @@
 import { WebPlugin } from '@capacitor/core';
 import type { GleapEventCallback, GleapPlugin } from './definitions';
 export declare class GleapWeb extends WebPlugin implements GleapPlugin {
-    initialize(_options: {
+    static callbacks: {
+        [key: string]: GleapEventCallback;
+    };
+    static initialized: boolean;
+    initialize(options: {
         API_KEY: string;
     }): Promise<{
         initialized: boolean;
     }>;
-    identify(_options: {
+    registerCallbackListeners(): void;
+    notifyCallbacks(event: string, data: any): void;
+    identify(options: {
         userId: string;
-        userName?: string;
-        userEmail?: string;
+        userHash?: string | undefined;
+        name?: string | undefined;
+        email?: string | undefined;
+        phone?: string | undefined;
+        value?: number | undefined;
     }): Promise<{
         identify: boolean;
     }>;
     clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;
-    addCustomData(_options: {
-        key: string;
-        value: string;
+    attachCustomData(options: {
+        data: any;
     }): Promise<{
-        addedCustomData: boolean;
+        attachedCustomData: boolean;
     }>;
-    setCustomData(_options: {
+    setCustomData(options: {
         key: string;
         value: string;
     }): Promise<{
         setCustomData: boolean;
     }>;
-    removeCustomData(_options: {
+    removeCustomData(options: {
         key: string;
     }): Promise<{
         removedCustomData: boolean;
@@ -36,51 +44,42 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     clearCustomData(): Promise<{
         clearedCustomData: boolean;
     }>;
-    logEvent(_options: {
+    logEvent(options: {
         name: string;
         data?: any;
     }): Promise<{
         loggedEvent: boolean;
     }>;
-    sendSilentBugReport(_options: {
-        silentBugReportInfo: string;
-        silentBugReportSeverity: string;
-    }): Promise<{
-        sendSilentBugReport: boolean;
-    }>;
-    openWidget(): Promise<{
-        openWidget: boolean;
-    }>;
-    startFeedbackFlow(_options: {
+    startFeedbackFlow(options: {
         feedbackFlow?: string | undefined;
         showBackButton?: boolean | undefined;
     }): Promise<{
         startedFeedbackFlow: boolean;
     }>;
-    setLanguage(_options: {
+    setLanguage(options: {
         languageCode: string;
     }): Promise<{
         setLanguage: string;
     }>;
-    log(_options: {
+    log(options: {
         message: string;
         logLevel?: 'ERROR' | 'WARNING' | 'INFO' | undefined;
     }): Promise<{
         logged: boolean;
     }>;
-    setEventCallback(_callback: GleapEventCallback): Promise<string>;
-    sendSilentCrashReport(_options: {
+    setEventCallback(callback: GleapEventCallback): Promise<string>;
+    sendSilentCrashReport(options: {
         description: string;
         severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
         dataExclusion?: {
-            customData?: Boolean | undefined;
-            metaData?: Boolean | undefined;
-            attachments?: Boolean | undefined;
-            consoleLog?: Boolean | undefined;
-            networkLogs?: Boolean | undefined;
-            customEventLog?: Boolean | undefined;
-            screenshot?: Boolean | undefined;
-            replays?: Boolean | undefined;
+            customData: Boolean;
+            metaData: Boolean;
+            attachments: Boolean;
+            consoleLog: Boolean;
+            networkLogs: Boolean;
+            customEventLog: Boolean;
+            screenshot: Boolean;
+            replays: Boolean;
         } | undefined;
     }): Promise<{
         sentSilentBugReport: boolean;
@@ -100,7 +99,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     enableDebugConsoleLog(): Promise<{
         debugConsoleLogEnabled: boolean;
     }>;
-    preFillForm(_options: {
+    preFillForm(options: {
         data: any;
     }): Promise<{
         preFilledForm: boolean;
@@ -114,9 +113,5 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     removeAllAttachments(): Promise<{
         allAttachmentsRemoved: boolean;
     }>;
-    attachCustomData(_options: {
-        data: any;
-    }): Promise<{
-        attachedCustomData: boolean;
-    }>;
+    private makeid;
 }

@@ -110,14 +110,14 @@ export interface GleapPlugin {
         description: string;
         severity?: "LOW" | "MEDIUM" | "HIGH";
         dataExclusion?: {
-            customData?: Boolean;
-            metaData?: Boolean;
-            attachments?: Boolean;
-            consoleLog?: Boolean;
-            networkLogs?: Boolean;
-            customEventLog?: Boolean;
-            screenshot?: Boolean;
-            replays?: Boolean;
+            customData: Boolean;
+            metaData: Boolean;
+            attachments: Boolean;
+            consoleLog: Boolean;
+            networkLogs: Boolean;
+            customEventLog: Boolean;
+            screenshot: Boolean;
+            replays: Boolean;
         };
     }): Promise<{
         sentSilentBugReport: boolean;

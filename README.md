@@ -223,14 +223,14 @@ setEventCallback(callback: GleapEventCallback) => any
 ### sendSilentCrashReport(...)
 
 ```typescript
-sendSilentCrashReport(options: { description: string; severity?: "LOW" | "MEDIUM" | "HIGH"; dataExclusion?: { customData?: Boolean; metaData?: Boolean; attachments?: Boolean; consoleLog?: Boolean; networkLogs?: Boolean; customEventLog?: Boolean; screenshot?: Boolean; replays?: Boolean; }; }) => any
+sendSilentCrashReport(options: { description: string; severity?: "LOW" | "MEDIUM" | "HIGH"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => any
 ```
 
 Log event to Gleap
 
-| Param         | Type                                                                                                                                                                                                                                                |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData?: any; metaData?: any; attachments?: any; consoleLog?: any; networkLogs?: any; customEventLog?: any; screenshot?: any; replays?: any; }; }</code> |
+| Param         | Type                                                                                                                                                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData: any; metaData: any; attachments: any; consoleLog: any; networkLogs: any; customEventLog: any; screenshot: any; replays: any; }; }</code> |
 
 **Returns:** <code>any</code>
 

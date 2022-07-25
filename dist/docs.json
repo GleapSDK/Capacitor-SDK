@@ -208,12 +208,12 @@
       },
       {
         "name": "sendSilentCrashReport",
-        "signature": "(options: { description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\"; dataExclusion?: { customData?: Boolean; metaData?: Boolean; attachments?: Boolean; consoleLog?: Boolean; networkLogs?: Boolean; customEventLog?: Boolean; screenshot?: Boolean; replays?: Boolean; }; }) => any",
+        "signature": "(options: { description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData?: any; metaData?: any; attachments?: any; consoleLog?: any; networkLogs?: any; customEventLog?: any; screenshot?: any; replays?: any; } | undefined; }"
+            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData: any; metaData: any; attachments: any; consoleLog: any; networkLogs: any; customEventLog: any; screenshot: any; replays: any; } | undefined; }"
           }
         ],
         "returns": "any",

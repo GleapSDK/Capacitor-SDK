@@ -1,85 +1,154 @@
-var capacitorGleap = (function (exports, core) {
+var capacitorGleap = (function (exports, core, Gleap$1) {
     'use strict';
+
+    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+    var Gleap__default = /*#__PURE__*/_interopDefaultLegacy(Gleap$1);
 
     const Gleap = core.registerPlugin('Gleap', {
         web: () => Promise.resolve().then(function () { return web; }).then(m => new m.GleapWeb()),
     });
 
     class GleapWeb extends core.WebPlugin {
-        // All web functionality has been disabled - needs to be developed
-        async initialize(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async initialize(options) {
+            if (GleapWeb.initialized) {
+                return { initialized: true };
+            }
+            Gleap__default["default"].initialize(options.API_KEY);
+            GleapWeb.initialized = true;
+            this.registerCallbackListeners();
+            return { initialized: true };
         }
-        async identify(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        registerCallbackListeners() {
+            Gleap__default["default"].on("open", () => {
+                this.notifyCallbacks("open", {});
+            });
+            Gleap__default["default"].on("close", () => {
+                this.notifyCallbacks("close", {});
+            });
+            Gleap__default["default"].on("feedback-sent", (formData) => {
+                this.notifyCallbacks("feedback-sent", formData);
+            });
+            Gleap__default["default"].on("flow-started", (flow) => {
+                this.notifyCallbacks("flow-started", flow);
+            });
+            Gleap__default["default"].on("error-while-sending", () => {
+                this.notifyCallbacks("error-while-sending", {});
+            });
+            Gleap__default["default"].registerCustomAction((customAction) => {
+                this.notifyCallbacks("custom-action-called", customAction);
+            });
+        }
+        notifyCallbacks(event, data) {
+            if (!GleapWeb.callbacks) {
+                return;
+            }
+            for (var callbackId in GleapWeb.callbacks) {
+                GleapWeb.callbacks[callbackId](event, data);
+            }
+        }
+        async identify(options) {
+            var userData = {
+                name: options.name,
+                email: options.email,
+                phone: options.phone,
+                value: options.value,
+            };
+            if (options.userHash) {
+                Gleap__default["default"].identify(options.userId, userData, options.userHash);
+            }
+            else {
+                Gleap__default["default"].identify(options.userId, userData);
+            }
+            return { identify: true };
         }
         async clearIdentity() {
-            throw this.unimplemented('Not implemented on web.');
+            Gleap__default["default"].clearIdentity();
+            return { clearIdentity: true };
         }
-        async addCustomData(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async attachCustomData(options) {
+            Gleap__default["default"].attachCustomData(options.data);
+            return { attachedCustomData: true };
         }
-        async setCustomData(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async setCustomData(options) {
+            Gleap__default["default"].setCustomData(options.key, options.value);
+            return { setCustomData: true };
         }
-        async removeCustomData(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async removeCustomData(options) {
+            Gleap__default["default"].removeCustomData(options.key);
+            return { removedCustomData: true };
         }
         async clearCustomData() {
-            throw this.unimplemented('Not implemented on web.');
+            Gleap__default["default"].clearCustomData();
+            return { clearedCustomData: true };
         }
-        async logEvent(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async logEvent(options) {
+            Gleap__default["default"].logEvent(options.name, options.data);
+            return { loggedEvent: true };
         }
-        async sendSilentBugReport(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async startFeedbackFlow(options) {
+            var _a;
+            if (!options.feedbackFlow) ;
+            Gleap__default["default"].startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : "bugreporting", options.showBackButton);
+            return { startedFeedbackFlow: true };
         }
-        async openWidget() {
-            throw this.unimplemented('Not implemented on web.');
+        async setLanguage(options) {
+            Gleap__default["default"].setLanguage(options.languageCode);
+            return { setLanguage: options.languageCode };
         }
-        startFeedbackFlow(_options) {
-            throw new Error('Method not implemented.');
+        async log(options) {
+            Gleap__default["default"].log(options.message, options.logLevel);
+            return { logged: true };
         }
-        async setLanguage(_options) {
-            throw this.unimplemented('Not implemented on web.');
+        async setEventCallback(callback) {
+            var callbackId = this.makeid(10);
+            GleapWeb.callbacks[callbackId] = callback;
+            return callbackId;
         }
-        async log(_options) {
-            throw new Error('Method not implemented.');
-        }
-        async setEventCallback(_callback) {
-            throw new Error('Method not implemented.');
-        }
-        async sendSilentCrashReport(_options) {
-            throw new Error('Method not implemented.');
+        async sendSilentCrashReport(options) {
+            Gleap__default["default"].sendSilentCrashReport(options.description, options.severity, options.dataExclusion);
+            return { sentSilentBugReport: true };
         }
         async open() {
-            throw new Error('Method not implemented.');
+            Gleap__default["default"].open();
+            return { openedWidget: true };
         }
         async close() {
-            throw new Error('Method not implemented.');
+            Gleap__default["default"].close();
+            return { closedWidget: true };
         }
         async isOpened() {
-            throw new Error('Method not implemented.');
+            return { isOpened: Gleap__default["default"].isOpened() };
         }
         async disableConsoleLogOverwrite() {
-            throw new Error('Method not implemented.');
+            Gleap__default["default"].disableConsoleLogOverwrite();
+            return { consoleLogDisabled: true };
         }
         async enableDebugConsoleLog() {
-            throw new Error('Method not implemented.');
+            return { debugConsoleLogEnabled: true };
         }
-        async preFillForm(_options) {
-            throw new Error('Method not implemented.');
+        async preFillForm(options) {
+            Gleap__default["default"].preFillForm(options.data);
+            return { preFilledForm: true };
         }
         async addAttachment(_options) {
-            throw new Error('Method not implemented.');
+            throw this.unavailable('addAttachment not available for browsers');
         }
         async removeAllAttachments() {
-            throw new Error('Method not implemented.');
+            throw this.unavailable('removeAllAttachments not available for browsers');
         }
-        async attachCustomData(_options) {
-            throw new Error('Method not implemented.');
+        makeid(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
         }
     }
+    GleapWeb.callbacks = {};
+    GleapWeb.initialized = false;
 
     var web = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -92,5 +161,5 @@ var capacitorGleap = (function (exports, core) {
 
     return exports;
 
-})({}, capacitorExports);
+})({}, capacitorExports, Gleap$1);
 //# sourceMappingURL=plugin.js.map

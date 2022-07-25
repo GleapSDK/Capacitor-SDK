@@ -1,77 +1,144 @@
 import { WebPlugin } from '@capacitor/core';
+import Gleap from 'gleap';
 export class GleapWeb extends WebPlugin {
-    // All web functionality has been disabled - needs to be developed
-    async initialize(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async initialize(options) {
+        if (GleapWeb.initialized) {
+            return { initialized: true };
+        }
+        Gleap.initialize(options.API_KEY);
+        GleapWeb.initialized = true;
+        this.registerCallbackListeners();
+        return { initialized: true };
     }
-    async identify(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    registerCallbackListeners() {
+        Gleap.on("open", () => {
+            this.notifyCallbacks("open", {});
+        });
+        Gleap.on("close", () => {
+            this.notifyCallbacks("close", {});
+        });
+        Gleap.on("feedback-sent", (formData) => {
+            this.notifyCallbacks("feedback-sent", formData);
+        });
+        Gleap.on("flow-started", (flow) => {
+            this.notifyCallbacks("flow-started", flow);
+        });
+        Gleap.on("error-while-sending", () => {
+            this.notifyCallbacks("error-while-sending", {});
+        });
+        Gleap.registerCustomAction((customAction) => {
+            this.notifyCallbacks("custom-action-called", customAction);
+        });
+    }
+    notifyCallbacks(event, data) {
+        if (!GleapWeb.callbacks) {
+            return;
+        }
+        for (var callbackId in GleapWeb.callbacks) {
+            GleapWeb.callbacks[callbackId](event, data);
+        }
+    }
+    async identify(options) {
+        var userData = {
+            name: options.name,
+            email: options.email,
+            phone: options.phone,
+            value: options.value,
+        };
+        if (options.userHash) {
+            Gleap.identify(options.userId, userData, options.userHash);
+        }
+        else {
+            Gleap.identify(options.userId, userData);
+        }
+        return { identify: true };
     }
     async clearIdentity() {
-        throw this.unimplemented('Not implemented on web.');
+        Gleap.clearIdentity();
+        return { clearIdentity: true };
     }
-    async addCustomData(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async attachCustomData(options) {
+        Gleap.attachCustomData(options.data);
+        return { attachedCustomData: true };
     }
-    async setCustomData(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async setCustomData(options) {
+        Gleap.setCustomData(options.key, options.value);
+        return { setCustomData: true };
     }
-    async removeCustomData(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async removeCustomData(options) {
+        Gleap.removeCustomData(options.key);
+        return { removedCustomData: true };
     }
     async clearCustomData() {
-        throw this.unimplemented('Not implemented on web.');
+        Gleap.clearCustomData();
+        return { clearedCustomData: true };
     }
-    async logEvent(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async logEvent(options) {
+        Gleap.logEvent(options.name, options.data);
+        return { loggedEvent: true };
     }
-    async sendSilentBugReport(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async startFeedbackFlow(options) {
+        var _a;
+        if (!options.feedbackFlow) {
+        }
+        Gleap.startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : "bugreporting", options.showBackButton);
+        return { startedFeedbackFlow: true };
     }
-    async openWidget() {
-        throw this.unimplemented('Not implemented on web.');
+    async setLanguage(options) {
+        Gleap.setLanguage(options.languageCode);
+        return { setLanguage: options.languageCode };
     }
-    startFeedbackFlow(_options) {
-        throw new Error('Method not implemented.');
+    async log(options) {
+        Gleap.log(options.message, options.logLevel);
+        return { logged: true };
     }
-    async setLanguage(_options) {
-        throw this.unimplemented('Not implemented on web.');
+    async setEventCallback(callback) {
+        var callbackId = this.makeid(10);
+        GleapWeb.callbacks[callbackId] = callback;
+        return callbackId;
     }
-    async log(_options) {
-        throw new Error('Method not implemented.');
-    }
-    async setEventCallback(_callback) {
-        throw new Error('Method not implemented.');
-    }
-    async sendSilentCrashReport(_options) {
-        throw new Error('Method not implemented.');
+    async sendSilentCrashReport(options) {
+        Gleap.sendSilentCrashReport(options.description, options.severity, options.dataExclusion);
+        return { sentSilentBugReport: true };
     }
     async open() {
-        throw new Error('Method not implemented.');
+        Gleap.open();
+        return { openedWidget: true };
     }
     async close() {
-        throw new Error('Method not implemented.');
+        Gleap.close();
+        return { closedWidget: true };
     }
     async isOpened() {
-        throw new Error('Method not implemented.');
+        return { isOpened: Gleap.isOpened() };
     }
     async disableConsoleLogOverwrite() {
-        throw new Error('Method not implemented.');
+        Gleap.disableConsoleLogOverwrite();
+        return { consoleLogDisabled: true };
     }
     async enableDebugConsoleLog() {
-        throw new Error('Method not implemented.');
+        return { debugConsoleLogEnabled: true };
     }
-    async preFillForm(_options) {
-        throw new Error('Method not implemented.');
+    async preFillForm(options) {
+        Gleap.preFillForm(options.data);
+        return { preFilledForm: true };
     }
     async addAttachment(_options) {
-        throw new Error('Method not implemented.');
+        throw this.unavailable('addAttachment not available for browsers');
     }
     async removeAllAttachments() {
-        throw new Error('Method not implemented.');
+        throw this.unavailable('removeAllAttachments not available for browsers');
     }
-    async attachCustomData(_options) {
-        throw new Error('Method not implemented.');
+    makeid(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 }
+GleapWeb.callbacks = {};
+GleapWeb.initialized = false;
 //# sourceMappingURL=web.js.map
