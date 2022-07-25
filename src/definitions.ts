@@ -59,11 +59,10 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-  addCustomData(options: {
-    key: string;
-    value: string;
+  attachCustomData(options: {
+    data: any;
   }): Promise<{
-    addedCustomData: boolean;
+    attachedCustomData: boolean;
   }>;
 
   /**

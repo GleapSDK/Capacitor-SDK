@@ -7,7 +7,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(initialize, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(identify, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(clearIdentity, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(addCustomData, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(attachCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(removeCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(clearCustomData, CAPPluginReturnPromise);

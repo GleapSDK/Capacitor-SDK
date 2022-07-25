@@ -14,9 +14,9 @@ import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapUserProperties;
 
 @CapacitorPlugin(name = "Gleap", permissions = {
-        @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
-        @Permission(strings = { Manifest.permission.INTERNET }, alias = "internet"),
-        @Permission(strings = { Manifest.permission.WAKE_LOCK }, alias = "wakelock")
+    @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
+    @Permission(strings = { Manifest.permission.INTERNET }, alias = "internet"),
+    @Permission(strings = { Manifest.permission.WAKE_LOCK }, alias = "wakelock")
 })
 public class GleapPlugin extends Plugin {
 
@@ -133,22 +133,19 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void setCustomData(PluginCall call) {
-
-        JSObject customData = call.getObject("customData");
-
-        // If customData is empty, then pass back error
-        if (!call.getData().has("customData")) {
-            call.reject("No custom data is provided");
+    public void attachCustomData(PluginCall call) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("data")) {
+            call.reject("No data is provided");
             return;
         }
 
         // Append custom data
-        implementation.setCustomData(customData);
+        implementation.attachCustomData(call.getObject("data"));
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("setCustomData", true);
+        ret.put("attachedCustomData", true);
         call.resolve(ret);
     }
 
@@ -208,29 +205,31 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void sendSilentBugReport(PluginCall call) {
-
-        String silentBugReportInfo = call.getString("silentBugReportInfo");
-        String silentBugReportSeverity = call.getString("silentBugReportSeverity");
-
-        // If silentBugReportInfo is empty, then pass back error
-        if (!call.getData().has("silentBugReportInfo")) {
-            call.reject("No silent bug report description provided");
+    public void sendSilentCrashReport(PluginCall call) {
+        if (!call.getData().has("description")) {
+            call.reject("No description provided");
             return;
         }
 
-        // If severity is set then apply the right gleap severity
-        if (silentBugReportSeverity == "high") {
-            implementation.sendSilentBugReport(silentBugReportInfo, Gleap.SEVERITY.HIGH);
-        } else if (silentBugReportSeverity == "medium") {
-            implementation.sendSilentBugReport(silentBugReportInfo, Gleap.SEVERITY.MEDIUM);
+        String description = call.getString("description");
+        String severity = call.getString("severity");
+
+        Gleap.SEVERITY severityObj = Gleap.SEVERITY.HIGH;
+        if (severity == "high") {
+            severityObj = Gleap.SEVERITY.HIGH;
+        } else if (severity == "medium") {
+            severityObj = Gleap.SEVERITY.MEDIUM;
         } else {
-            implementation.sendSilentBugReport(silentBugReportInfo, Gleap.SEVERITY.LOW);
+            severityObj = Gleap.SEVERITY.LOW;
         }
+
+        String dataExclusion = call.getData("dataExclusion");
+
+        implementation.sendSilentCrashReport(description, severityObj);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("sendSilentBugReport", true);
+        ret.put("sentSilentBugReport", true);
         call.resolve(ret);
     }
 

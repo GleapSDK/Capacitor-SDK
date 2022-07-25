@@ -116,21 +116,15 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
-    @objc func addCustomData(_ call: CAPPluginCall) {
+    @objc func attachCustomData(_ call: CAPPluginCall) {
         // If key is empty, then pass back error
-        guard let key = call.options["key"] as? String else {
-            call.reject("Must provide a data key")
-            return;
-        }
-        
-        // If value is empty, then pass back error
-        guard let value = call.options["value"] as? String else {
-            call.reject("Must provide a data value")
+        guard let data = call.getObject("data") else {
+            call.reject("Must provide data")
             return;
         }
         
         // Set custom data
-        Gleap.attachCustomData(["value": value, "type": key])
+        Gleap.attachCustomData(data)
         
         // Provide feedback that it has been success
         call.resolve([
