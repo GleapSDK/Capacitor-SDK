@@ -54,8 +54,15 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-    implementation group: 'io.gleap', name: 'gleap-android-sdk', version: '7.0.28-SDKVersion30'
-    implementation( "com.google.android.material:material:1.4.0") {
-        force = true
+    implementation group: 'io.gleap', name: 'gleap-android-sdk', version: '7.0.28'
+    if (rootProject && rootProject.ext) {
+        if (rootProject.ext.targetSdkVersion == 30 || rootProject.ext.compileSdkVersion == 30) {
+            implementation( "androidx.appcompat:appcompat:1.3.0") {
+                force = true
+            }
+            implementation( "com.google.android.material:material:1.4.0") {
+                force = true
+            }
+        }
     }
 }
