@@ -17,10 +17,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GleapSDK/Capacitor.git"
+    "url": "git+https://github.com/GleapSDK/Capacitor-SDK.git"
   },
   "bugs": {
-    "url": "https://github.com/GleapSDK/Capacitor/issues"
+    "url": "https://github.com/GleapSDK/Capacitor-SDK/issues"
   },
   "keywords": [
     "capacitor",
