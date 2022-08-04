@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import io.gleap.APPLICATIONTYPE;
 import io.gleap.ConfigLoadedCallback;
 import io.gleap.CustomActionCallback;
 import io.gleap.FeedbackFlowStartedCallback;
