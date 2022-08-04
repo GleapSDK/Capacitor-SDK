@@ -57,6 +57,9 @@ public class GleapPlugin extends Plugin {
         // Initialize Gleap with API Key
         Gleap.initialize(api_key, getActivity().getApplication());
 
+        // Set the application type
+        Gleap.getInstance().setApplicationType(APPLICATIONTYPE.CAPACITOR);
+
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("initialized", true);

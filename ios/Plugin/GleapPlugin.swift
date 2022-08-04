@@ -23,6 +23,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         
         // Initialize Gleap with API key
         Gleap.initialize(withToken: api_key)
+        Gleap.setApplicationType(CAPACITOR)
         
         // Provide feedback that it has been success
         call.resolve([
