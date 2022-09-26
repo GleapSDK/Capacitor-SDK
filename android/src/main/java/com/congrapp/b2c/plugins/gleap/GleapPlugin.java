@@ -20,17 +20,17 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import io.gleap.APPLICATIONTYPE;
-import io.gleap.ConfigLoadedCallback;
-import io.gleap.CustomActionCallback;
-import io.gleap.FeedbackFlowStartedCallback;
-import io.gleap.FeedbackSendingFailedCallback;
-import io.gleap.FeedbackSentCallback;
 import io.gleap.Gleap;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapUserProperties;
-import io.gleap.WidgetClosedCallback;
-import io.gleap.WidgetOpenedCallback;
+import io.gleap.callbacks.ConfigLoadedCallback;
+import io.gleap.callbacks.CustomActionCallback;
+import io.gleap.callbacks.FeedbackFlowStartedCallback;
+import io.gleap.callbacks.FeedbackSendingFailedCallback;
+import io.gleap.callbacks.FeedbackSentCallback;
+import io.gleap.callbacks.WidgetClosedCallback;
+import io.gleap.callbacks.WidgetOpenedCallback;
 
 @CapacitorPlugin(name = "Gleap", permissions = {
     @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
