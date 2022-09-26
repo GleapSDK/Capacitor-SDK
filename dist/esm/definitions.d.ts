@@ -87,9 +87,9 @@ export interface GleapPlugin {
     /**
     * Log event to Gleap
     *
-    * @since 7.0.0
+    * @since 8.0.0
     */
-    logEvent(options: {
+    trackEvent(options: {
         name: string;
         data?: any;
     }): Promise<{
@@ -185,6 +185,16 @@ export interface GleapPlugin {
         showBackButton?: boolean;
     }): Promise<{
         startedFeedbackFlow: boolean;
+    }>;
+    /**
+   * Show or hide the feedback button.
+   *
+   * @since 8.0.0
+   */
+    showFeedbackButton(options: {
+        show?: boolean;
+    }): Promise<{
+        feedbackButtonShown: boolean;
     }>;
     /**
    * Set Language

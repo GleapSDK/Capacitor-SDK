@@ -38,6 +38,10 @@ export class GleapWeb extends WebPlugin {
             GleapWeb.callbacks[callbackId](event, data);
         }
     }
+    async showFeedbackButton(options) {
+        Gleap.showFeedbackButton(options.show ? true : false);
+        return { feedbackButtonShown: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -73,8 +77,8 @@ export class GleapWeb extends WebPlugin {
         Gleap.clearCustomData();
         return { clearedCustomData: true };
     }
-    async logEvent(options) {
-        Gleap.logEvent(options.name, options.data);
+    async trackEvent(options) {
+        Gleap.trackEvent(options.name, options.data);
         return { loggedEvent: true };
     }
     async startFeedbackFlow(options) {

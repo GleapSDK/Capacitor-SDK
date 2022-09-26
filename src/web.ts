@@ -4,7 +4,7 @@ import Gleap from 'gleap';
 import type { GleapEventCallback, GleapPlugin } from './definitions';
 
 export class GleapWeb extends WebPlugin implements GleapPlugin {
-  static callbacks: {[key: string]: GleapEventCallback} = {};
+  static callbacks: { [key: string]: GleapEventCallback } = {};
   static initialized = false;
 
   async initialize(options: { API_KEY: string }): Promise<{ initialized: boolean; }> {
@@ -56,6 +56,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     }
   }
 
+  async showFeedbackButton(options: { show: boolean; }): Promise<{ feedbackButtonShown: boolean; }> {
+    Gleap.showFeedbackButton(options.show ? true : false);
+
+    return { feedbackButtonShown: true };
+  }
+
   async identify(options: { userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }): Promise<{ identify: boolean; }> {
     var userData = {
       name: options.name,
@@ -102,8 +108,8 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { clearedCustomData: true };
   }
 
-  async logEvent(options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
-    Gleap.logEvent(options.name, options.data);
+  async trackEvent(options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
+    Gleap.trackEvent(options.name, options.data);
 
     return { loggedEvent: true };
   }

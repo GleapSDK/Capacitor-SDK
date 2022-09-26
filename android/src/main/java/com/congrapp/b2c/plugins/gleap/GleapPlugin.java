@@ -201,7 +201,6 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod()
     public void log(PluginCall call) {
-        // If logEventSubject is empty, then pass back error
         if (!call.getData().has("message")) {
             call.reject("No log message provided");
             return;
@@ -226,25 +225,25 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void logEvent(PluginCall call) {
-        // If logEventSubject is empty, then pass back error
+    public void trackEvent(PluginCall call) {
+        // If name is empty, then pass back error
         if (!call.getData().has("name")) {
             call.reject("No event name provided");
             return;
         }
 
         String name = call.getString("name");
-        // If logEventData is empty call for function without data
+        // If data is empty call for function without data
         if (!call.getData().has("data")) {
-            implementation.logEvent(name);
+            implementation.trackEvent(name);
         } else {
             JSObject eventData = call.getObject("data");
-            implementation.logEvent(name, eventData);
+            implementation.trackEvent(name, eventData);
         }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("loggedEvent", true);
+        ret.put("trackedEvent", true);
         call.resolve(ret);
     }
 
@@ -305,6 +304,18 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("attachmentAdded", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void showFeedbackButton(PluginCall call) {
+        boolean show = call.getBoolean("show");
+
+        implementation.showFeedbackButton(show);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("feedbackButtonShown", true);
         call.resolve(ret);
     }
 

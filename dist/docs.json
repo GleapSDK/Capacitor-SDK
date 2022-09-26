@@ -162,7 +162,7 @@
         "slug": "clearcustomdata"
       },
       {
-        "name": "logEvent",
+        "name": "trackEvent",
         "signature": "(options: { name: string; data?: any; }) => any",
         "parameters": [
           {
@@ -175,12 +175,12 @@
         "tags": [
           {
             "name": "since",
-            "text": "7.0.0"
+            "text": "8.0.0"
           }
         ],
         "docs": "Log event to Gleap",
         "complexTypes": [],
-        "slug": "logevent"
+        "slug": "trackevent"
       },
       {
         "name": "setEventCallback",
@@ -351,6 +351,27 @@
         "docs": "Start Feedback flow",
         "complexTypes": [],
         "slug": "startfeedbackflow"
+      },
+      {
+        "name": "showFeedbackButton",
+        "signature": "(options: { show?: boolean; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ show?: boolean | undefined; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.0"
+          }
+        ],
+        "docs": "Show or hide the feedback button.",
+        "complexTypes": [],
+        "slug": "showfeedbackbutton"
       },
       {
         "name": "setLanguage",

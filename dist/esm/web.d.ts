@@ -12,6 +12,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     registerCallbackListeners(): void;
     notifyCallbacks(event: string, data: any): void;
+    showFeedbackButton(options: {
+        show: boolean;
+    }): Promise<{
+        feedbackButtonShown: boolean;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;
@@ -44,7 +49,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     clearCustomData(): Promise<{
         clearedCustomData: boolean;
     }>;
-    logEvent(options: {
+    trackEvent(options: {
         name: string;
         data?: any;
     }): Promise<{

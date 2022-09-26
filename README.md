@@ -25,7 +25,7 @@ npx cap sync
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
-* [`logEvent(...)`](#logevent)
+* [`trackEvent(...)`](#trackevent)
 * [`setEventCallback(...)`](#seteventcallback)
 * [`sendSilentCrashReport(...)`](#sendsilentcrashreport)
 * [`preFillForm(...)`](#prefillform)
@@ -35,6 +35,7 @@ npx cap sync
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
+* [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -188,10 +189,10 @@ Clear custom data
 --------------------
 
 
-### logEvent(...)
+### trackEvent(...)
 
 ```typescript
-logEvent(options: { name: string; data?: any; }) => any
+trackEvent(options: { name: string; data?: any; }) => any
 ```
 
 Log event to Gleap
@@ -202,7 +203,7 @@ Log event to Gleap
 
 **Returns:** <code>any</code>
 
-**Since:** 7.0.0
+**Since:** 8.0.0
 
 --------------------
 
@@ -356,6 +357,25 @@ Start Feedback flow
 **Returns:** <code>any</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### showFeedbackButton(...)
+
+```typescript
+showFeedbackButton(options: { show?: boolean; }) => any
+```
+
+Show or hide the feedback button.
+
+| Param         | Type                             |
+| ------------- | -------------------------------- |
+| **`options`** | <code>{ show?: boolean; }</code> |
+
+**Returns:** <code>any</code>
+
+**Since:** 8.0.0
 
 --------------------
 

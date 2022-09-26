@@ -51,6 +51,10 @@ class GleapWeb extends core.WebPlugin {
             GleapWeb.callbacks[callbackId](event, data);
         }
     }
+    async showFeedbackButton(options) {
+        Gleap__default["default"].showFeedbackButton(options.show ? true : false);
+        return { feedbackButtonShown: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -86,8 +90,8 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].clearCustomData();
         return { clearedCustomData: true };
     }
-    async logEvent(options) {
-        Gleap__default["default"].logEvent(options.name, options.data);
+    async trackEvent(options) {
+        Gleap__default["default"].trackEvent(options.name, options.data);
         return { loggedEvent: true };
     }
     async startFeedbackFlow(options) {

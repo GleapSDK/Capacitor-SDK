@@ -16,17 +16,11 @@ Gleap.setEventCallback((name: String, data?: any) => {
 });
 
 Gleap.identify({
-  userId: '123',
-  email: "lukas@gleap.io",
+  userId: '29382',
+  email: "lukas+demo@gleap.io",
   name: "Lukas",
   phone: "123456789",
   value: 100.00,
-});
-
-Gleap.preFillForm({
-  data: {
-    "bugdescription": "TEST PREFILL. YEAH!",
-  }
 });
 
 ReactDOM.render(
