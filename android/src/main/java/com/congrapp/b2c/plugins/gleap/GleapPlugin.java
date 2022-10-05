@@ -397,6 +397,17 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
+    public void openNews(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        implementation.openNews();
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("openedNews", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
     public void close(PluginCall call) throws GleapNotInitialisedException {
         // Open widget
         implementation.close();

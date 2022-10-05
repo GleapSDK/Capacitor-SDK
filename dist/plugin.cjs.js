@@ -121,6 +121,10 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].open();
         return { openedWidget: true };
     }
+    async openNews() {
+        Gleap__default["default"].openNews();
+        return { openedNews: true };
+    }
     async close() {
         Gleap__default["default"].close();
         return { closedWidget: true };

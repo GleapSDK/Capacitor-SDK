@@ -92,6 +92,9 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     open(): Promise<{
         openedWidget: boolean;
     }>;
+    openNews(): Promise<{
+        openedNews: boolean;
+    }>;
     close(): Promise<{
         closedWidget: boolean;
     }>;

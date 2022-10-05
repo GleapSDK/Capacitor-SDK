@@ -182,6 +182,15 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Open news
+  *
+  * @since 8.0.4
+  */
+   openNews(): Promise<{
+    openedNews: boolean;
+  }>;
+
+  /**
   * Close widget
   *
   * @since 7.0.0

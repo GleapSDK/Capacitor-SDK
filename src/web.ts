@@ -154,6 +154,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { openedWidget: true };
   }
 
+  async openNews(): Promise<{ openedNews: boolean; }> {
+    Gleap.openNews();
+    
+    return { openedNews: true };
+  }
+
   async close(): Promise<{ closedWidget: boolean; }> {
     Gleap.close();
 

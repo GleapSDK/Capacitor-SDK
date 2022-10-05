@@ -32,6 +32,7 @@ npx cap sync
 * [`addAttachment(...)`](#addattachment)
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
+* [`openNews()`](#opennews)
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
@@ -39,6 +40,7 @@ npx cap sync
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -48,7 +50,7 @@ npx cap sync
 ### initialize(...)
 
 ```typescript
-initialize(options: { API_KEY: string; }) => any
+initialize(options: { API_KEY: string; }) => Promise<{ initialized: boolean; }>
 ```
 
 Initialize Gleap with an API key
@@ -57,7 +59,7 @@ Initialize Gleap with an API key
 | ------------- | --------------------------------- |
 | **`options`** | <code>{ API_KEY: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ initialized: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -67,7 +69,7 @@ Initialize Gleap with an API key
 ### identify(...)
 
 ```typescript
-identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => any
+identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => Promise<{ identify: boolean; }>
 ```
 
 Set user identity
@@ -76,7 +78,7 @@ Set user identity
 | ------------- | ------------------------------------------------------------------------------------------------------------------ |
 | **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -86,12 +88,12 @@ Set user identity
 ### clearIdentity()
 
 ```typescript
-clearIdentity() => any
+clearIdentity() => Promise<{ clearIdentity: boolean; }>
 ```
 
 Clear user identity
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ clearIdentity: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -101,7 +103,7 @@ Clear user identity
 ### log(...)
 
 ```typescript
-log(options: { message: string; logLevel?: "ERROR" | "WARNING" | "INFO"; }) => any
+log(options: { message: string; logLevel?: "ERROR" | "WARNING" | "INFO"; }) => Promise<{ logged: boolean; }>
 ```
 
 Submit a custom log message with the given level
@@ -110,7 +112,7 @@ Submit a custom log message with the given level
 | ------------- | ---------------------------------------------------------------------------- |
 | **`options`** | <code>{ message: string; logLevel?: "ERROR" \| "WARNING" \| "INFO"; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ logged: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -120,7 +122,7 @@ Submit a custom log message with the given level
 ### attachCustomData(...)
 
 ```typescript
-attachCustomData(options: { data: any; }) => any
+attachCustomData(options: { data: any; }) => Promise<{ attachedCustomData: boolean; }>
 ```
 
 Add custom data
@@ -129,7 +131,7 @@ Add custom data
 | ------------- | --------------------------- |
 | **`options`** | <code>{ data: any; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ attachedCustomData: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -139,7 +141,7 @@ Add custom data
 ### setCustomData(...)
 
 ```typescript
-setCustomData(options: { key: string; value: string; }) => any
+setCustomData(options: { key: string; value: string; }) => Promise<{ setCustomData: boolean; }>
 ```
 
 Set custom data
@@ -148,7 +150,7 @@ Set custom data
 | ------------- | -------------------------------------------- |
 | **`options`** | <code>{ key: string; value: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ setCustomData: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -158,7 +160,7 @@ Set custom data
 ### removeCustomData(...)
 
 ```typescript
-removeCustomData(options: { key: string; }) => any
+removeCustomData(options: { key: string; }) => Promise<{ removedCustomData: boolean; }>
 ```
 
 Remove custom data by key
@@ -167,7 +169,7 @@ Remove custom data by key
 | ------------- | ----------------------------- |
 | **`options`** | <code>{ key: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ removedCustomData: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -177,12 +179,12 @@ Remove custom data by key
 ### clearCustomData()
 
 ```typescript
-clearCustomData() => any
+clearCustomData() => Promise<{ clearedCustomData: boolean; }>
 ```
 
 Clear custom data
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ clearedCustomData: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -192,7 +194,7 @@ Clear custom data
 ### trackEvent(...)
 
 ```typescript
-trackEvent(options: { name: string; data?: any; }) => any
+trackEvent(options: { name: string; data?: any; }) => Promise<{ loggedEvent: boolean; }>
 ```
 
 Log event to Gleap
@@ -201,7 +203,7 @@ Log event to Gleap
 | ------------- | ------------------------------------------ |
 | **`options`** | <code>{ name: string; data?: any; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ loggedEvent: boolean; }&gt;</code>
 
 **Since:** 8.0.0
 
@@ -211,14 +213,14 @@ Log event to Gleap
 ### setEventCallback(...)
 
 ```typescript
-setEventCallback(callback: GleapEventCallback) => any
+setEventCallback(callback: GleapEventCallback) => Promise<CallbackID>
 ```
 
 | Param          | Type                                               |
 | -------------- | -------------------------------------------------- |
 | **`callback`** | <code>(name: string, data?: any) =&gt; void</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;string&gt;</code>
 
 **Since:** 7.0.0
 
@@ -228,16 +230,16 @@ setEventCallback(callback: GleapEventCallback) => any
 ### sendSilentCrashReport(...)
 
 ```typescript
-sendSilentCrashReport(options: { description: string; severity?: "LOW" | "MEDIUM" | "HIGH"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => any
+sendSilentCrashReport(options: { description: string; severity?: "LOW" | "MEDIUM" | "HIGH"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => Promise<{ sentSilentBugReport: boolean; }>
 ```
 
 Log event to Gleap
 
-| Param         | Type                                                                                                                                                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData: any; metaData: any; attachments: any; consoleLog: any; networkLogs: any; customEventLog: any; screenshot: any; replays: any; }; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData: <a href="#boolean">Boolean</a>; metaData: <a href="#boolean">Boolean</a>; attachments: <a href="#boolean">Boolean</a>; consoleLog: <a href="#boolean">Boolean</a>; networkLogs: <a href="#boolean">Boolean</a>; customEventLog: <a href="#boolean">Boolean</a>; screenshot: <a href="#boolean">Boolean</a>; replays: <a href="#boolean">Boolean</a>; }; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ sentSilentBugReport: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -247,7 +249,7 @@ Log event to Gleap
 ### preFillForm(...)
 
 ```typescript
-preFillForm(options: { data: any; }) => any
+preFillForm(options: { data: any; }) => Promise<{ preFilledForm: boolean; }>
 ```
 
 Prefills the widget's form data
@@ -256,7 +258,7 @@ Prefills the widget's form data
 | ------------- | --------------------------- |
 | **`options`** | <code>{ data: any; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ preFilledForm: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -266,7 +268,7 @@ Prefills the widget's form data
 ### addAttachment(...)
 
 ```typescript
-addAttachment(options: { base64data: string; name: string; }) => any
+addAttachment(options: { base64data: string; name: string; }) => Promise<{ attachmentAdded: boolean; }>
 ```
 
 Add attachment as bas64 string
@@ -275,7 +277,7 @@ Add attachment as bas64 string
 | ------------- | -------------------------------------------------- |
 | **`options`** | <code>{ base64data: string; name: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ attachmentAdded: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -285,12 +287,12 @@ Add attachment as bas64 string
 ### removeAllAttachments()
 
 ```typescript
-removeAllAttachments() => any
+removeAllAttachments() => Promise<{ allAttachmentsRemoved: boolean; }>
 ```
 
 All attachments removed
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ allAttachmentsRemoved: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -300,14 +302,29 @@ All attachments removed
 ### open()
 
 ```typescript
-open() => any
+open() => Promise<{ openedWidget: boolean; }>
 ```
 
 Open widget
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ openedWidget: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### openNews()
+
+```typescript
+openNews() => Promise<{ openedNews: boolean; }>
+```
+
+Open news
+
+**Returns:** <code>Promise&lt;{ openedNews: boolean; }&gt;</code>
+
+**Since:** 8.0.4
 
 --------------------
 
@@ -315,12 +332,12 @@ Open widget
 ### close()
 
 ```typescript
-close() => any
+close() => Promise<{ closedWidget: boolean; }>
 ```
 
 Close widget
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ closedWidget: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -330,12 +347,12 @@ Close widget
 ### isOpened()
 
 ```typescript
-isOpened() => any
+isOpened() => Promise<{ isOpened: boolean; }>
 ```
 
 Check widget status code
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isOpened: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -345,7 +362,7 @@ Check widget status code
 ### startFeedbackFlow(...)
 
 ```typescript
-startFeedbackFlow(options: { feedbackFlow?: string; showBackButton?: boolean; }) => any
+startFeedbackFlow(options: { feedbackFlow?: string; showBackButton?: boolean; }) => Promise<{ startedFeedbackFlow: boolean; }>
 ```
 
 Start Feedback flow
@@ -354,7 +371,7 @@ Start Feedback flow
 | ------------- | ----------------------------------------------------------------- |
 | **`options`** | <code>{ feedbackFlow?: string; showBackButton?: boolean; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ startedFeedbackFlow: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -364,7 +381,7 @@ Start Feedback flow
 ### showFeedbackButton(...)
 
 ```typescript
-showFeedbackButton(options: { show?: boolean; }) => any
+showFeedbackButton(options: { show?: boolean; }) => Promise<{ feedbackButtonShown: boolean; }>
 ```
 
 Show or hide the feedback button.
@@ -373,7 +390,7 @@ Show or hide the feedback button.
 | ------------- | -------------------------------- |
 | **`options`** | <code>{ show?: boolean; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ feedbackButtonShown: boolean; }&gt;</code>
 
 **Since:** 8.0.0
 
@@ -383,7 +400,7 @@ Show or hide the feedback button.
 ### setLanguage(...)
 
 ```typescript
-setLanguage(options: { languageCode: string; }) => any
+setLanguage(options: { languageCode: string; }) => Promise<{ setLanguage: string; }>
 ```
 
 Set Language
@@ -392,7 +409,7 @@ Set Language
 | ------------- | -------------------------------------- |
 | **`options`** | <code>{ languageCode: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ setLanguage: string; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -402,12 +419,12 @@ Set Language
 ### disableConsoleLogOverwrite()
 
 ```typescript
-disableConsoleLogOverwrite() => any
+disableConsoleLogOverwrite() => Promise<{ consoleLogDisabled: boolean; }>
 ```
 
 Disable console log overwrite
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ consoleLogDisabled: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
@@ -417,15 +434,25 @@ Disable console log overwrite
 ### enableDebugConsoleLog()
 
 ```typescript
-enableDebugConsoleLog() => any
+enableDebugConsoleLog() => Promise<{ debugConsoleLogEnabled: boolean; }>
 ```
 
 Enable debug console log
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ debugConsoleLogEnabled: boolean; }&gt;</code>
 
 **Since:** 7.0.0
 
 --------------------
+
+
+### Interfaces
+
+
+#### Boolean
+
+| Method      | Signature        | Description                                          |
+| ----------- | ---------------- | ---------------------------------------------------- |
+| **valueOf** | () =&gt; boolean | Returns the primitive value of the specified object. |
 
 </docgen-api>

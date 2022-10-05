@@ -7,7 +7,7 @@
     "methods": [
       {
         "name": "initialize",
-        "signature": "(options: { API_KEY: string; }) => any",
+        "signature": "(options: { API_KEY: string; }) => Promise<{ initialized: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -15,7 +15,7 @@
             "type": "{ API_KEY: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ initialized: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -28,7 +28,7 @@
       },
       {
         "name": "identify",
-        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => any",
+        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => Promise<{ identify: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -36,7 +36,7 @@
             "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ identify: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -49,9 +49,9 @@
       },
       {
         "name": "clearIdentity",
-        "signature": "() => any",
+        "signature": "() => Promise<{ clearIdentity: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ clearIdentity: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -64,7 +64,7 @@
       },
       {
         "name": "log",
-        "signature": "(options: { message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\"; }) => any",
+        "signature": "(options: { message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\"; }) => Promise<{ logged: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -72,7 +72,7 @@
             "type": "{ message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\" | undefined; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ logged: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -85,7 +85,7 @@
       },
       {
         "name": "attachCustomData",
-        "signature": "(options: { data: any; }) => any",
+        "signature": "(options: { data: any; }) => Promise<{ attachedCustomData: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -93,7 +93,7 @@
             "type": "{ data: any; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ attachedCustomData: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -106,7 +106,7 @@
       },
       {
         "name": "setCustomData",
-        "signature": "(options: { key: string; value: string; }) => any",
+        "signature": "(options: { key: string; value: string; }) => Promise<{ setCustomData: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -114,7 +114,7 @@
             "type": "{ key: string; value: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ setCustomData: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -127,7 +127,7 @@
       },
       {
         "name": "removeCustomData",
-        "signature": "(options: { key: string; }) => any",
+        "signature": "(options: { key: string; }) => Promise<{ removedCustomData: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -135,7 +135,7 @@
             "type": "{ key: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ removedCustomData: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -148,9 +148,9 @@
       },
       {
         "name": "clearCustomData",
-        "signature": "() => any",
+        "signature": "() => Promise<{ clearedCustomData: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ clearedCustomData: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -163,7 +163,7 @@
       },
       {
         "name": "trackEvent",
-        "signature": "(options: { name: string; data?: any; }) => any",
+        "signature": "(options: { name: string; data?: any; }) => Promise<{ loggedEvent: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -171,7 +171,7 @@
             "type": "{ name: string; data?: any; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ loggedEvent: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -184,7 +184,7 @@
       },
       {
         "name": "setEventCallback",
-        "signature": "(callback: GleapEventCallback) => any",
+        "signature": "(callback: GleapEventCallback) => Promise<CallbackID>",
         "parameters": [
           {
             "name": "callback",
@@ -192,7 +192,7 @@
             "type": "(name: string, data?: any) => void"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<string>",
         "tags": [
           {
             "name": "since",
@@ -208,15 +208,15 @@
       },
       {
         "name": "sendSilentCrashReport",
-        "signature": "(options: { description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => any",
+        "signature": "(options: { description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\"; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; }; }) => Promise<{ sentSilentBugReport: boolean; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData: any; metaData: any; attachments: any; consoleLog: any; networkLogs: any; customEventLog: any; screenshot: any; replays: any; } | undefined; }"
+            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; } | undefined; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ sentSilentBugReport: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -231,7 +231,7 @@
       },
       {
         "name": "preFillForm",
-        "signature": "(options: { data: any; }) => any",
+        "signature": "(options: { data: any; }) => Promise<{ preFilledForm: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -239,7 +239,7 @@
             "type": "{ data: any; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ preFilledForm: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -252,7 +252,7 @@
       },
       {
         "name": "addAttachment",
-        "signature": "(options: { base64data: string; name: string; }) => any",
+        "signature": "(options: { base64data: string; name: string; }) => Promise<{ attachmentAdded: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -260,7 +260,7 @@
             "type": "{ base64data: string; name: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ attachmentAdded: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -273,9 +273,9 @@
       },
       {
         "name": "removeAllAttachments",
-        "signature": "() => any",
+        "signature": "() => Promise<{ allAttachmentsRemoved: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ allAttachmentsRemoved: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -288,9 +288,9 @@
       },
       {
         "name": "open",
-        "signature": "() => any",
+        "signature": "() => Promise<{ openedWidget: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ openedWidget: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -302,10 +302,25 @@
         "slug": "open"
       },
       {
-        "name": "close",
-        "signature": "() => any",
+        "name": "openNews",
+        "signature": "() => Promise<{ openedNews: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ openedNews: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.4"
+          }
+        ],
+        "docs": "Open news",
+        "complexTypes": [],
+        "slug": "opennews"
+      },
+      {
+        "name": "close",
+        "signature": "() => Promise<{ closedWidget: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ closedWidget: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -318,9 +333,9 @@
       },
       {
         "name": "isOpened",
-        "signature": "() => any",
+        "signature": "() => Promise<{ isOpened: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ isOpened: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -333,7 +348,7 @@
       },
       {
         "name": "startFeedbackFlow",
-        "signature": "(options: { feedbackFlow?: string; showBackButton?: boolean; }) => any",
+        "signature": "(options: { feedbackFlow?: string; showBackButton?: boolean; }) => Promise<{ startedFeedbackFlow: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -341,7 +356,7 @@
             "type": "{ feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ startedFeedbackFlow: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -354,7 +369,7 @@
       },
       {
         "name": "showFeedbackButton",
-        "signature": "(options: { show?: boolean; }) => any",
+        "signature": "(options: { show?: boolean; }) => Promise<{ feedbackButtonShown: boolean; }>",
         "parameters": [
           {
             "name": "options",
@@ -362,7 +377,7 @@
             "type": "{ show?: boolean | undefined; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ feedbackButtonShown: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -375,7 +390,7 @@
       },
       {
         "name": "setLanguage",
-        "signature": "(options: { languageCode: string; }) => any",
+        "signature": "(options: { languageCode: string; }) => Promise<{ setLanguage: string; }>",
         "parameters": [
           {
             "name": "options",
@@ -383,7 +398,7 @@
             "type": "{ languageCode: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<{ setLanguage: string; }>",
         "tags": [
           {
             "name": "since",
@@ -396,9 +411,9 @@
       },
       {
         "name": "disableConsoleLogOverwrite",
-        "signature": "() => any",
+        "signature": "() => Promise<{ consoleLogDisabled: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ consoleLogDisabled: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -411,9 +426,9 @@
       },
       {
         "name": "enableDebugConsoleLog",
-        "signature": "() => any",
+        "signature": "() => Promise<{ debugConsoleLogEnabled: boolean; }>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<{ debugConsoleLogEnabled: boolean; }>",
         "tags": [
           {
             "name": "since",
@@ -427,6 +442,26 @@
     ],
     "properties": []
   },
-  "interfaces": [],
+  "interfaces": [
+    {
+      "name": "Boolean",
+      "slug": "boolean",
+      "docs": "",
+      "tags": [],
+      "methods": [
+        {
+          "name": "valueOf",
+          "signature": "() => boolean",
+          "parameters": [],
+          "returns": "boolean",
+          "tags": [],
+          "docs": "Returns the primitive value of the specified object.",
+          "complexTypes": [],
+          "slug": "valueof"
+        }
+      ],
+      "properties": []
+    }
+  ],
   "enums": []
 }
