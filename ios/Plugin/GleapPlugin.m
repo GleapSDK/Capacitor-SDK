@@ -15,6 +15,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(sendSilentCrashReport, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(open, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openNews, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(openFeatureRequests, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(close, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(isOpened, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(showFeedbackButton, CAPPluginReturnPromise);

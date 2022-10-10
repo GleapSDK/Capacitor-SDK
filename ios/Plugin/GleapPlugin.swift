@@ -315,6 +315,16 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func openFeatureRequests(_ call: CAPPluginCall) {
+        // Open news
+        Gleap.openFeatureRequests()
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "openedFeatureRequests": true
+        ])
+    }
+    
     @objc func close(_ call: CAPPluginCall) {
         // Open widget
         Gleap.close()

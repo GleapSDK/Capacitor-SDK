@@ -408,6 +408,17 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
+    public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        implementation.openFeatureRequests();
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("openedFeatureRequests", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
     public void close(PluginCall call) throws GleapNotInitialisedException {
         // Open widget
         implementation.close();
