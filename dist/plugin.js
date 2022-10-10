@@ -117,6 +117,10 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].open();
             return { openedWidget: true };
         }
+        async openFeatureRequests() {
+            Gleap__default["default"].openFeatureRequests();
+            return { openedFeatureRequests: true };
+        }
         async openNews() {
             Gleap__default["default"].openNews();
             return { openedNews: true };

@@ -33,6 +33,7 @@ npx cap sync
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
 * [`openNews()`](#opennews)
+* [`openFeatureRequests()`](#openfeaturerequests)
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
@@ -325,6 +326,21 @@ Open news
 **Returns:** <code>Promise&lt;{ openedNews: boolean; }&gt;</code>
 
 **Since:** 8.0.4
+
+--------------------
+
+
+### openFeatureRequests()
+
+```typescript
+openFeatureRequests() => Promise<{ openedFeatureRequests: boolean; }>
+```
+
+Open feature requests
+
+**Returns:** <code>Promise&lt;{ openedFeatureRequests: boolean; }&gt;</code>
+
+**Since:** 8.0.5
 
 --------------------
 

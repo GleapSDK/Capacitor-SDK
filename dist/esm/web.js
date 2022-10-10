@@ -109,6 +109,10 @@ export class GleapWeb extends WebPlugin {
         Gleap.open();
         return { openedWidget: true };
     }
+    async openFeatureRequests() {
+        Gleap.openFeatureRequests();
+        return { openedFeatureRequests: true };
+    }
     async openNews() {
         Gleap.openNews();
         return { openedNews: true };

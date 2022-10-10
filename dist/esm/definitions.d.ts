@@ -168,6 +168,14 @@ export interface GleapPlugin {
         openedNews: boolean;
     }>;
     /**
+    * Open feature requests
+    *
+    * @since 8.0.5
+    */
+    openFeatureRequests(): Promise<{
+        openedFeatureRequests: boolean;
+    }>;
+    /**
     * Close widget
     *
     * @since 7.0.0

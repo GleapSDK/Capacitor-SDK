@@ -317,6 +317,21 @@
         "slug": "opennews"
       },
       {
+        "name": "openFeatureRequests",
+        "signature": "() => Promise<{ openedFeatureRequests: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ openedFeatureRequests: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.5"
+          }
+        ],
+        "docs": "Open feature requests",
+        "complexTypes": [],
+        "slug": "openfeaturerequests"
+      },
+      {
         "name": "close",
         "signature": "() => Promise<{ closedWidget: boolean; }>",
         "parameters": [],
