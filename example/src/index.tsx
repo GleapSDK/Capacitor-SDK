@@ -11,7 +11,7 @@ Gleap.initialize({
 
 Gleap.identify({
   userId: '29382',
-  email: "lukas+demo@gleap.io",
+  email: "lukas@gleap.io",
   name: "Lukas",
   phone: "123456789",
   value: 100.00,

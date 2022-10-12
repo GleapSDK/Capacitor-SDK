@@ -84,6 +84,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { clearIdentity: true };
   }
 
+  async getIdentity(): Promise<{ identity: { userId: string; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }; }> {
+    return { identity: Gleap.getIdentity() };
+  }
+
+  async isUserIdentified(): Promise<{ isUserIdentified: boolean; }> {
+    return { isUserIdentified: Gleap.isUserIdentified() };
+  }
+
   async attachCustomData(options: { data: any; }): Promise<{ attachedCustomData: boolean; }> {
     Gleap.attachCustomData(options.data);
 

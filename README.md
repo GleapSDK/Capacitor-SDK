@@ -20,6 +20,8 @@ npx cap sync
 * [`initialize(...)`](#initialize)
 * [`identify(...)`](#identify)
 * [`clearIdentity()`](#clearidentity)
+* [`getIdentity()`](#getidentity)
+* [`isUserIdentified()`](#isuseridentified)
 * [`log(...)`](#log)
 * [`attachCustomData(...)`](#attachcustomdata)
 * [`setCustomData(...)`](#setcustomdata)
@@ -97,6 +99,36 @@ Clear user identity
 **Returns:** <code>Promise&lt;{ clearIdentity: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### getIdentity()
+
+```typescript
+getIdentity() => Promise<{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }>
+```
+
+Get the current user identity
+
+**Returns:** <code>Promise&lt;{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }&gt;</code>
+
+**Since:** 8.1.0
+
+--------------------
+
+
+### isUserIdentified()
+
+```typescript
+isUserIdentified() => Promise<{ isUserIdentified: boolean; }>
+```
+
+User identified status.
+
+**Returns:** <code>Promise&lt;{ isUserIdentified: boolean; }&gt;</code>
+
+**Since:** 8.1.0
 
 --------------------
 

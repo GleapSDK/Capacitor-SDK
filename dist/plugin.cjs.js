@@ -74,6 +74,12 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].clearIdentity();
         return { clearIdentity: true };
     }
+    getIdentity() {
+        throw new Error('Method not implemented.');
+    }
+    isUserIdentified() {
+        throw new Error('Method not implemented.');
+    }
     async attachCustomData(options) {
         Gleap__default["default"].attachCustomData(options.data);
         return { attachedCustomData: true };

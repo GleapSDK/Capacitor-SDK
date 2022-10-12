@@ -24,6 +24,7 @@ import io.gleap.Gleap;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapUserProperties;
+import io.gleap.GleapUser;
 import io.gleap.callbacks.ConfigLoadedCallback;
 import io.gleap.callbacks.CustomActionCallback;
 import io.gleap.callbacks.FeedbackFlowStartedCallback;
@@ -110,6 +111,45 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("clearIdentity", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void getIdentity(PluginCall call) {
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+
+        try {
+            GleapUser gleapUser = implementation.getIdentity();
+            if (gleapUser != null) {
+                GleapUserProperties userProps = gleapUser.getGleapUserProperties();
+
+                JSObject identityObj = new JSObject();
+
+                if (userProps != null) {
+                    identityObj.put("userId", gleapUser.getUserId());
+                    identityObj.put("phone", userProps.getPhoneNumber());
+                    identityObj.put("email", userProps.getEmail());
+                    identityObj.put("name", userProps.getName());
+                    identityObj.put("value", userProps.getValue());
+                }
+
+                ret.put("identity", identityObj);
+            } else {
+                ret.put("identity", null);
+            }
+        } catch (Exception ex) {}
+
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void isUserIdentified(PluginCall call) {
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        try {
+            ret.put("isUserIdentified", implementation.isUserIdentified());
+        } catch (Exception ex) {}
         call.resolve(ret);
     }
 

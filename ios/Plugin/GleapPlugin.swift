@@ -75,6 +75,18 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func getIdentity(_ call: CAPPluginCall) {
+        call.resolve([
+            "identity": Gleap.getIdentity()
+        ])
+    }
+    
+    @objc func isUserIdentified(_ call: CAPPluginCall) {
+        call.resolve([
+            "isUserIdentified": Gleap.isUserIdentified()
+        ])
+    }
+    
     @objc func disableConsoleLogOverwrite(_ call: CAPPluginCall) {
         call.resolve([
             "consoleLogDisabled": true

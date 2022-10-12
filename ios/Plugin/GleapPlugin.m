@@ -25,7 +25,9 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(startFeedbackFlow, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setLanguage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setEventCallback, CAPPluginReturnCallback);
-           CAP_PLUGIN_METHOD(preFillForm, CAPPluginReturnCallback);
-           CAP_PLUGIN_METHOD(addAttachment, CAPPluginReturnCallback);
-           CAP_PLUGIN_METHOD(removeAllAttachments, CAPPluginReturnCallback);
+           CAP_PLUGIN_METHOD(preFillForm, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(addAttachment, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(removeAllAttachments, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(getIdentity, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(isUserIdentified, CAPPluginReturnPromise);
 )

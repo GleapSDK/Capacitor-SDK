@@ -63,6 +63,36 @@
         "slug": "clearidentity"
       },
       {
+        "name": "getIdentity",
+        "signature": "() => Promise<{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }>",
+        "parameters": [],
+        "returns": "Promise<{ identity: { userId: string; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.1.0"
+          }
+        ],
+        "docs": "Get the current user identity",
+        "complexTypes": [],
+        "slug": "getidentity"
+      },
+      {
+        "name": "isUserIdentified",
+        "signature": "() => Promise<{ isUserIdentified: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ isUserIdentified: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.1.0"
+          }
+        ],
+        "docs": "User identified status.",
+        "complexTypes": [],
+        "slug": "isuseridentified"
+      },
+      {
         "name": "log",
         "signature": "(options: { message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\"; }) => Promise<{ logged: boolean; }>",
         "parameters": [
