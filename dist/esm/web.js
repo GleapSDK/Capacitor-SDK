@@ -61,11 +61,11 @@ export class GleapWeb extends WebPlugin {
         Gleap.clearIdentity();
         return { clearIdentity: true };
     }
-    getIdentity() {
-        throw new Error('Method not implemented.');
+    async getIdentity() {
+        return { identity: Gleap.getIdentity() };
     }
-    isUserIdentified() {
-        throw new Error('Method not implemented.');
+    async isUserIdentified() {
+        return { isUserIdentified: Gleap.isUserIdentified() };
     }
     async attachCustomData(options) {
         Gleap.attachCustomData(options.data);

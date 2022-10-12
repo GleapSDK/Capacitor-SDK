@@ -70,11 +70,11 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].clearIdentity();
             return { clearIdentity: true };
         }
-        getIdentity() {
-            throw new Error('Method not implemented.');
+        async getIdentity() {
+            return { identity: Gleap__default["default"].getIdentity() };
         }
-        isUserIdentified() {
-            throw new Error('Method not implemented.');
+        async isUserIdentified() {
+            return { isUserIdentified: Gleap__default["default"].isUserIdentified() };
         }
         async attachCustomData(options) {
             Gleap__default["default"].attachCustomData(options.data);
