@@ -35,6 +35,28 @@ export interface GleapPlugin {
         clearIdentity: boolean;
     }>;
     /**
+    * Get the current user identity
+    *
+    * @since 8.1.0
+    */
+    getIdentity(): Promise<{
+        identity: {
+            userId: string;
+            name?: string;
+            email?: string;
+            phone?: string;
+            value?: number;
+        };
+    }>;
+    /**
+    * User identified status.
+    *
+    * @since 8.1.0
+    */
+    isUserIdentified(): Promise<{
+        isUserIdentified: boolean;
+    }>;
+    /**
     * Submit a custom log message with the given level
     *
     * @since 7.0.0
@@ -87,9 +109,9 @@ export interface GleapPlugin {
     /**
     * Log event to Gleap
     *
-    * @since 7.0.0
+    * @since 8.0.0
     */
-    logEvent(options: {
+    trackEvent(options: {
         name: string;
         data?: any;
     }): Promise<{
@@ -160,6 +182,22 @@ export interface GleapPlugin {
         openedWidget: boolean;
     }>;
     /**
+    * Open news
+    *
+    * @since 8.0.4
+    */
+    openNews(): Promise<{
+        openedNews: boolean;
+    }>;
+    /**
+    * Open feature requests
+    *
+    * @since 8.0.5
+    */
+    openFeatureRequests(): Promise<{
+        openedFeatureRequests: boolean;
+    }>;
+    /**
     * Close widget
     *
     * @since 7.0.0
@@ -185,6 +223,16 @@ export interface GleapPlugin {
         showBackButton?: boolean;
     }): Promise<{
         startedFeedbackFlow: boolean;
+    }>;
+    /**
+   * Show or hide the feedback button.
+   *
+   * @since 8.0.0
+   */
+    showFeedbackButton(options: {
+        show?: boolean;
+    }): Promise<{
+        feedbackButtonShown: boolean;
     }>;
     /**
    * Set Language

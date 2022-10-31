@@ -51,6 +51,10 @@ class GleapWeb extends core.WebPlugin {
             GleapWeb.callbacks[callbackId](event, data);
         }
     }
+    async showFeedbackButton(options) {
+        Gleap__default["default"].showFeedbackButton(options.show ? true : false);
+        return { feedbackButtonShown: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -70,6 +74,12 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].clearIdentity();
         return { clearIdentity: true };
     }
+    async getIdentity() {
+        return { identity: Gleap__default["default"].getIdentity() };
+    }
+    async isUserIdentified() {
+        return { isUserIdentified: Gleap__default["default"].isUserIdentified() };
+    }
     async attachCustomData(options) {
         Gleap__default["default"].attachCustomData(options.data);
         return { attachedCustomData: true };
@@ -86,8 +96,8 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].clearCustomData();
         return { clearedCustomData: true };
     }
-    async logEvent(options) {
-        Gleap__default["default"].logEvent(options.name, options.data);
+    async trackEvent(options) {
+        Gleap__default["default"].trackEvent(options.name, options.data);
         return { loggedEvent: true };
     }
     async startFeedbackFlow(options) {
@@ -116,6 +126,14 @@ class GleapWeb extends core.WebPlugin {
     async open() {
         Gleap__default["default"].open();
         return { openedWidget: true };
+    }
+    async openFeatureRequests() {
+        Gleap__default["default"].openFeatureRequests();
+        return { openedFeatureRequests: true };
+    }
+    async openNews() {
+        Gleap__default["default"].openNews();
+        return { openedNews: true };
     }
     async close() {
         Gleap__default["default"].close();

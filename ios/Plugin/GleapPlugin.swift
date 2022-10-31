@@ -75,6 +75,18 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func getIdentity(_ call: CAPPluginCall) {
+        call.resolve([
+            "identity": Gleap.getIdentity()
+        ])
+    }
+    
+    @objc func isUserIdentified(_ call: CAPPluginCall) {
+        call.resolve([
+            "isUserIdentified": Gleap.isUserIdentified()
+        ])
+    }
+    
     @objc func disableConsoleLogOverwrite(_ call: CAPPluginCall) {
         call.resolve([
             "consoleLogDisabled": true
@@ -199,21 +211,21 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
-    @objc func logEvent(_ call: CAPPluginCall) {
+    @objc func trackEvent(_ call: CAPPluginCall) {
         guard let eventName = call.options["name"] as? String else {
             call.reject("No event log subject provided")
             return;
         }
         
         if let eventData = call.getObject("data") {
-            Gleap.logEvent(eventName, withData: eventData)
+            Gleap.trackEvent(eventName, withData: eventData)
         } else {
-            Gleap.logEvent(eventName)
+            Gleap.trackEvent(eventName)
         }
         
         // Provide feedback that it has been success
         call.resolve([
-            "loggedEvent": true
+            "trackedEvent": true
         ])
     }
     
@@ -241,6 +253,17 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func showFeedbackButton(_ call: CAPPluginCall) {
+        let showFeedbackButton = call.getBool("show") ?? false
+
+        Gleap.showFeedbackButton(showFeedbackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "feedbackButtonShown": true
+        ])
+    }
+    
     @objc func removeAllAttachments(_ call: CAPPluginCall) {
         Gleap.removeAllAttachments()
         
@@ -254,7 +277,6 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         let dataExclusion = call.getObject("dataExclusion") ?? [:]
         let severity = call.getString("severity") ?? "low"
         
-        // If logEventSubject is empty, then pass back error
         guard let description = call.options["description"] as? String else {
             call.reject("No silent bug report description provided")
             return;
@@ -292,6 +314,26 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "openedWidget": true
+        ])
+    }
+    
+    @objc func openNews(_ call: CAPPluginCall) {
+        // Open news
+        Gleap.openNews()
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "openedNews": true
+        ])
+    }
+    
+    @objc func openFeatureRequests(_ call: CAPPluginCall) {
+        // Open news
+        Gleap.openFeatureRequests()
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "openedFeatureRequests": true
         ])
     }
     

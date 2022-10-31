@@ -12,6 +12,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     registerCallbackListeners(): void;
     notifyCallbacks(event: string, data: any): void;
+    showFeedbackButton(options: {
+        show: boolean;
+    }): Promise<{
+        feedbackButtonShown: boolean;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;
@@ -24,6 +29,18 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     clearIdentity(): Promise<{
         clearIdentity: boolean;
+    }>;
+    getIdentity(): Promise<{
+        identity: {
+            userId: string;
+            name?: string | undefined;
+            email?: string | undefined;
+            phone?: string | undefined;
+            value?: number | undefined;
+        };
+    }>;
+    isUserIdentified(): Promise<{
+        isUserIdentified: boolean;
     }>;
     attachCustomData(options: {
         data: any;
@@ -44,7 +61,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     clearCustomData(): Promise<{
         clearedCustomData: boolean;
     }>;
-    logEvent(options: {
+    trackEvent(options: {
         name: string;
         data?: any;
     }): Promise<{
@@ -86,6 +103,12 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     open(): Promise<{
         openedWidget: boolean;
+    }>;
+    openFeatureRequests(): Promise<{
+        openedFeatureRequests: boolean;
+    }>;
+    openNews(): Promise<{
+        openedNews: boolean;
     }>;
     close(): Promise<{
         closedWidget: boolean;

@@ -4,7 +4,7 @@ import Gleap from 'gleap';
 import type { GleapEventCallback, GleapPlugin } from './definitions';
 
 export class GleapWeb extends WebPlugin implements GleapPlugin {
-  static callbacks: {[key: string]: GleapEventCallback} = {};
+  static callbacks: { [key: string]: GleapEventCallback } = {};
   static initialized = false;
 
   async initialize(options: { API_KEY: string }): Promise<{ initialized: boolean; }> {
@@ -56,6 +56,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     }
   }
 
+  async showFeedbackButton(options: { show: boolean; }): Promise<{ feedbackButtonShown: boolean; }> {
+    Gleap.showFeedbackButton(options.show ? true : false);
+
+    return { feedbackButtonShown: true };
+  }
+
   async identify(options: { userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }): Promise<{ identify: boolean; }> {
     var userData = {
       name: options.name,
@@ -76,6 +82,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.clearIdentity();
 
     return { clearIdentity: true };
+  }
+
+  async getIdentity(): Promise<{ identity: { userId: string; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }; }> {
+    return { identity: Gleap.getIdentity() };
+  }
+
+  async isUserIdentified(): Promise<{ isUserIdentified: boolean; }> {
+    return { isUserIdentified: Gleap.isUserIdentified() };
   }
 
   async attachCustomData(options: { data: any; }): Promise<{ attachedCustomData: boolean; }> {
@@ -102,8 +116,8 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { clearedCustomData: true };
   }
 
-  async logEvent(options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
-    Gleap.logEvent(options.name, options.data);
+  async trackEvent(options: { name: string; data?: any; }): Promise<{ loggedEvent: boolean; }> {
+    Gleap.trackEvent(options.name, options.data);
 
     return { loggedEvent: true };
   }
@@ -146,6 +160,18 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.open();
 
     return { openedWidget: true };
+  }
+
+  async openFeatureRequests(): Promise<{ openedFeatureRequests: boolean; }> {
+    Gleap.openFeatureRequests();
+
+    return { openedFeatureRequests: true };
+  }
+
+  async openNews(): Promise<{ openedNews: boolean; }> {
+    Gleap.openNews();
+
+    return { openedNews: true };
   }
 
   async close(): Promise<{ closedWidget: boolean; }> {

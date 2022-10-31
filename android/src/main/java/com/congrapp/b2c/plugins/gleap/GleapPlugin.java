@@ -20,17 +20,18 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import io.gleap.APPLICATIONTYPE;
-import io.gleap.ConfigLoadedCallback;
-import io.gleap.CustomActionCallback;
-import io.gleap.FeedbackFlowStartedCallback;
-import io.gleap.FeedbackSendingFailedCallback;
-import io.gleap.FeedbackSentCallback;
 import io.gleap.Gleap;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapUserProperties;
-import io.gleap.WidgetClosedCallback;
-import io.gleap.WidgetOpenedCallback;
+import io.gleap.GleapUser;
+import io.gleap.callbacks.ConfigLoadedCallback;
+import io.gleap.callbacks.CustomActionCallback;
+import io.gleap.callbacks.FeedbackFlowStartedCallback;
+import io.gleap.callbacks.FeedbackSendingFailedCallback;
+import io.gleap.callbacks.FeedbackSentCallback;
+import io.gleap.callbacks.WidgetClosedCallback;
+import io.gleap.callbacks.WidgetOpenedCallback;
 
 @CapacitorPlugin(name = "Gleap", permissions = {
     @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
@@ -110,6 +111,45 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("clearIdentity", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void getIdentity(PluginCall call) {
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+
+        try {
+            GleapUser gleapUser = implementation.getIdentity();
+            if (gleapUser != null) {
+                GleapUserProperties userProps = gleapUser.getGleapUserProperties();
+
+                JSObject identityObj = new JSObject();
+
+                if (userProps != null) {
+                    identityObj.put("userId", gleapUser.getUserId());
+                    identityObj.put("phone", userProps.getPhoneNumber());
+                    identityObj.put("email", userProps.getEmail());
+                    identityObj.put("name", userProps.getName());
+                    identityObj.put("value", userProps.getValue());
+                }
+
+                ret.put("identity", identityObj);
+            } else {
+                ret.put("identity", null);
+            }
+        } catch (Exception ex) {}
+
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void isUserIdentified(PluginCall call) {
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        try {
+            ret.put("isUserIdentified", implementation.isUserIdentified());
+        } catch (Exception ex) {}
         call.resolve(ret);
     }
 
@@ -201,7 +241,6 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod()
     public void log(PluginCall call) {
-        // If logEventSubject is empty, then pass back error
         if (!call.getData().has("message")) {
             call.reject("No log message provided");
             return;
@@ -226,25 +265,25 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void logEvent(PluginCall call) {
-        // If logEventSubject is empty, then pass back error
+    public void trackEvent(PluginCall call) {
+        // If name is empty, then pass back error
         if (!call.getData().has("name")) {
             call.reject("No event name provided");
             return;
         }
 
         String name = call.getString("name");
-        // If logEventData is empty call for function without data
+        // If data is empty call for function without data
         if (!call.getData().has("data")) {
-            implementation.logEvent(name);
+            implementation.trackEvent(name);
         } else {
             JSObject eventData = call.getObject("data");
-            implementation.logEvent(name, eventData);
+            implementation.trackEvent(name, eventData);
         }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("loggedEvent", true);
+        ret.put("trackedEvent", true);
         call.resolve(ret);
     }
 
@@ -305,6 +344,18 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("attachmentAdded", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void showFeedbackButton(PluginCall call) {
+        boolean show = call.getBoolean("show");
+
+        implementation.showFeedbackButton(show);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("feedbackButtonShown", true);
         call.resolve(ret);
     }
 
@@ -382,6 +433,28 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("openedWidget", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openNews(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        implementation.openNews();
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("openedNews", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        implementation.openFeatureRequests();
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("openedFeatureRequests", true);
         call.resolve(ret);
     }
 

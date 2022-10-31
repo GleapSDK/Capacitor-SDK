@@ -38,6 +38,10 @@ export class GleapWeb extends WebPlugin {
             GleapWeb.callbacks[callbackId](event, data);
         }
     }
+    async showFeedbackButton(options) {
+        Gleap.showFeedbackButton(options.show ? true : false);
+        return { feedbackButtonShown: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -57,6 +61,12 @@ export class GleapWeb extends WebPlugin {
         Gleap.clearIdentity();
         return { clearIdentity: true };
     }
+    async getIdentity() {
+        return { identity: Gleap.getIdentity() };
+    }
+    async isUserIdentified() {
+        return { isUserIdentified: Gleap.isUserIdentified() };
+    }
     async attachCustomData(options) {
         Gleap.attachCustomData(options.data);
         return { attachedCustomData: true };
@@ -73,8 +83,8 @@ export class GleapWeb extends WebPlugin {
         Gleap.clearCustomData();
         return { clearedCustomData: true };
     }
-    async logEvent(options) {
-        Gleap.logEvent(options.name, options.data);
+    async trackEvent(options) {
+        Gleap.trackEvent(options.name, options.data);
         return { loggedEvent: true };
     }
     async startFeedbackFlow(options) {
@@ -104,6 +114,14 @@ export class GleapWeb extends WebPlugin {
     async open() {
         Gleap.open();
         return { openedWidget: true };
+    }
+    async openFeatureRequests() {
+        Gleap.openFeatureRequests();
+        return { openedFeatureRequests: true };
+    }
+    async openNews() {
+        Gleap.openNews();
+        return { openedNews: true };
     }
     async close() {
         Gleap.close();

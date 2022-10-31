@@ -20,21 +20,26 @@ npx cap sync
 * [`initialize(...)`](#initialize)
 * [`identify(...)`](#identify)
 * [`clearIdentity()`](#clearidentity)
+* [`getIdentity()`](#getidentity)
+* [`isUserIdentified()`](#isuseridentified)
 * [`log(...)`](#log)
 * [`attachCustomData(...)`](#attachcustomdata)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
-* [`logEvent(...)`](#logevent)
+* [`trackEvent(...)`](#trackevent)
 * [`setEventCallback(...)`](#seteventcallback)
 * [`sendSilentCrashReport(...)`](#sendsilentcrashreport)
 * [`preFillForm(...)`](#prefillform)
 * [`addAttachment(...)`](#addattachment)
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
+* [`openNews()`](#opennews)
+* [`openFeatureRequests()`](#openfeaturerequests)
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
+* [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -94,6 +99,36 @@ Clear user identity
 **Returns:** <code>Promise&lt;{ clearIdentity: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### getIdentity()
+
+```typescript
+getIdentity() => Promise<{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }>
+```
+
+Get the current user identity
+
+**Returns:** <code>Promise&lt;{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }&gt;</code>
+
+**Since:** 8.1.0
+
+--------------------
+
+
+### isUserIdentified()
+
+```typescript
+isUserIdentified() => Promise<{ isUserIdentified: boolean; }>
+```
+
+User identified status.
+
+**Returns:** <code>Promise&lt;{ isUserIdentified: boolean; }&gt;</code>
+
+**Since:** 8.1.0
 
 --------------------
 
@@ -189,10 +224,10 @@ Clear custom data
 --------------------
 
 
-### logEvent(...)
+### trackEvent(...)
 
 ```typescript
-logEvent(options: { name: string; data?: any; }) => Promise<{ loggedEvent: boolean; }>
+trackEvent(options: { name: string; data?: any; }) => Promise<{ loggedEvent: boolean; }>
 ```
 
 Log event to Gleap
@@ -203,7 +238,7 @@ Log event to Gleap
 
 **Returns:** <code>Promise&lt;{ loggedEvent: boolean; }&gt;</code>
 
-**Since:** 7.0.0
+**Since:** 8.0.0
 
 --------------------
 
@@ -312,6 +347,36 @@ Open widget
 --------------------
 
 
+### openNews()
+
+```typescript
+openNews() => Promise<{ openedNews: boolean; }>
+```
+
+Open news
+
+**Returns:** <code>Promise&lt;{ openedNews: boolean; }&gt;</code>
+
+**Since:** 8.0.4
+
+--------------------
+
+
+### openFeatureRequests()
+
+```typescript
+openFeatureRequests() => Promise<{ openedFeatureRequests: boolean; }>
+```
+
+Open feature requests
+
+**Returns:** <code>Promise&lt;{ openedFeatureRequests: boolean; }&gt;</code>
+
+**Since:** 8.0.5
+
+--------------------
+
+
 ### close()
 
 ```typescript
@@ -357,6 +422,25 @@ Start Feedback flow
 **Returns:** <code>Promise&lt;{ startedFeedbackFlow: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### showFeedbackButton(...)
+
+```typescript
+showFeedbackButton(options: { show?: boolean; }) => Promise<{ feedbackButtonShown: boolean; }>
+```
+
+Show or hide the feedback button.
+
+| Param         | Type                             |
+| ------------- | -------------------------------- |
+| **`options`** | <code>{ show?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ feedbackButtonShown: boolean; }&gt;</code>
+
+**Since:** 8.0.0
 
 --------------------
 

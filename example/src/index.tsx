@@ -9,24 +9,12 @@ Gleap.initialize({
   API_KEY: 'KProDXhMS0V3UUku2iNnrZ4XsBnAYzxt',
 });
 
-Gleap.setEventCallback((name: String, data?: any) => {
-  console.log('Event callback');
-  console.log(name);
-  console.log(data);
-});
-
 Gleap.identify({
-  userId: '123',
+  userId: '29382',
   email: "lukas@gleap.io",
   name: "Lukas",
   phone: "123456789",
   value: 100.00,
-});
-
-Gleap.preFillForm({
-  data: {
-    "bugdescription": "TEST PREFILL. YEAH!",
-  }
 });
 
 ReactDOM.render(
