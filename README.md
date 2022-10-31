@@ -13,6 +13,8 @@ npm install capacitor-gleap-plugin
 npx cap sync
 ```
 
+> :warning: **Using capacitor v3**: Make sure to use *v8.2.3* of the Gleap SDK.
+
 ## API
 
 <docgen-index>
