@@ -63,6 +63,36 @@
         "slug": "clearidentity"
       },
       {
+        "name": "getIdentity",
+        "signature": "() => Promise<{ identity: { userId: string; name?: string; email?: string; phone?: string; value?: number; }; }>",
+        "parameters": [],
+        "returns": "Promise<{ identity: { userId: string; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.1.0"
+          }
+        ],
+        "docs": "Get the current user identity",
+        "complexTypes": [],
+        "slug": "getidentity"
+      },
+      {
+        "name": "isUserIdentified",
+        "signature": "() => Promise<{ isUserIdentified: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ isUserIdentified: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.1.0"
+          }
+        ],
+        "docs": "User identified status.",
+        "complexTypes": [],
+        "slug": "isuseridentified"
+      },
+      {
         "name": "log",
         "signature": "(options: { message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\"; }) => Promise<{ logged: boolean; }>",
         "parameters": [
@@ -162,7 +192,7 @@
         "slug": "clearcustomdata"
       },
       {
-        "name": "logEvent",
+        "name": "trackEvent",
         "signature": "(options: { name: string; data?: any; }) => Promise<{ loggedEvent: boolean; }>",
         "parameters": [
           {
@@ -175,12 +205,12 @@
         "tags": [
           {
             "name": "since",
-            "text": "7.0.0"
+            "text": "8.0.0"
           }
         ],
         "docs": "Log event to Gleap",
         "complexTypes": [],
-        "slug": "logevent"
+        "slug": "trackevent"
       },
       {
         "name": "setEventCallback",
@@ -302,6 +332,36 @@
         "slug": "open"
       },
       {
+        "name": "openNews",
+        "signature": "() => Promise<{ openedNews: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ openedNews: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.4"
+          }
+        ],
+        "docs": "Open news",
+        "complexTypes": [],
+        "slug": "opennews"
+      },
+      {
+        "name": "openFeatureRequests",
+        "signature": "() => Promise<{ openedFeatureRequests: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ openedFeatureRequests: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.5"
+          }
+        ],
+        "docs": "Open feature requests",
+        "complexTypes": [],
+        "slug": "openfeaturerequests"
+      },
+      {
         "name": "close",
         "signature": "() => Promise<{ closedWidget: boolean; }>",
         "parameters": [],
@@ -351,6 +411,27 @@
         "docs": "Start Feedback flow",
         "complexTypes": [],
         "slug": "startfeedbackflow"
+      },
+      {
+        "name": "showFeedbackButton",
+        "signature": "(options: { show?: boolean; }) => Promise<{ feedbackButtonShown: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ show?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ feedbackButtonShown: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.0.0"
+          }
+        ],
+        "docs": "Show or hide the feedback button.",
+        "complexTypes": [],
+        "slug": "showfeedbackbutton"
       },
       {
         "name": "setLanguage",
