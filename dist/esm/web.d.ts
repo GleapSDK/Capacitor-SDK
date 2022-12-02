@@ -104,11 +104,44 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     open(): Promise<{
         openedWidget: boolean;
     }>;
-    openFeatureRequests(): Promise<{
+    openFeatureRequests(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
         openedFeatureRequests: boolean;
     }>;
-    openNews(): Promise<{
+    openNews(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
         openedNews: boolean;
+    }>;
+    openNewsArticle(options: {
+        articleId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    openHelpCenter(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    openHelpCenterArticle(options: {
+        articleId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    openHelpCenterCollection(options: {
+        collectionId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    searchHelpCenter(options: {
+        term: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
     }>;
     close(): Promise<{
         closedWidget: boolean;

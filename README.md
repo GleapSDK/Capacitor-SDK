@@ -36,8 +36,13 @@ npx cap sync
 * [`addAttachment(...)`](#addattachment)
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
-* [`openNews()`](#opennews)
-* [`openFeatureRequests()`](#openfeaturerequests)
+* [`openNews(...)`](#opennews)
+* [`openNewsArticle(...)`](#opennewsarticle)
+* [`openHelpCenter(...)`](#openhelpcenter)
+* [`openHelpCenterArticle(...)`](#openhelpcenterarticle)
+* [`openHelpCenterCollection(...)`](#openhelpcentercollection)
+* [`searchHelpCenter(...)`](#searchhelpcenter)
+* [`openFeatureRequests(...)`](#openfeaturerequests)
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
@@ -349,32 +354,135 @@ Open widget
 --------------------
 
 
-### openNews()
+### openNews(...)
 
 ```typescript
-openNews() => Promise<{ openedNews: boolean; }>
+openNews(options: { showBackButton?: boolean; }) => Promise<{ openedNews: boolean; }>
 ```
 
 Open news
 
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
 **Returns:** <code>Promise&lt;{ openedNews: boolean; }&gt;</code>
 
-**Since:** 8.0.4
+**Since:** 8.4.0
 
 --------------------
 
 
-### openFeatureRequests()
+### openNewsArticle(...)
 
 ```typescript
-openFeatureRequests() => Promise<{ openedFeatureRequests: boolean; }>
+openNewsArticle(options: { articleId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open news article
+
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code>{ articleId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.4.0
+
+--------------------
+
+
+### openHelpCenter(...)
+
+```typescript
+openHelpCenter(options: { showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open help center
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.4.0
+
+--------------------
+
+
+### openHelpCenterArticle(...)
+
+```typescript
+openHelpCenterArticle(options: { articleId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open help center article
+
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code>{ articleId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.4.0
+
+--------------------
+
+
+### openHelpCenterCollection(...)
+
+```typescript
+openHelpCenterCollection(options: { collectionId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open help center collection
+
+| Param         | Type                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| **`options`** | <code>{ collectionId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.4.0
+
+--------------------
+
+
+### searchHelpCenter(...)
+
+```typescript
+searchHelpCenter(options: { term: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Search help center
+
+| Param         | Type                                                     |
+| ------------- | -------------------------------------------------------- |
+| **`options`** | <code>{ term: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.4.0
+
+--------------------
+
+
+### openFeatureRequests(...)
+
+```typescript
+openFeatureRequests(options: { showBackButton?: boolean; }) => Promise<{ openedFeatureRequests: boolean; }>
 ```
 
 Open feature requests
 
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
 **Returns:** <code>Promise&lt;{ openedFeatureRequests: boolean; }&gt;</code>
 
-**Since:** 8.0.5
+**Since:** 8.4.0
 
 --------------------
 

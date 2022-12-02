@@ -333,13 +333,19 @@
       },
       {
         "name": "openNews",
-        "signature": "() => Promise<{ openedNews: boolean; }>",
-        "parameters": [],
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ openedNews: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
         "returns": "Promise<{ openedNews: boolean; }>",
         "tags": [
           {
             "name": "since",
-            "text": "8.0.4"
+            "text": "8.4.0"
           }
         ],
         "docs": "Open news",
@@ -347,14 +353,125 @@
         "slug": "opennews"
       },
       {
+        "name": "openNewsArticle",
+        "signature": "(options: { articleId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ articleId: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.0"
+          }
+        ],
+        "docs": "Open news article",
+        "complexTypes": [],
+        "slug": "opennewsarticle"
+      },
+      {
+        "name": "openHelpCenter",
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.0"
+          }
+        ],
+        "docs": "Open help center",
+        "complexTypes": [],
+        "slug": "openhelpcenter"
+      },
+      {
+        "name": "openHelpCenterArticle",
+        "signature": "(options: { articleId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ articleId: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.0"
+          }
+        ],
+        "docs": "Open help center article",
+        "complexTypes": [],
+        "slug": "openhelpcenterarticle"
+      },
+      {
+        "name": "openHelpCenterCollection",
+        "signature": "(options: { collectionId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ collectionId: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.0"
+          }
+        ],
+        "docs": "Open help center collection",
+        "complexTypes": [],
+        "slug": "openhelpcentercollection"
+      },
+      {
+        "name": "searchHelpCenter",
+        "signature": "(options: { term: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ term: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.0"
+          }
+        ],
+        "docs": "Search help center",
+        "complexTypes": [],
+        "slug": "searchhelpcenter"
+      },
+      {
         "name": "openFeatureRequests",
-        "signature": "() => Promise<{ openedFeatureRequests: boolean; }>",
-        "parameters": [],
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ openedFeatureRequests: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
         "returns": "Promise<{ openedFeatureRequests: boolean; }>",
         "tags": [
           {
             "name": "since",
-            "text": "8.0.5"
+            "text": "8.4.0"
           }
         ],
         "docs": "Open feature requests",

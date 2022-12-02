@@ -115,13 +115,33 @@ export class GleapWeb extends WebPlugin {
         Gleap.open();
         return { openedWidget: true };
     }
-    async openFeatureRequests() {
-        Gleap.openFeatureRequests();
+    async openFeatureRequests(options) {
+        Gleap.openFeatureRequests(options.showBackButton);
         return { openedFeatureRequests: true };
     }
-    async openNews() {
-        Gleap.openNews();
+    async openNews(options) {
+        Gleap.openNews(options.showBackButton);
         return { openedNews: true };
+    }
+    async openNewsArticle(options) {
+        Gleap.openNewsArticle(options.articleId, options.showBackButton);
+        return { opened: true };
+    }
+    async openHelpCenter(options) {
+        Gleap.openHelpCenter(options.showBackButton);
+        return { opened: true };
+    }
+    async openHelpCenterArticle(options) {
+        Gleap.openHelpCenterArticle(options.articleId, options.showBackButton);
+        return { opened: true };
+    }
+    async openHelpCenterCollection(options) {
+        Gleap.openHelpCenterCollection(options.collectionId, options.showBackButton);
+        return { opened: true };
+    }
+    async searchHelpCenter(options) {
+        Gleap.searchHelpCenter(options.term, options.showBackButton);
+        return { opened: true };
     }
     async close() {
         Gleap.close();

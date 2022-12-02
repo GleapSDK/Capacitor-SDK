@@ -123,13 +123,33 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].open();
             return { openedWidget: true };
         }
-        async openFeatureRequests() {
-            Gleap__default["default"].openFeatureRequests();
+        async openFeatureRequests(options) {
+            Gleap__default["default"].openFeatureRequests(options.showBackButton);
             return { openedFeatureRequests: true };
         }
-        async openNews() {
-            Gleap__default["default"].openNews();
+        async openNews(options) {
+            Gleap__default["default"].openNews(options.showBackButton);
             return { openedNews: true };
+        }
+        async openNewsArticle(options) {
+            Gleap__default["default"].openNewsArticle(options.articleId, options.showBackButton);
+            return { opened: true };
+        }
+        async openHelpCenter(options) {
+            Gleap__default["default"].openHelpCenter(options.showBackButton);
+            return { opened: true };
+        }
+        async openHelpCenterArticle(options) {
+            Gleap__default["default"].openHelpCenterArticle(options.articleId, options.showBackButton);
+            return { opened: true };
+        }
+        async openHelpCenterCollection(options) {
+            Gleap__default["default"].openHelpCenterCollection(options.collectionId, options.showBackButton);
+            return { opened: true };
+        }
+        async searchHelpCenter(options) {
+            Gleap__default["default"].searchHelpCenter(options.term, options.showBackButton);
+            return { opened: true };
         }
         async close() {
             Gleap__default["default"].close();

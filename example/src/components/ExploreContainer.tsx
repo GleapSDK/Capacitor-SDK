@@ -27,20 +27,49 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         <IonButton style={{
           marginTop: '12px',
         }} color="primary" onClick={async () => {
-          const ide = await Gleap.getIdentity();
-          const idet = await Gleap.isUserIdentified();
-          alert("GetIdent:" + JSON.stringify(ide) + JSON.stringify(idet));
-        }}>Open page</IonButton>
+         Gleap.openNews({
+          showBackButton: false,
+         });
+        }}>Open news</IonButton>
         <IonButton style={{
           marginTop: '12px',
         }} color="primary" onClick={async () => {
-          Gleap.identify({
-            userId: "123456789",
-            email: "lukas@gleap.io",
-            name: "Lukas",
-            value: 192.99,
-          });
-        }}>Identify</IonButton>
+         Gleap.openNewsArticle({
+          articleId: '6372305f9cc1b60bf5cae22a',
+          showBackButton: false,
+         });
+        }}>Open news article</IonButton>
+        <IonButton style={{
+          marginTop: '12px',
+        }} color="primary" onClick={async () => {
+         Gleap.openHelpCenter({
+          showBackButton: false,
+         });
+        }}>Open help center</IonButton>
+        <IonButton style={{
+          marginTop: '12px',
+        }} color="primary" onClick={async () => {
+         Gleap.openHelpCenterArticle({
+          articleId: '1',
+          showBackButton: false,
+         });
+        }}>Open help center article</IonButton>
+        <IonButton style={{
+          marginTop: '12px',
+        }} color="primary" onClick={async () => {
+         Gleap.openHelpCenterCollection({
+          collectionId: '4',
+          showBackButton: false,
+         });
+        }}>Open help center collection</IonButton>
+        <IonButton style={{
+          marginTop: '12px',
+        }} color="primary" onClick={async () => {
+         Gleap.searchHelpCenter({
+          term: "Test",
+          showBackButton: false,
+         });
+        }}>Search help center</IonButton>
       </div>
     </div>
   );

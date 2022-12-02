@@ -327,9 +327,75 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
-    @objc func openFeatureRequests(_ call: CAPPluginCall) {
+    @objc func openNewsArticle(_ call: CAPPluginCall) {
+        let articleId = call.getString("articleId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
         // Open news
-        Gleap.openFeatureRequests()
+        Gleap.openNewsArticle(articleId, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func openHelpCenter(_ call: CAPPluginCall) {
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        // Open news
+        Gleap.openHelpCenter(showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func openHelpCenterArticle(_ call: CAPPluginCall) {
+        let articleId = call.getString("articleId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        // Open news
+        Gleap.openHelpCenterArticle(articleId, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func openHelpCenterCollection(_ call: CAPPluginCall) {
+        let collectionId = call.getString("collectionId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        // Open news
+        Gleap.openHelpCenterCollection(collectionId, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func searchHelpCenter(_ call: CAPPluginCall) {
+        let term = call.getString("term") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        // Open news
+        Gleap.searchHelpCenter(term, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func openFeatureRequests(_ call: CAPPluginCall) {
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        // Open news
+        Gleap.openFeatureRequests(showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([

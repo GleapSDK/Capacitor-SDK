@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { Gleap } from 'capacitor-gleap-plugin';
 
 Gleap.initialize({
-  API_KEY: 'KProDXhMS0V3UUku2iNnrZ4XsBnAYzxt',
+  API_KEY: 'ek98ANmHary9PQNG5EIl6TQd3SzqstZA',
 });
 
 Gleap.identify({

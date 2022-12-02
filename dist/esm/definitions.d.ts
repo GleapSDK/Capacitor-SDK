@@ -184,17 +184,75 @@ export interface GleapPlugin {
     /**
     * Open news
     *
-    * @since 8.0.4
+    * @since 8.4.0
     */
-    openNews(): Promise<{
+    openNews(options: {
+        showBackButton?: boolean;
+    }): Promise<{
         openedNews: boolean;
+    }>;
+    /**
+    * Open news article
+    *
+    * @since 8.4.0
+    */
+    openNewsArticle(options: {
+        articleId: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Open help center
+    *
+    * @since 8.4.0
+    */
+    openHelpCenter(options: {
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Open help center article
+    *
+    * @since 8.4.0
+    */
+    openHelpCenterArticle(options: {
+        articleId: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Open help center collection
+    *
+    * @since 8.4.0
+    */
+    openHelpCenterCollection(options: {
+        collectionId: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Search help center
+    *
+    * @since 8.4.0
+    */
+    searchHelpCenter(options: {
+        term: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
     }>;
     /**
     * Open feature requests
     *
-    * @since 8.0.5
+    * @since 8.4.0
     */
-    openFeatureRequests(): Promise<{
+    openFeatureRequests(options: {
+        showBackButton?: boolean;
+    }): Promise<{
         openedFeatureRequests: boolean;
     }>;
     /**

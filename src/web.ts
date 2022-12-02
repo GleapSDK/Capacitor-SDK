@@ -162,16 +162,46 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { openedWidget: true };
   }
 
-  async openFeatureRequests(): Promise<{ openedFeatureRequests: boolean; }> {
-    Gleap.openFeatureRequests();
+  async openFeatureRequests(options: { showBackButton?: boolean | undefined; }): Promise<{ openedFeatureRequests: boolean; }> {
+    Gleap.openFeatureRequests(options.showBackButton);
 
     return { openedFeatureRequests: true };
   }
 
-  async openNews(): Promise<{ openedNews: boolean; }> {
-    Gleap.openNews();
+  async openNews(options: { showBackButton?: boolean | undefined; }): Promise<{ openedNews: boolean; }> {
+    Gleap.openNews(options.showBackButton);
 
     return { openedNews: true };
+  }
+
+  async openNewsArticle(options: { articleId: string; showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.openNewsArticle(options.articleId, options.showBackButton);
+
+    return { opened: true };
+  }
+  
+  async openHelpCenter(options: { showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.openHelpCenter(options.showBackButton);
+
+    return { opened: true };
+  }
+
+  async openHelpCenterArticle(options: { articleId: string; showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.openHelpCenterArticle(options.articleId, options.showBackButton);
+
+    return { opened: true };
+  }
+
+  async openHelpCenterCollection(options: { collectionId: string; showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.openHelpCenterCollection(options.collectionId, options.showBackButton);
+
+    return { opened: true };
+  }
+
+  async searchHelpCenter(options: { term: string; showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.searchHelpCenter(options.term, options.showBackButton);
+
+    return { opened: true };
   }
 
   async close(): Promise<{ closedWidget: boolean; }> {
