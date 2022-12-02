@@ -438,8 +438,9 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod()
     public void openNews(PluginCall call) throws GleapNotInitialisedException {
-        // Open news
-        implementation.openNews();
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openNews(showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -448,9 +449,78 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod()
-    public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
+    public void openNewsArticle(PluginCall call) throws GleapNotInitialisedException {
+        String articleId = call.getString("articleId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openNewsArticle(articleId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openHelpCenter(PluginCall call) throws GleapNotInitialisedException {
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openHelpCenter(showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openHelpCenterArticle(PluginCall call) throws GleapNotInitialisedException {
         // Open news
-        implementation.openFeatureRequests();
+        String articleId = call.getString("articleId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openHelpCenterArticle(articleId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openHelpCenterCollection(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        String collectionId = call.getString("collectionId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openHelpCenterCollection(collectionId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void searchHelpCenter(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        String term = call.getString("term");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.searchHelpCenter(term, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        // Open feature requests
+        implementation.openFeatureRequests(showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
