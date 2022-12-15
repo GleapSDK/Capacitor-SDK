@@ -48,6 +48,7 @@ export class GleapWeb extends WebPlugin {
             email: options.email,
             phone: options.phone,
             value: options.value,
+            customData: options.customData,
         };
         if (options.userHash) {
             Gleap.identify(options.userId, userData, options.userHash);
@@ -86,6 +87,12 @@ export class GleapWeb extends WebPlugin {
     async trackEvent(options) {
         Gleap.trackEvent(options.name, options.data);
         return { loggedEvent: true };
+    }
+    async trackPage(options) {
+        Gleap.trackEvent('pageView', {
+            page: options.pageName
+        });
+        return { trackedPage: true };
     }
     async startFeedbackFlow(options) {
         var _a;

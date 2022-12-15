@@ -23,6 +23,7 @@ export interface GleapPlugin {
         email?: string;
         phone?: string;
         value?: number;
+        customData?: Object;
     }): Promise<{
         identify: boolean;
     }>;
@@ -116,6 +117,16 @@ export interface GleapPlugin {
         data?: any;
     }): Promise<{
         loggedEvent: boolean;
+    }>;
+    /**
+    * Track a page view
+    *
+    * @since 8.4.1
+    */
+    trackPage(options: {
+        pageName: string;
+    }): Promise<{
+        trackedPage: boolean;
     }>;
     /**
      *

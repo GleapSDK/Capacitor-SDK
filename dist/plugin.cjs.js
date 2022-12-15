@@ -61,6 +61,7 @@ class GleapWeb extends core.WebPlugin {
             email: options.email,
             phone: options.phone,
             value: options.value,
+            customData: options.customData,
         };
         if (options.userHash) {
             Gleap__default["default"].identify(options.userId, userData, options.userHash);
@@ -99,6 +100,12 @@ class GleapWeb extends core.WebPlugin {
     async trackEvent(options) {
         Gleap__default["default"].trackEvent(options.name, options.data);
         return { loggedEvent: true };
+    }
+    async trackPage(options) {
+        Gleap__default["default"].trackEvent('pageView', {
+            page: options.pageName
+        });
+        return { trackedPage: true };
     }
     async startFeedbackFlow(options) {
         var _a;

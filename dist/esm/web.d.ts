@@ -20,6 +20,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     identify(options: {
         userId: string;
         userHash?: string | undefined;
+        customData?: Object | undefined;
         name?: string | undefined;
         email?: string | undefined;
         phone?: string | undefined;
@@ -66,6 +67,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         data?: any;
     }): Promise<{
         loggedEvent: boolean;
+    }>;
+    trackPage(options: {
+        pageName: string;
+    }): Promise<{
+        trackedPage: boolean;
     }>;
     startFeedbackFlow(options: {
         feedbackFlow?: string | undefined;

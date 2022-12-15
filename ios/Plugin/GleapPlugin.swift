@@ -52,6 +52,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         if (call.getString("phone") != nil) {
             userProperty.phone = call.getString("phone") ?? ""
         }
+        if (call.getObject("customData") != nil) {
+            userProperty.customData = call.getObject("customData")!
+        }
         
         if let userHash = call.getString("userHash") {
             Gleap.identifyUser(with: userId, andData:  userProperty, andUserHash: userHash)
@@ -226,6 +229,22 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "trackedEvent": true
+        ])
+    }
+    
+    @objc func trackPage(_ call: CAPPluginCall) {
+        guard let pageName = call.options["pageName"] as? String else {
+            call.reject("No page name provided")
+            return;
+        }
+        
+        Gleap.trackEvent("pageView", withData: [
+            "page": pageName
+        ])
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "trackedPage": true
         ])
     }
     

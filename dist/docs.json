@@ -28,12 +28,12 @@
       },
       {
         "name": "identify",
-        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; }) => Promise<{ identify: boolean; }>",
+        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }"
+            "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; customData?: Object | undefined; }"
           }
         ],
         "returns": "Promise<{ identify: boolean; }>",
@@ -44,7 +44,9 @@
           }
         ],
         "docs": "Set user identity",
-        "complexTypes": [],
+        "complexTypes": [
+          "Object"
+        ],
         "slug": "identify"
       },
       {
@@ -211,6 +213,27 @@
         "docs": "Log event to Gleap",
         "complexTypes": [],
         "slug": "trackevent"
+      },
+      {
+        "name": "trackPage",
+        "signature": "(options: { pageName: string; }) => Promise<{ trackedPage: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ pageName: string; }"
+          }
+        ],
+        "returns": "Promise<{ trackedPage: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.4.1"
+          }
+        ],
+        "docs": "Track a page view",
+        "complexTypes": [],
+        "slug": "trackpage"
       },
       {
         "name": "setEventCallback",
@@ -605,6 +628,272 @@
     "properties": []
   },
   "interfaces": [
+    {
+      "name": "Object",
+      "slug": "object",
+      "docs": "Provides functionality common to all JavaScript objects.",
+      "tags": [],
+      "methods": [
+        {
+          "name": "toString",
+          "signature": "() => string",
+          "parameters": [],
+          "returns": "string",
+          "tags": [],
+          "docs": "Returns a string representation of an object.",
+          "complexTypes": [],
+          "slug": "tostring"
+        },
+        {
+          "name": "toLocaleString",
+          "signature": "() => string",
+          "parameters": [],
+          "returns": "string",
+          "tags": [],
+          "docs": "Returns a date converted to a string using the current locale.",
+          "complexTypes": [],
+          "slug": "tolocalestring"
+        },
+        {
+          "name": "valueOf",
+          "signature": "() => Object",
+          "parameters": [],
+          "returns": "Object",
+          "tags": [],
+          "docs": "Returns the primitive value of the specified object.",
+          "complexTypes": [
+            "Object"
+          ],
+          "slug": "valueof"
+        },
+        {
+          "name": "hasOwnProperty",
+          "signature": "(v: PropertyKey) => boolean",
+          "parameters": [
+            {
+              "name": "v",
+              "docs": "A property name.",
+              "type": "string | number | symbol"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "v A property name."
+            }
+          ],
+          "docs": "Determines whether an object has a property with the specified name.",
+          "complexTypes": [
+            "PropertyKey"
+          ],
+          "slug": "hasownproperty"
+        },
+        {
+          "name": "isPrototypeOf",
+          "signature": "(v: Object) => boolean",
+          "parameters": [
+            {
+              "name": "v",
+              "docs": "Another object whose prototype chain is to be checked.",
+              "type": "Object"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "v Another object whose prototype chain is to be checked."
+            }
+          ],
+          "docs": "Determines whether an object exists in another object's prototype chain.",
+          "complexTypes": [
+            "Object"
+          ],
+          "slug": "isprototypeof"
+        },
+        {
+          "name": "propertyIsEnumerable",
+          "signature": "(v: PropertyKey) => boolean",
+          "parameters": [
+            {
+              "name": "v",
+              "docs": "A property name.",
+              "type": "string | number | symbol"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "v A property name."
+            }
+          ],
+          "docs": "Determines whether a specified property is enumerable.",
+          "complexTypes": [
+            "PropertyKey"
+          ],
+          "slug": "propertyisenumerable"
+        }
+      ],
+      "properties": [
+        {
+          "name": "constructor",
+          "tags": [],
+          "docs": "The initial value of Object.prototype.constructor is the standard built-in Object constructor.",
+          "complexTypes": [
+            "Function"
+          ],
+          "type": "Function"
+        }
+      ]
+    },
+    {
+      "name": "Function",
+      "slug": "function",
+      "docs": "Creates a new function.",
+      "tags": [],
+      "methods": [
+        {
+          "name": "apply",
+          "signature": "(this: Function, thisArg: any, argArray?: any) => any",
+          "parameters": [
+            {
+              "name": "thisArg",
+              "docs": "The object to be used as the this object.",
+              "type": "any"
+            },
+            {
+              "name": "argArray",
+              "docs": "A set of arguments to be passed to the function.",
+              "type": "any"
+            }
+          ],
+          "returns": "any",
+          "tags": [
+            {
+              "name": "param",
+              "text": "thisArg The object to be used as the this object."
+            },
+            {
+              "name": "param",
+              "text": "argArray A set of arguments to be passed to the function."
+            }
+          ],
+          "docs": "Calls the function, substituting the specified object for the this value of the function, and the specified array for the arguments of the function.",
+          "complexTypes": [
+            "Function"
+          ],
+          "slug": "apply"
+        },
+        {
+          "name": "call",
+          "signature": "(this: Function, thisArg: any, ...argArray: any[]) => any",
+          "parameters": [
+            {
+              "name": "thisArg",
+              "docs": "The object to be used as the current object.",
+              "type": "any"
+            },
+            {
+              "name": "argArray",
+              "docs": "A list of arguments to be passed to the method.",
+              "type": "any[]"
+            }
+          ],
+          "returns": "any",
+          "tags": [
+            {
+              "name": "param",
+              "text": "thisArg The object to be used as the current object."
+            },
+            {
+              "name": "param",
+              "text": "argArray A list of arguments to be passed to the method."
+            }
+          ],
+          "docs": "Calls a method of an object, substituting another object for the current object.",
+          "complexTypes": [
+            "Function"
+          ],
+          "slug": "call"
+        },
+        {
+          "name": "bind",
+          "signature": "(this: Function, thisArg: any, ...argArray: any[]) => any",
+          "parameters": [
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer inside the new function.",
+              "type": "any"
+            },
+            {
+              "name": "argArray",
+              "docs": "A list of arguments to be passed to the new function.",
+              "type": "any[]"
+            }
+          ],
+          "returns": "any",
+          "tags": [
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer inside the new function."
+            },
+            {
+              "name": "param",
+              "text": "argArray A list of arguments to be passed to the new function."
+            }
+          ],
+          "docs": "For a given function, creates a bound function that has the same body as the original function.\r\nThe this object of the bound function is associated with the specified object, and has the specified initial parameters.",
+          "complexTypes": [
+            "Function"
+          ],
+          "slug": "bind"
+        },
+        {
+          "name": "toString",
+          "signature": "() => string",
+          "parameters": [],
+          "returns": "string",
+          "tags": [],
+          "docs": "Returns a string representation of a function.",
+          "complexTypes": [],
+          "slug": "tostring"
+        }
+      ],
+      "properties": [
+        {
+          "name": "prototype",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "any"
+        },
+        {
+          "name": "length",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "arguments",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "any"
+        },
+        {
+          "name": "caller",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Function"
+          ],
+          "type": "Function"
+        }
+      ]
+    },
     {
       "name": "Boolean",
       "slug": "boolean",

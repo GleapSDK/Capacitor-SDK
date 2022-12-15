@@ -15,6 +15,13 @@ Gleap.identify({
   name: "Lukas",
   phone: "123456789",
   value: 100.00,
+  customData: {
+    "customKey": "Web"
+  }
+});
+
+Gleap.trackPage({
+  pageName: "WebWebWeb",
 });
 
 ReactDOM.render(

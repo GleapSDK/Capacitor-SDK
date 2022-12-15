@@ -92,6 +92,9 @@ public class GleapPlugin extends Plugin {
         if (call.getData().has("userHash")) {
             userProperties.setHash(call.getString("userHash"));
         }
+        if (call.getData().has("customData")) {
+            userProperties.setCustomData(call.getObject("customData"));
+        }
 
         String userId = call.getString("userId");
         implementation.identifyUser(userId, userProperties);
@@ -284,6 +287,29 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("trackedEvent", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void trackPage(PluginCall call) {
+        // If page name is empty, then pass back error
+        if (!call.getData().has("pageName")) {
+            call.reject("No page name provided");
+            return;
+        }
+
+        try {
+            String pageName = call.getString("pageName");
+            JSONObject eventData = new JSONObject();
+            eventData.put("page", pageName);
+            implementation.trackEvent("pageView", eventData);
+        } catch (Exception ignore) {
+
+        }
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("trackedPage", true);
         call.resolve(ret);
     }
 

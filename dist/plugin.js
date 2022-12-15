@@ -57,6 +57,7 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
                 email: options.email,
                 phone: options.phone,
                 value: options.value,
+                customData: options.customData,
             };
             if (options.userHash) {
                 Gleap__default["default"].identify(options.userId, userData, options.userHash);
@@ -95,6 +96,12 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
         async trackEvent(options) {
             Gleap__default["default"].trackEvent(options.name, options.data);
             return { loggedEvent: true };
+        }
+        async trackPage(options) {
+            Gleap__default["default"].trackEvent('pageView', {
+                page: options.pageName
+            });
+            return { trackedPage: true };
         }
         async startFeedbackFlow(options) {
             var _a;

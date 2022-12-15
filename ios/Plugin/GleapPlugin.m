@@ -12,6 +12,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(removeCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(clearCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(trackEvent, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(trackPage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(sendSilentCrashReport, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(open, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openNews, CAPPluginReturnPromise);

@@ -62,12 +62,13 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { feedbackButtonShown: true };
   }
 
-  async identify(options: { userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }): Promise<{ identify: boolean; }> {
+  async identify(options: { userId: string; userHash?: string | undefined; customData?: Object | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; }): Promise<{ identify: boolean; }> {
     var userData = {
       name: options.name,
       email: options.email,
       phone: options.phone,
       value: options.value,
+      customData: options.customData,
     };
     if (options.userHash) {
       Gleap.identify(options.userId, userData, options.userHash);
@@ -120,6 +121,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.trackEvent(options.name, options.data);
 
     return { loggedEvent: true };
+  }
+
+  async trackPage(options: { pageName: string; }): Promise<{ trackedPage: boolean; }> {
+    Gleap.trackEvent('pageView', {
+      page: options.pageName
+    });
+
+    return { trackedPage: true };
   }
 
   async startFeedbackFlow(options: { feedbackFlow?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ startedFeedbackFlow: boolean; }> {
@@ -179,7 +188,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
 
     return { opened: true };
   }
-  
+
   async openHelpCenter(options: { showBackButton?: boolean | undefined; }): Promise<{ opened: boolean; }> {
     Gleap.openHelpCenter(options.showBackButton);
 
