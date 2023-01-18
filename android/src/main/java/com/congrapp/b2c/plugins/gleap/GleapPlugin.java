@@ -32,6 +32,8 @@ import io.gleap.callbacks.FeedbackSendingFailedCallback;
 import io.gleap.callbacks.FeedbackSentCallback;
 import io.gleap.callbacks.WidgetClosedCallback;
 import io.gleap.callbacks.WidgetOpenedCallback;
+import io.gleap.callbacks.RegisterPushMessageGroupCallback;
+import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
 
 @CapacitorPlugin(name = "Gleap", permissions = {
     @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
@@ -671,6 +673,28 @@ public class GleapPlugin extends Plugin {
                 JSObject data = new JSObject();
                 data.put("name", "flow-started");
                 data.put("data", message);
+                call.resolve(data);
+            }
+        });
+
+        implementation.setRegisterPushMessageGroupCallback(new RegisterPushMessageGroupCallback() {
+            @Override
+            public void invoke(String pushMessageGroup) {
+                // called when the feedback flow ist started, not only the widget is opened
+                JSObject data = new JSObject();
+                data.put("name", "register-pushmessage-group");
+                data.put("data", pushMessageGroup);
+                call.resolve(data);
+            }
+        });
+
+        implementation.setUnRegisterPushMessageGroupCallback(new UnRegisterPushMessageGroupCallback() {
+            @Override
+            public void invoke(String pushMessageGroup) {
+                // called when the feedback flow ist started, not only the widget is opened
+                JSObject data = new JSObject();
+                data.put("name", "unregister-pushmessage-group");
+                data.put("data", pushMessageGroup);
                 call.resolve(data);
             }
         });

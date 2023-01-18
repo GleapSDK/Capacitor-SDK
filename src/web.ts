@@ -44,6 +44,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.registerCustomAction((customAction) => {
       this.notifyCallbacks("custom-action-called", customAction);
     });
+
+    Gleap.on("unregister-pushmessage-group", (groupName) => {
+      this.notifyCallbacks("unregister-pushmessage-group", groupName);
+    });
+
+    Gleap.on("register-pushmessage-group", (groupName) => {
+      this.notifyCallbacks("register-pushmessage-group", groupName);
+    });
   }
 
   notifyCallbacks(event: string, data: any): void {

@@ -505,4 +505,12 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     public func feedbackSendingFailed() {
         notifyEventUpdate(name: "error-while-sending", data: nil)
     }
+    
+    public func registerPushMessageGroup(_ pushMessageGroup: String) {
+        notifyEventUpdate(name: "register-pushmessage-group", data: pushMessageGroup)
+    }
+    
+    public func unregisterPushMessageGroup(_ pushMessageGroup: String) {
+        notifyEventUpdate(name: "unregister-pushmessage-group", data: pushMessageGroup)
+    }
 }
