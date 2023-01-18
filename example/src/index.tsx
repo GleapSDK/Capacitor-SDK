@@ -9,6 +9,12 @@ Gleap.initialize({
   API_KEY: 'ek98ANmHary9PQNG5EIl6TQd3SzqstZA',
 });
 
+console.log("HI!?");
+
+Gleap.setEventCallback((name, data) => {
+  console.log("Event Callback", name, data);
+});
+
 Gleap.identify({
   userId: '29382',
   email: "lukas@gleap.io",

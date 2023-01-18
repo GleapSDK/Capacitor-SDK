@@ -24,29 +24,29 @@ class GleapWeb extends core.WebPlugin {
         return { initialized: true };
     }
     registerCallbackListeners() {
-        Gleap__default["default"].on("open", () => {
-            this.notifyCallbacks("open", {});
+        Gleap__default["default"].on('open', () => {
+            this.notifyCallbacks('open', {});
         });
-        Gleap__default["default"].on("close", () => {
-            this.notifyCallbacks("close", {});
+        Gleap__default["default"].on('close', () => {
+            this.notifyCallbacks('close', {});
         });
-        Gleap__default["default"].on("feedback-sent", (formData) => {
-            this.notifyCallbacks("feedback-sent", formData);
+        Gleap__default["default"].on('feedback-sent', formData => {
+            this.notifyCallbacks('feedback-sent', formData);
         });
-        Gleap__default["default"].on("flow-started", (flow) => {
-            this.notifyCallbacks("flow-started", flow);
+        Gleap__default["default"].on('flow-started', flow => {
+            this.notifyCallbacks('flow-started', flow);
         });
-        Gleap__default["default"].on("error-while-sending", () => {
-            this.notifyCallbacks("error-while-sending", {});
+        Gleap__default["default"].on('error-while-sending', () => {
+            this.notifyCallbacks('error-while-sending', {});
         });
-        Gleap__default["default"].registerCustomAction((customAction) => {
-            this.notifyCallbacks("custom-action-called", customAction);
+        Gleap__default["default"].on('unregister-pushmessage-group', groupName => {
+            this.notifyCallbacks('unregister-pushmessage-group', groupName);
         });
-        Gleap__default["default"].on("unregister-pushmessage-group", (groupName) => {
-            this.notifyCallbacks("unregister-pushmessage-group", groupName);
+        Gleap__default["default"].on('register-pushmessage-group', groupName => {
+            this.notifyCallbacks('register-pushmessage-group', groupName);
         });
-        Gleap__default["default"].on("register-pushmessage-group", (groupName) => {
-            this.notifyCallbacks("register-pushmessage-group", groupName);
+        Gleap__default["default"].registerCustomAction(customAction => {
+            this.notifyCallbacks('custom-action-called', customAction);
         });
     }
     notifyCallbacks(event, data) {
@@ -109,14 +109,14 @@ class GleapWeb extends core.WebPlugin {
     }
     async trackPage(options) {
         Gleap__default["default"].trackEvent('pageView', {
-            page: options.pageName
+            page: options.pageName,
         });
         return { trackedPage: true };
     }
     async startFeedbackFlow(options) {
         var _a;
         if (!options.feedbackFlow) ;
-        Gleap__default["default"].startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : "bugreporting", options.showBackButton);
+        Gleap__default["default"].startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : 'bugreporting', options.showBackButton);
         return { startedFeedbackFlow: true };
     }
     async setLanguage(options) {
