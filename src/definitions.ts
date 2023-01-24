@@ -80,6 +80,18 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Submit a custom log message with the given level
+  *
+  * @since 8.5.1
+  */
+  showSurvey(options: {
+    surveyId: string;
+    format?: "survey" | "survey_full";
+  }): Promise<{
+    opened: boolean;
+  }>;
+
+  /**
   * Add custom data
   *
   * @since 7.0.0
