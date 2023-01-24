@@ -2,45 +2,46 @@ package com.congrapp.b2c.plugins.gleap;
 
 import android.Manifest;
 import android.os.Build;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
-
+import io.gleap.APPLICATIONTYPE;
+import io.gleap.Gleap;
+import io.gleap.GleapLogLevel;
+import io.gleap.GleapNotInitialisedException;
+import io.gleap.GleapUser;
+import io.gleap.GleapUserProperties;
+import io.gleap.SurveyType;
+import io.gleap.callbacks.ConfigLoadedCallback;
+import io.gleap.callbacks.CustomActionCallback;
+import io.gleap.callbacks.FeedbackFlowStartedCallback;
+import io.gleap.callbacks.FeedbackSendingFailedCallback;
+import io.gleap.callbacks.FeedbackSentCallback;
+import io.gleap.callbacks.RegisterPushMessageGroupCallback;
+import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
+import io.gleap.callbacks.WidgetClosedCallback;
+import io.gleap.callbacks.WidgetOpenedCallback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.json.JSONObject;
 
-import io.gleap.APPLICATIONTYPE;
-import io.gleap.Gleap;
-import io.gleap.GleapLogLevel;
-import io.gleap.GleapNotInitialisedException;
-import io.gleap.GleapUserProperties;
-import io.gleap.GleapUser;
-import io.gleap.callbacks.ConfigLoadedCallback;
-import io.gleap.callbacks.CustomActionCallback;
-import io.gleap.callbacks.FeedbackFlowStartedCallback;
-import io.gleap.callbacks.FeedbackSendingFailedCallback;
-import io.gleap.callbacks.FeedbackSentCallback;
-import io.gleap.callbacks.WidgetClosedCallback;
-import io.gleap.callbacks.WidgetOpenedCallback;
-import io.gleap.callbacks.RegisterPushMessageGroupCallback;
-import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
-
-@CapacitorPlugin(name = "Gleap", permissions = {
-    @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
-    @Permission(strings = { Manifest.permission.INTERNET }, alias = "internet"),
-    @Permission(strings = { Manifest.permission.WAKE_LOCK }, alias = "wakelock")
-})
+@CapacitorPlugin(
+    name = "Gleap",
+    permissions = {
+        @Permission(strings = { Manifest.permission.ACCESS_NETWORK_STATE }, alias = "network"),
+        @Permission(strings = { Manifest.permission.INTERNET }, alias = "internet"),
+        @Permission(strings = { Manifest.permission.WAKE_LOCK }, alias = "wakelock")
+    }
+)
 public class GleapPlugin extends Plugin {
+
     private Gleap implementation;
 
     @Override
@@ -48,7 +49,7 @@ public class GleapPlugin extends Plugin {
         implementation = Gleap.getInstance();
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void initialize(PluginCall call) {
         String api_key = call.getString("API_KEY");
 
@@ -70,7 +71,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void identify(PluginCall call) {
         // If userId is empty, then pass back error
         if (!call.getData().has("userId")) {
@@ -107,9 +108,8 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void clearIdentity(PluginCall call) {
-
         // Clear User Identity in Gleap
         implementation.clearIdentity();
 
@@ -119,7 +119,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void getIdentity(PluginCall call) {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -148,7 +148,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void isUserIdentified(PluginCall call) {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -158,7 +158,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void setCustomData(PluginCall call) {
         // If key is empty, then pass back error
         if (!call.getData().has("key")) {
@@ -183,7 +183,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void attachCustomData(PluginCall call) {
         // If key is empty, then pass back error
         if (!call.getData().has("data")) {
@@ -200,7 +200,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void removeCustomData(PluginCall call) {
         // If key is empty, then pass back error
         if (!call.getData().has("key")) {
@@ -217,7 +217,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void clearCustomData(PluginCall call) {
         implementation.clearCustomData();
 
@@ -227,7 +227,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void preFillForm(PluginCall call) {
         // If key is empty, then pass back error
         if (!call.getData().has("data")) {
@@ -244,7 +244,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void log(PluginCall call) {
         if (!call.getData().has("message")) {
             call.reject("No log message provided");
@@ -269,7 +269,31 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
+    public void showSurvey(PluginCall call) {
+        if (!call.getData().has("surveyId")) {
+            call.reject("No surveyId provided");
+            return;
+        }
+
+        String surveyId = call.getString("surveyId");
+        String format = call.getString("format", "survey");
+
+        SurveyType surveyFormat = SurveyType.SURVEY;
+        if ("survey_full".equalsIgnoreCase(format)) {
+            surveyFormat = SurveyType.SURVEY_FULL;
+        }
+
+        // Forward log message to native implementation
+        implementation.showSurvey(surveyId, surveyFormat);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void trackEvent(PluginCall call) {
         // If name is empty, then pass back error
         if (!call.getData().has("name")) {
@@ -292,7 +316,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void trackPage(PluginCall call) {
         // If page name is empty, then pass back error
         if (!call.getData().has("pageName")) {
@@ -305,9 +329,7 @@ public class GleapPlugin extends Plugin {
             JSONObject eventData = new JSONObject();
             eventData.put("page", pageName);
             implementation.trackEvent("pageView", eventData);
-        } catch (Exception ignore) {
-
-        }
+        } catch (Exception ignore) {}
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -315,7 +337,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void addAttachment(PluginCall call) {
         if (!call.getData().has("base64data")) {
             call.reject("No base64 file data provided");
@@ -375,7 +397,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void showFeedbackButton(PluginCall call) {
         boolean show = call.getBoolean("show");
 
@@ -387,7 +409,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void removeAllAttachments(PluginCall call) {
         implementation.removeAllAttachments();
 
@@ -397,7 +419,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void disableConsoleLogOverwrite(PluginCall call) {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -405,7 +427,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void enableDebugConsoleLog(PluginCall call) {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -413,7 +435,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void sendSilentCrashReport(PluginCall call) {
         if (!call.getData().has("description")) {
             call.reject("No description provided");
@@ -445,7 +467,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void isOpened(PluginCall call) throws GleapNotInitialisedException {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -453,7 +475,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void open(PluginCall call) throws GleapNotInitialisedException {
         // Open widget
         implementation.open();
@@ -464,7 +486,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openNews(PluginCall call) throws GleapNotInitialisedException {
         boolean showBackButton = call.getBoolean("showBackButton");
 
@@ -476,7 +498,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openNewsArticle(PluginCall call) throws GleapNotInitialisedException {
         String articleId = call.getString("articleId");
         boolean showBackButton = call.getBoolean("showBackButton");
@@ -489,7 +511,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openHelpCenter(PluginCall call) throws GleapNotInitialisedException {
         boolean showBackButton = call.getBoolean("showBackButton");
 
@@ -501,7 +523,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openHelpCenterArticle(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String articleId = call.getString("articleId");
@@ -515,7 +537,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openHelpCenterCollection(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String collectionId = call.getString("collectionId");
@@ -529,7 +551,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void searchHelpCenter(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String term = call.getString("term");
@@ -543,7 +565,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
         boolean showBackButton = call.getBoolean("showBackButton");
 
@@ -556,7 +578,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void close(PluginCall call) throws GleapNotInitialisedException {
         // Open widget
         implementation.close();
@@ -567,7 +589,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void startFeedbackFlow(PluginCall call) throws GleapNotInitialisedException {
         if (!call.getData().has("feedbackFlow")) {
             call.reject("No feedback flow provided");
@@ -584,7 +606,7 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    @PluginMethod()
+    @PluginMethod
     public void setLanguage(PluginCall call) {
         // If languageCode is empty, then pass back error
         if (!call.getData().has("languageCode")) {
@@ -606,98 +628,116 @@ public class GleapPlugin extends Plugin {
     public void setEventCallback(PluginCall call) {
         call.setKeepAlive(true);
 
-        implementation.setWidgetOpenedCallback(new WidgetOpenedCallback() {
-            @Override
-            public void invoke() {
-                JSObject data = new JSObject();
-                data.put("name", "widget-opened");
-                call.resolve(data);
+        implementation.setWidgetOpenedCallback(
+            new WidgetOpenedCallback() {
+                @Override
+                public void invoke() {
+                    JSObject data = new JSObject();
+                    data.put("name", "widget-opened");
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setWidgetClosedCallback(new WidgetClosedCallback() {
-            @Override
-            public void invoke() {
-                JSObject data = new JSObject();
-                data.put("name", "widget-closed");
-                call.resolve(data);
+        implementation.setWidgetClosedCallback(
+            new WidgetClosedCallback() {
+                @Override
+                public void invoke() {
+                    JSObject data = new JSObject();
+                    data.put("name", "widget-closed");
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setConfigLoadedCallback(new ConfigLoadedCallback() {
-            @Override
-            public void configLoaded(JSONObject jsonObject) {
-                JSObject data = new JSObject();
-                data.put("name", "widget-opened");
-                data.put("data", jsonObject);
-                call.resolve(data);
+        implementation.setConfigLoadedCallback(
+            new ConfigLoadedCallback() {
+                @Override
+                public void configLoaded(JSONObject jsonObject) {
+                    JSObject data = new JSObject();
+                    data.put("name", "widget-opened");
+                    data.put("data", jsonObject);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setFeedbackSentCallback(new FeedbackSentCallback() {
-            @Override
-            public void invoke(String message) {
-                JSObject data = new JSObject();
-                data.put("name", "feedback-sent");
-                data.put("data", message);
-                call.resolve(data);
+        implementation.setFeedbackSentCallback(
+            new FeedbackSentCallback() {
+                @Override
+                public void invoke(String message) {
+                    JSObject data = new JSObject();
+                    data.put("name", "feedback-sent");
+                    data.put("data", message);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setFeedbackSendingFailedCallback(new FeedbackSendingFailedCallback() {
-            @Override
-            public void invoke(String message) {
-                // called when the sending of the feedback failed
-                JSObject data = new JSObject();
-                data.put("name", "error-while-sending");
-                data.put("data", message);
-                call.resolve(data);
+        implementation.setFeedbackSendingFailedCallback(
+            new FeedbackSendingFailedCallback() {
+                @Override
+                public void invoke(String message) {
+                    // called when the sending of the feedback failed
+                    JSObject data = new JSObject();
+                    data.put("name", "error-while-sending");
+                    data.put("data", message);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.registerCustomAction(new CustomActionCallback() {
-            @Override
-            public void invoke(String message) {
-                // called when a custom action from the widget is issued
-                JSObject data = new JSObject();
-                data.put("name", "custom-action-called");
-                data.put("data", message);
-                call.resolve(data);
+        implementation.registerCustomAction(
+            new CustomActionCallback() {
+                @Override
+                public void invoke(String message) {
+                    // called when a custom action from the widget is issued
+                    JSObject data = new JSObject();
+                    data.put("name", "custom-action-called");
+                    data.put("data", message);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setFeedbackFlowStartedCallback(new FeedbackFlowStartedCallback() {
-            @Override
-            public void invoke(String message) {
-                // called when the feedback flow ist started, not only the widget is opened
-                JSObject data = new JSObject();
-                data.put("name", "flow-started");
-                data.put("data", message);
-                call.resolve(data);
+        implementation.setFeedbackFlowStartedCallback(
+            new FeedbackFlowStartedCallback() {
+                @Override
+                public void invoke(String message) {
+                    // called when the feedback flow ist started, not only the widget is opened
+                    JSObject data = new JSObject();
+                    data.put("name", "flow-started");
+                    data.put("data", message);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setRegisterPushMessageGroupCallback(new RegisterPushMessageGroupCallback() {
-            @Override
-            public void invoke(String pushMessageGroup) {
-                // called when the feedback flow ist started, not only the widget is opened
-                JSObject data = new JSObject();
-                data.put("name", "register-pushmessage-group");
-                data.put("data", pushMessageGroup);
-                call.resolve(data);
+        implementation.setRegisterPushMessageGroupCallback(
+            new RegisterPushMessageGroupCallback() {
+                @Override
+                public void invoke(String pushMessageGroup) {
+                    // called when the feedback flow ist started, not only the widget is opened
+                    JSObject data = new JSObject();
+                    data.put("name", "register-pushmessage-group");
+                    data.put("data", pushMessageGroup);
+                    call.resolve(data);
+                }
             }
-        });
+        );
 
-        implementation.setUnRegisterPushMessageGroupCallback(new UnRegisterPushMessageGroupCallback() {
-            @Override
-            public void invoke(String pushMessageGroup) {
-                // called when the feedback flow ist started, not only the widget is opened
-                JSObject data = new JSObject();
-                data.put("name", "unregister-pushmessage-group");
-                data.put("data", pushMessageGroup);
-                call.resolve(data);
+        implementation.setUnRegisterPushMessageGroupCallback(
+            new UnRegisterPushMessageGroupCallback() {
+                @Override
+                public void invoke(String pushMessageGroup) {
+                    // called when the feedback flow ist started, not only the widget is opened
+                    JSObject data = new JSObject();
+                    data.put("name", "unregister-pushmessage-group");
+                    data.put("data", pushMessageGroup);
+                    call.resolve(data);
+                }
             }
-        });
+        );
     }
 
     /**
@@ -709,14 +749,13 @@ public class GleapPlugin extends Plugin {
     private String extractMimeType(final String encoded) {
         final Pattern mime = Pattern.compile("^data:([a-zA-Z0-9]+/[a-zA-Z0-9]+).*,.*");
         final Matcher matcher = mime.matcher(encoded);
-        if (!matcher.find())
-            return "";
+        if (!matcher.find()) return "";
         return matcher.group(1).toLowerCase();
     }
 
     private boolean checkAllowedEndings(String fileName) {
         String[] fileType = fileName.split("\\.");
-        String[] allowedTypes = {"jpeg", "svg", "png", "mp4", "webp", "xml", "plain", "xml", "json"};
+        String[] allowedTypes = { "jpeg", "svg", "png", "mp4", "webp", "xml", "plain", "xml", "json" };
         if (fileType.length <= 1) {
             return false;
         }

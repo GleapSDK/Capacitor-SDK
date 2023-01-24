@@ -85,6 +85,6 @@
     }
   },
   "dependencies": {
-    "gleap": "^8.5.8"
+    "gleap": "^8.5.9"
   }
 }

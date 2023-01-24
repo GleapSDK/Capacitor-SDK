@@ -104,31 +104,21 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
-    @objc func log(_ call: CAPPluginCall) {
-        guard let message = call.options["message"] as? String else {
-            call.reject("Must provide a log message")
+    @objc func showSurvey(_ call: CAPPluginCall) {
+        guard let surveyId = call.options["surveyId"] as? String else {
+            call.reject("Must provide a surveyId")
             return;
         }
         
-        var logLevel = INFO
-        switch call.getString("logLevel") ?? "INFO" {
-        case "INFO":
-            logLevel = INFO
-
-        case "WARNING":
-            logLevel = WARNING
-
-        case "ERROR":
-            logLevel = INFO
-
-        default:
-            logLevel = INFO
+        var surveyFormat = SURVEY
+        if (call.getString("format") ?? "survey" == "survey") {
+            surveyFormat = SURVEY_FULL
         }
         
-        Gleap.log(message, with: logLevel)
+        Gleap.showSurvey(surveyId, andFormat: surveyFormat)
         
         call.resolve([
-            "logged": true
+            "opened": true
         ])
     }
     

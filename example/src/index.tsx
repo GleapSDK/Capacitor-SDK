@@ -6,10 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { Gleap } from 'capacitor-gleap-plugin';
 
 Gleap.initialize({
-  API_KEY: 'ek98ANmHary9PQNG5EIl6TQd3SzqstZA',
+  API_KEY: 'DUPaIr7s689BBblcFI4pc5aBgYJTm7Sc',
 });
 
-console.log("HI!?");
+setTimeout(() => {
+  Gleap.showSurvey({
+    surveyId: "1g9pym",
+    format: 'survey'
+  });
+}, 5000);
 
 Gleap.setEventCallback((name, data) => {
   console.log("Event Callback", name, data);

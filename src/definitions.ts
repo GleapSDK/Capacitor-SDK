@@ -80,7 +80,7 @@ export interface GleapPlugin {
   }>;
 
   /**
-  * Submit a custom log message with the given level
+  * Manually show a survey.
   *
   * @since 8.5.1
   */

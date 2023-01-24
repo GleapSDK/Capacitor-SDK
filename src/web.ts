@@ -66,6 +66,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     }
   }
 
+  async showSurvey(options: { surveyId: string; format?: 'survey' | 'survey_full' | undefined; }): Promise<{ opened: boolean; }> {
+    Gleap.showSurvey(options.surveyId, options.format);
+
+    return { opened: true };
+  }
+
   async showFeedbackButton(options: {
     show: boolean;
   }): Promise<{ feedbackButtonShown: boolean }> {

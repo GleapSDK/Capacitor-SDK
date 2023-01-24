@@ -25,6 +25,7 @@ npx cap sync
 * [`getIdentity()`](#getidentity)
 * [`isUserIdentified()`](#isuseridentified)
 * [`log(...)`](#log)
+* [`showSurvey(...)`](#showsurvey)
 * [`attachCustomData(...)`](#attachcustomdata)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
@@ -156,6 +157,25 @@ Submit a custom log message with the given level
 **Returns:** <code>Promise&lt;{ logged: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### showSurvey(...)
+
+```typescript
+showSurvey(options: { surveyId: string; format?: "survey" | "survey_full"; }) => Promise<{ opened: boolean; }>
+```
+
+Manually show a survey.
+
+| Param         | Type                                                                   |
+| ------------- | ---------------------------------------------------------------------- |
+| **`options`** | <code>{ surveyId: string; format?: "survey" \| "survey_full"; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 8.5.1
 
 --------------------
 
