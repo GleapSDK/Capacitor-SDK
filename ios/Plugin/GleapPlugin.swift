@@ -138,6 +138,23 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func setTags(_ call: CAPPluginCall) {
+        // If value is empty, then pass back error
+        guard let tags = call.options["tags"] as? [String] else {
+            call.reject("Must provide a tag array")
+            return;
+        }
+        
+        // Append custom data
+        Gleap.setTags(tags)
+        
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "tagsSet": true
+        ])
+    }
+    
     @objc func setCustomData(_ call: CAPPluginCall) {
         // If key is empty, then pass back error
         guard let key = call.options["key"] as? String else {

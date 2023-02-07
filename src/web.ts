@@ -105,6 +105,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { identify: true };
   }
 
+  async setTags(options: { tags: string[]; }): Promise<{ tagsSet: boolean; }> {
+    Gleap.setTags(options.tags);
+
+    return { tagsSet: true };
+  }
+
   async clearIdentity(): Promise<{ clearIdentity: boolean }> {
     Gleap.clearIdentity();
 

@@ -27,6 +27,7 @@ npx cap sync
 * [`log(...)`](#log)
 * [`showSurvey(...)`](#showsurvey)
 * [`attachCustomData(...)`](#attachcustomdata)
+* [`setTags(...)`](#settags)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
@@ -195,6 +196,25 @@ Add custom data
 **Returns:** <code>Promise&lt;{ attachedCustomData: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### setTags(...)
+
+```typescript
+setTags(options: { tags: string[]; }) => Promise<{ tagsSet: boolean; }>
+```
+
+Set tags
+
+| Param         | Type                             |
+| ------------- | -------------------------------- |
+| **`options`** | <code>{ tags: string[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ tagsSet: boolean; }&gt;</code>
+
+**Since:** 8.6.0
 
 --------------------
 

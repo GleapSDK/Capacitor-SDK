@@ -90,6 +90,16 @@ export interface GleapPlugin {
         attachedCustomData: boolean;
     }>;
     /**
+    * Set tags
+    *
+    * @since 8.6.0
+    */
+    setTags(options: {
+        tags: string[];
+    }): Promise<{
+        tagsSet: boolean;
+    }>;
+    /**
     * Set custom data
     *
     * @since 7.0.0

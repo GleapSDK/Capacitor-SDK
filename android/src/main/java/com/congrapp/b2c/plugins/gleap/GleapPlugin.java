@@ -2,6 +2,8 @@ package com.congrapp.b2c.plugins.gleap;
 
 import android.Manifest;
 import android.os.Build;
+
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -27,7 +29,9 @@ import io.gleap.callbacks.WidgetOpenedCallback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.json.JSONObject;
@@ -180,6 +184,31 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("setCustomData", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setTags(PluginCall call) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("tags")) {
+            call.reject("Must provide a tags array");
+            return;
+        }
+
+        try {
+            // Set custom data
+            JSArray jsonTags = call.getArray("tags");
+            String[] tags = new String[jsonTags.length()];
+            for (int i = 0; i < jsonTags.length(); i++) {
+                tags[i] = jsonTags.getString(i);
+            }
+
+            implementation.setTags(tags);
+        } catch (Exception ex) {}
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("tagsSet", true);
         call.resolve(ret);
     }
 

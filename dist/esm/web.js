@@ -68,6 +68,10 @@ export class GleapWeb extends WebPlugin {
         }
         return { identify: true };
     }
+    async setTags(options) {
+        Gleap.setTags(options.tags);
+        return { tagsSet: true };
+    }
     async clearIdentity() {
         Gleap.clearIdentity();
         return { clearIdentity: true };

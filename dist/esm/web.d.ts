@@ -34,6 +34,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         identify: boolean;
     }>;
+    setTags(options: {
+        tags: string[];
+    }): Promise<{
+        tagsSet: boolean;
+    }>;
     clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;

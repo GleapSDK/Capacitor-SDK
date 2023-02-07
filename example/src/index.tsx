@@ -20,6 +20,10 @@ Gleap.setEventCallback((name, data) => {
   console.log("Event Callback", name, data);
 });
 
+Gleap.setTags({
+  tags: ["tag1", "tag2", "tag3"]
+});
+
 Gleap.identify({
   userId: '29382',
   email: "lukas@gleap.io",

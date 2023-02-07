@@ -158,6 +158,27 @@
         "slug": "attachcustomdata"
       },
       {
+        "name": "setTags",
+        "signature": "(options: { tags: string[]; }) => Promise<{ tagsSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ tags: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ tagsSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.6.0"
+          }
+        ],
+        "docs": "Set tags",
+        "complexTypes": [],
+        "slug": "settags"
+      },
+      {
         "name": "setCustomData",
         "signature": "(options: { key: string; value: string; }) => Promise<{ setCustomData: boolean; }>",
         "parameters": [

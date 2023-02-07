@@ -77,6 +77,10 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             }
             return { identify: true };
         }
+        async setTags(options) {
+            Gleap__default["default"].setTags(options.tags);
+            return { tagsSet: true };
+        }
         async clearIdentity() {
             Gleap__default["default"].clearIdentity();
             return { clearIdentity: true };
