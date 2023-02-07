@@ -52,6 +52,11 @@ export class GleapWeb extends WebPlugin {
         Gleap.showFeedbackButton(options.show ? true : false);
         return { feedbackButtonShown: true };
     }
+    async setDisableInAppNotifications(options) {
+        var _a;
+        Gleap.setDisableInAppNotifications((_a = options.disableInAppNotifications) !== null && _a !== void 0 ? _a : false);
+        return { inAppNotificationsDisabled: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,

@@ -427,6 +427,18 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void setDisableInAppNotifications(PluginCall call) {
+        boolean disableInAppNotifications = call.getBoolean("disableInAppNotifications");
+
+        implementation.setDisableInAppNotifications(disableInAppNotifications);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("inAppNotificationsDisabled", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void showFeedbackButton(PluginCall call) {
         boolean show = call.getBoolean("show");
 

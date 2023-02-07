@@ -38,4 +38,5 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(getIdentity, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(isUserIdentified, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setTags, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setDisableInAppNotifications, CAPPluginReturnPromise);
 )

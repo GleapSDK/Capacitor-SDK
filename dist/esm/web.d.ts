@@ -23,6 +23,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         feedbackButtonShown: boolean;
     }>;
+    setDisableInAppNotifications(options: {
+        disableInAppNotifications?: boolean | undefined;
+    }): Promise<{
+        inAppNotificationsDisabled: boolean;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;

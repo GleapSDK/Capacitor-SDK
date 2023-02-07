@@ -325,6 +325,16 @@ export interface GleapPlugin {
         feedbackButtonShown: boolean;
     }>;
     /**
+ * Disable in app notifications.
+ *
+ * @since 8.6.1
+ */
+    setDisableInAppNotifications(options: {
+        disableInAppNotifications?: boolean;
+    }): Promise<{
+        inAppNotificationsDisabled: boolean;
+    }>;
+    /**
    * Set Language
    *
    * @since 7.0.0

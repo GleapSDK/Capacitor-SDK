@@ -616,6 +616,27 @@
         "slug": "showfeedbackbutton"
       },
       {
+        "name": "setDisableInAppNotifications",
+        "signature": "(options: { disableInAppNotifications?: boolean; }) => Promise<{ inAppNotificationsDisabled: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ disableInAppNotifications?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ inAppNotificationsDisabled: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "8.6.1"
+          }
+        ],
+        "docs": "Disable in app notifications.",
+        "complexTypes": [],
+        "slug": "setdisableinappnotifications"
+      },
+      {
         "name": "setLanguage",
         "signature": "(options: { languageCode: string; }) => Promise<{ setLanguage: string; }>",
         "parameters": [

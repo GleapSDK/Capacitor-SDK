@@ -148,7 +148,6 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Append custom data
         Gleap.setTags(tags)
         
-        
         // Provide feedback that it has been success
         call.resolve([
             "tagsSet": true
@@ -276,6 +275,17 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "attachmentAdded": true
+        ])
+    }
+    
+    @objc func setDisableInAppNotifications(_ call: CAPPluginCall) {
+        let disableInAppNotifications = call.getBool("disableInAppNotifications") ?? false
+
+        Gleap.setDisableInAppNotifications(disableInAppNotifications)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "inAppNotificationsDisabled": true
         ])
     }
     

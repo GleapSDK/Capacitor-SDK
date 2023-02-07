@@ -50,6 +50,7 @@ npx cap sync
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
+* [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -611,6 +612,25 @@ Show or hide the feedback button.
 **Returns:** <code>Promise&lt;{ feedbackButtonShown: boolean; }&gt;</code>
 
 **Since:** 8.0.0
+
+--------------------
+
+
+### setDisableInAppNotifications(...)
+
+```typescript
+setDisableInAppNotifications(options: { disableInAppNotifications?: boolean; }) => Promise<{ inAppNotificationsDisabled: boolean; }>
+```
+
+Disable in app notifications.
+
+| Param         | Type                                                  |
+| ------------- | ----------------------------------------------------- |
+| **`options`** | <code>{ disableInAppNotifications?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ inAppNotificationsDisabled: boolean; }&gt;</code>
+
+**Since:** 8.6.1
 
 --------------------
 

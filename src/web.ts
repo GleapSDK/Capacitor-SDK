@@ -80,6 +80,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { feedbackButtonShown: true };
   }
 
+  async setDisableInAppNotifications(options: { disableInAppNotifications?: boolean | undefined; }): Promise<{ inAppNotificationsDisabled: boolean; }> {
+    Gleap.setDisableInAppNotifications(options.disableInAppNotifications ?? false);
+
+    return { inAppNotificationsDisabled: true };
+  }
+
   async identify(options: {
     userId: string;
     userHash?: string | undefined;
