@@ -9,10 +9,6 @@ Gleap.initialize({
   API_KEY: 'DUPaIr7s689BBblcFI4pc5aBgYJTm7Sc',
 });
 
-Gleap.setDisableInAppNotifications({
-  disableInAppNotifications: true
-});
-
 setTimeout(() => {
   Gleap.showSurvey({
     surveyId: "1g9pym",
