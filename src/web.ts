@@ -204,6 +204,21 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { startedFeedbackFlow: true };
   }
 
+  async startBot(options: {
+    botId?: string | undefined;
+    showBackButton?: boolean | undefined;
+  }): Promise<{ startedBot: boolean }> {
+    if (!options.botId) {
+    }
+
+    Gleap.startBot(
+      options.botId ?? '',
+      options.showBackButton,
+    );
+
+    return { startedBot: true };
+  }
+
   async setLanguage(options: {
     languageCode: string;
   }): Promise<{ setLanguage: string }> {

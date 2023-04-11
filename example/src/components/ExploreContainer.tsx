@@ -27,9 +27,10 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         <IonButton style={{
           marginTop: '12px',
         }} color="primary" onClick={async () => {
-         Gleap.openNews({
-          showBackButton: false,
-         });
+         Gleap.startBot({
+          botId: '64350c6b39c89ea4650c36ae',
+          showBackButton: true,
+         })
         }}>Open news</IonButton>
         <IonButton style={{
           marginTop: '12px',

@@ -95,6 +95,12 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         startedFeedbackFlow: boolean;
     }>;
+    startBot(options: {
+        botId?: string | undefined;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        startedBot: boolean;
+    }>;
     setLanguage(options: {
         languageCode: string;
     }): Promise<{

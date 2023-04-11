@@ -30,6 +30,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(log, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(disableConsoleLogOverwrite, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(startFeedbackFlow, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(startBot, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setLanguage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setEventCallback, CAPPluginReturnCallback);
            CAP_PLUGIN_METHOD(preFillForm, CAPPluginReturnPromise);

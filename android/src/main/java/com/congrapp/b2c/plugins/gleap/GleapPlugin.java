@@ -631,6 +631,24 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void startBot(PluginCall call) throws GleapNotInitialisedException {
+        if (!call.getData().has("botId")) {
+            call.reject("No feedback flow provided");
+            return;
+        }
+
+        // Start bot
+        String botId = call.getString("botId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+        implementation.startBot(botId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("startedBot", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void startFeedbackFlow(PluginCall call) throws GleapNotInitialisedException {
         if (!call.getData().has("feedbackFlow")) {
             call.reject("No feedback flow provided");

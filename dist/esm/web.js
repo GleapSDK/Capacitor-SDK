@@ -120,6 +120,13 @@ export class GleapWeb extends WebPlugin {
         Gleap.startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : 'bugreporting', options.showBackButton);
         return { startedFeedbackFlow: true };
     }
+    async startBot(options) {
+        var _a;
+        if (!options.botId) {
+        }
+        Gleap.startBot((_a = options.botId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+        return { startedBot: true };
+    }
     async setLanguage(options) {
         Gleap.setLanguage(options.languageCode);
         return { setLanguage: options.languageCode };

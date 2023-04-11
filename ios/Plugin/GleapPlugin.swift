@@ -456,6 +456,18 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func startBot(_ call: CAPPluginCall) {
+        let botId = call.getString("botId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? false
+        
+        Gleap.startBot(botId, showBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "startedBot": true
+        ])
+    }
+    
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {
         let feedbackFlow = call.getString("feedbackFlow") ?? "bugreporting"
         let showBackButton = call.getBool("showBackButton") ?? false

@@ -590,9 +590,30 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Start Feedback flow",
+        "docs": "Start feedback flow",
         "complexTypes": [],
         "slug": "startfeedbackflow"
+      },
+      {
+        "name": "startBot",
+        "signature": "(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ botId?: string | undefined; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ startedBot: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "10.0.3"
+          }
+        ],
+        "docs": "Start bot",
+        "complexTypes": [],
+        "slug": "startbot"
       },
       {
         "name": "showFeedbackButton",

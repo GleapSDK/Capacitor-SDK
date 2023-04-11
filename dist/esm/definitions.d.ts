@@ -304,7 +304,7 @@ export interface GleapPlugin {
         isOpened: boolean;
     }>;
     /**
-   * Start Feedback flow
+   * Start feedback flow
    *
    * @since 7.0.0
    */
@@ -313,6 +313,17 @@ export interface GleapPlugin {
         showBackButton?: boolean;
     }): Promise<{
         startedFeedbackFlow: boolean;
+    }>;
+    /**
+   * Start bot
+   *
+   * @since 10.0.3
+   */
+    startBot(options: {
+        botId?: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        startedBot: boolean;
     }>;
     /**
    * Show or hide the feedback button.

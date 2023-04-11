@@ -49,6 +49,7 @@ npx cap sync
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
+* [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
 * [`setLanguage(...)`](#setlanguage)
@@ -584,7 +585,7 @@ Check widget status code
 startFeedbackFlow(options: { feedbackFlow?: string; showBackButton?: boolean; }) => Promise<{ startedFeedbackFlow: boolean; }>
 ```
 
-Start Feedback flow
+Start feedback flow
 
 | Param         | Type                                                              |
 | ------------- | ----------------------------------------------------------------- |
@@ -593,6 +594,25 @@ Start Feedback flow
 **Returns:** <code>Promise&lt;{ startedFeedbackFlow: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### startBot(...)
+
+```typescript
+startBot(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>
+```
+
+Start bot
+
+| Param         | Type                                                       |
+| ------------- | ---------------------------------------------------------- |
+| **`options`** | <code>{ botId?: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ startedBot: boolean; }&gt;</code>
+
+**Since:** 10.0.3
 
 --------------------
 

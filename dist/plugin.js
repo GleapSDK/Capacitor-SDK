@@ -128,6 +128,12 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : 'bugreporting', options.showBackButton);
             return { startedFeedbackFlow: true };
         }
+        async startBot(options) {
+            var _a;
+            if (!options.botId) ;
+            Gleap__default["default"].startBot((_a = options.botId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+            return { startedBot: true };
+        }
         async setLanguage(options) {
             Gleap__default["default"].setLanguage(options.languageCode);
             return { setLanguage: options.languageCode };
