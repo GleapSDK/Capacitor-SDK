@@ -1,0 +1,47 @@
+PODS:
+  - Capacitor (5.0.1):
+    - CapacitorCordova
+  - CapacitorCamera (5.0.1):
+    - Capacitor
+  - CapacitorCordova (5.0.1)
+  - CapacitorGleapPlugin (10.0.5):
+    - Capacitor
+    - Gleap (= 10.0.3)
+  - CapacitorSplashScreen (5.0.1):
+    - Capacitor
+  - Gleap (10.0.3)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - CapacitorGleapPlugin (from `../../..`)
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
+
+SPEC REPOS:
+  trunk:
+    - Gleap
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorGleapPlugin:
+    :path: "../../.."
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
+
+SPEC CHECKSUMS:
+  Capacitor: c550a8485d00d5d92b4f91a245f43555a2230eb6
+  CapacitorCamera: 51f3e7ec924711a41574ae91406faebce1ec439d
+  CapacitorCordova: 4f8cf089c691f0e21032d22b1014808308cbc467
+  CapacitorGleapPlugin: d153464122402d110941c4c9c420abe5aaeb1faa
+  CapacitorSplashScreen: b3aa7304627a561e98d894d6fb301eced671e599
+  Gleap: 5cd1b5b2a995b483f67caa750065a0b49b80b537
+
+PODFILE CHECKSUM: 0d736eece0df97d890ce934dc764ff47c95f27f5
+
+COCOAPODS: 1.12.1

@@ -1,6 +1,11 @@
 {
-	"appId": "io.ionic.starter",
+	"appId": "com.example.plugin",
 	"appName": "example",
-	"webDir": "build",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"webDir": "dist",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		}
+	}
 }

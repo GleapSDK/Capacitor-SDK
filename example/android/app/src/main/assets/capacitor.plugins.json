@@ -1,22 +1,14 @@
 [
 	{
-		"pkg": "@capacitor/app",
-		"classpath": "com.capacitorjs.plugins.app.AppPlugin"
+		"pkg": "@capacitor/camera",
+		"classpath": "com.capacitorjs.plugins.camera.CameraPlugin"
 	},
 	{
-		"pkg": "@capacitor/haptics",
-		"classpath": "com.capacitorjs.plugins.haptics.HapticsPlugin"
-	},
-	{
-		"pkg": "@capacitor/keyboard",
-		"classpath": "com.capacitorjs.plugins.keyboard.KeyboardPlugin"
-	},
-	{
-		"pkg": "@capacitor/status-bar",
-		"classpath": "com.capacitorjs.plugins.statusbar.StatusBarPlugin"
+		"pkg": "@capacitor/splash-screen",
+		"classpath": "com.capacitorjs.plugins.splashscreen.SplashScreenPlugin"
 	},
 	{
 		"pkg": "capacitor-gleap-plugin",
-		"classpath": "com.congrapp.b2c.plugins.gleap.GleapPlugin"
+		"classpath": "io.gleapplugins.capacitor.GleapPlugin"
 	}
 ]

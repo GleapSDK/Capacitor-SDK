@@ -246,17 +246,17 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     description: string;
     severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
     dataExclusion?:
-      | {
-          customData: Boolean;
-          metaData: Boolean;
-          attachments: Boolean;
-          consoleLog: Boolean;
-          networkLogs: Boolean;
-          customEventLog: Boolean;
-          screenshot: Boolean;
-          replays: Boolean;
-        }
-      | undefined;
+    | {
+      customData: Boolean;
+      metaData: Boolean;
+      attachments: Boolean;
+      consoleLog: Boolean;
+      networkLogs: Boolean;
+      customEventLog: Boolean;
+      screenshot: Boolean;
+      replays: Boolean;
+    }
+    | undefined;
   }): Promise<{ sentSilentBugReport: boolean }> {
     Gleap.sendSilentCrashReport(
       options.description,

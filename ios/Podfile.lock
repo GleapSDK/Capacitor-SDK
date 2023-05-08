@@ -1,17 +1,11 @@
 PODS:
-  - Capacitor (3.3.1):
+  - Capacitor (5.0.1):
     - CapacitorCordova
-  - CapacitorCordova (3.3.1)
-  - Gleap (7.0.2)
+  - CapacitorCordova (5.0.1)
 
 DEPENDENCIES:
   - "Capacitor (from `../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../node_modules/@capacitor/ios`)"
-  - Gleap (>= 7.0.2)
-
-SPEC REPOS:
-  trunk:
-    - Gleap
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -20,10 +14,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@capacitor/ios"
 
 SPEC CHECKSUMS:
-  Capacitor: 03a45821c64411719140ba9fb39a895d026e597c
-  CapacitorCordova: 6c6127c6ee31a7a808705bf4ac17fb5f80ed63f6
-  Gleap: a1e94eb14511b9dec103d4a5ee734c01a6f6e821
+  Capacitor: c550a8485d00d5d92b4f91a245f43555a2230eb6
+  CapacitorCordova: 4f8cf089c691f0e21032d22b1014808308cbc467
 
-PODFILE CHECKSUM: 3b81e283dd55300d26845c840b45c69bd93146bb
+PODFILE CHECKSUM: 14e8b2400457751b865e1c327e7cfa1c6fa67da6
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
