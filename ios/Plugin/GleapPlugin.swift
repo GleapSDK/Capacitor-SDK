@@ -519,6 +519,10 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         notifyEventUpdate(name: "widget-closed", data: nil)
     }
     
+    public func initialized() {
+        notifyEventUpdate(name: "initialized", data: nil)
+    }
+    
     public func widgetOpened() {
         notifyEventUpdate(name: "widget-opened", data: nil)
     }

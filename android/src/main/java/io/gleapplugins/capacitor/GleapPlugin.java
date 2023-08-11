@@ -17,6 +17,7 @@ import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapUser;
 import io.gleap.GleapUserProperties;
 import io.gleap.SurveyType;
+import io.gleap.callbacks.InitializedCallback;
 import io.gleap.callbacks.ConfigLoadedCallback;
 import io.gleap.callbacks.CustomActionCallback;
 import io.gleap.callbacks.FeedbackFlowStartedCallback;
@@ -704,6 +705,17 @@ public class GleapPlugin extends Plugin {
                 public void invoke() {
                     JSObject data = new JSObject();
                     data.put("name", "widget-closed");
+                    call.resolve(data);
+                }
+            }
+        );
+
+        implementation.setInitializedCallback(
+            new InitializedCallback() {
+                @Override
+                public void initialized(JSONObject jsonObject) {
+                    JSObject data = new JSObject();
+                    data.put("name", "initialized");
                     call.resolve(data);
                 }
             }

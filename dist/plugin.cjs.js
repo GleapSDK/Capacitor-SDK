@@ -27,6 +27,9 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].on('open', () => {
             this.notifyCallbacks('open', {});
         });
+        Gleap__default["default"].on('initialized', () => {
+            this.notifyCallbacks('initialized', {});
+        });
         Gleap__default["default"].on('close', () => {
             this.notifyCallbacks('close', {});
         });

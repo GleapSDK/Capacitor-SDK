@@ -27,6 +27,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       this.notifyCallbacks('open', {});
     });
 
+    Gleap.on('initialized', () => {
+      this.notifyCallbacks('initialized', {});
+    });
+
     Gleap.on('close', () => {
       this.notifyCallbacks('close', {});
     });
