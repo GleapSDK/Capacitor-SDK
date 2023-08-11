@@ -713,7 +713,7 @@ public class GleapPlugin extends Plugin {
         implementation.setInitializedCallback(
             new InitializedCallback() {
                 @Override
-                public void initialized(JSONObject jsonObject) {
+                public void initialized() {
                     JSObject data = new JSObject();
                     data.put("name", "initialized");
                     call.resolve(data);

@@ -3,7 +3,7 @@ import { Camera } from '@capacitor/camera';
 import { Gleap } from 'capacitor-gleap-plugin';
 
 Gleap.initialize({
-  API_KEY: 'ogWhNhuiZcGWrva5nlDS8l7a78OfaLlV',
+  API_KEY: 'hciNpT8z64tsHATINYZjWBvbirVWCKWt',
 });
 
 window.customElements.define(
