@@ -1,6 +1,6 @@
 {
   "name": "capacitor-gleap-plugin",
-  "version": "11.1.6",
+  "version": "11.2.0",
   "description": "Gleap SDK for Capacitor is the easiest way to integrate Gleap into your Ionic apps! Achieve better app quality with comprehensive in-app bug reporting & customer feedback for your web-apps and websites. Many thanks to Stephan Nagel (congrapp) for his work on the Gleap capacitor plugin.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -76,6 +76,6 @@
     }
   },
   "dependencies": {
-    "gleap": "11.1.4"
+    "gleap": "11.2.0"
   }
 }
