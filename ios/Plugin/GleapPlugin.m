@@ -14,6 +14,9 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(trackEvent, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(trackPage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(sendSilentCrashReport, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(openChecklists, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(openChecklist, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(startChecklist, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(open, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openNews, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(showSurvey, CAPPluginReturnPromise);

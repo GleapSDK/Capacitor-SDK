@@ -529,6 +529,44 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void openChecklists(PluginCall call) throws GleapNotInitialisedException {
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openChecklists(showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void openChecklist(PluginCall call) throws GleapNotInitialisedException {
+        String checklistId = call.getString("checklistId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openChecklist(checklistId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void startChecklist(PluginCall call) throws GleapNotInitialisedException {
+        String outboundId = call.getString("outboundId");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.openChecklist(outboundId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void openNews(PluginCall call) throws GleapNotInitialisedException {
         boolean showBackButton = call.getBoolean("showBackButton");
 
@@ -536,7 +574,7 @@ public class GleapPlugin extends Plugin {
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("openedNews", true);
+        ret.put("opened", true);
         call.resolve(ret);
     }
 

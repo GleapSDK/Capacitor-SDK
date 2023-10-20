@@ -353,19 +353,57 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func openChecklists(_ call: CAPPluginCall) {
+        let showBackButton = call.getBool("showBackButton") ?? true
+
+        // Open news
+        Gleap.openChecklists(showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func openChecklist(_ call: CAPPluginCall) {
+        let checklistId = call.getString("checklistId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? true
+        
+        // Open news
+        Gleap.openNewsArticle(checklistId, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
+    @objc func startChecklist(_ call: CAPPluginCall) {
+        let outboundId = call.getString("outboundId") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? true
+        
+        // Open news
+        Gleap.openNewsArticle(outboundId, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
     @objc func openNews(_ call: CAPPluginCall) {
         // Open news
         Gleap.openNews()
         
         // Provide feedback that it has been success
         call.resolve([
-            "openedNews": true
+            "opened": true
         ])
     }
     
     @objc func openNewsArticle(_ call: CAPPluginCall) {
         let articleId = call.getString("articleId") ?? ""
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.openNewsArticle(articleId, andShowBackButton: showBackButton)
@@ -377,7 +415,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     @objc func openHelpCenter(_ call: CAPPluginCall) {
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.openHelpCenter(showBackButton)
@@ -390,7 +428,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func openHelpCenterArticle(_ call: CAPPluginCall) {
         let articleId = call.getString("articleId") ?? ""
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.openHelpCenterArticle(articleId, andShowBackButton: showBackButton)
@@ -403,7 +441,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func openHelpCenterCollection(_ call: CAPPluginCall) {
         let collectionId = call.getString("collectionId") ?? ""
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.openHelpCenterCollection(collectionId, andShowBackButton: showBackButton)
@@ -416,7 +454,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func searchHelpCenter(_ call: CAPPluginCall) {
         let term = call.getString("term") ?? ""
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.searchHelpCenter(term, andShowBackButton: showBackButton)
@@ -428,7 +466,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     @objc func openFeatureRequests(_ call: CAPPluginCall) {
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         // Open news
         Gleap.openFeatureRequests(showBackButton)
@@ -458,7 +496,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func startBot(_ call: CAPPluginCall) {
         let botId = call.getString("botId") ?? ""
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         Gleap.startBot(botId, showBackButton: showBackButton)
         
@@ -470,7 +508,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {
         let feedbackFlow = call.getString("feedbackFlow") ?? "bugreporting"
-        let showBackButton = call.getBool("showBackButton") ?? false
+        let showBackButton = call.getBool("showBackButton") ?? true
         
         Gleap.startFeedbackFlow(feedbackFlow, showBackButton: showBackButton)
         
