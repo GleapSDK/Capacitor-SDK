@@ -28,6 +28,9 @@ export interface GleapPlugin {
     name?: string;
     email?: string;
     phone?: string;
+    companyId?: string;
+    companyName?: string;
+    plan?: string;
     value?: number;
     customData?: Object;
   }): Promise<{

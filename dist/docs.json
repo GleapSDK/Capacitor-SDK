@@ -28,12 +28,12 @@
       },
       {
         "name": "identify",
-        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>",
+        "signature": "(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; value?: number | undefined; customData?: Object | undefined; }"
+            "type": "{ userId: string; userHash?: string | undefined; name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }"
           }
         ],
         "returns": "Promise<{ identify: boolean; }>",

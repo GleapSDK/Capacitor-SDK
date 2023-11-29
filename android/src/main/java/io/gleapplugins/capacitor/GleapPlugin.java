@@ -92,7 +92,16 @@ public class GleapPlugin extends Plugin {
             userProperties.setName(call.getString("name"));
         }
         if (call.getData().has("phone")) {
-            userProperties.setPhoneNumber(call.getString("phone"));
+            userProperties.setPhone(call.getString("phone"));
+        }
+        if (call.getData().has("plan")) {
+            userProperties.setPlan(call.getString("plan"));
+        }
+        if (call.getData().has("companyName")) {
+            userProperties.setCompanyName(call.getString("companyName"));
+        }
+        if (call.getData().has("companyId")) {
+            userProperties.setCompanyId(call.getString("companyId"));
         }
         if (call.getData().has("value")) {
             userProperties.setValue(call.getDouble("value"));

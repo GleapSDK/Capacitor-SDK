@@ -74,6 +74,9 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
                 name: options.name,
                 email: options.email,
                 phone: options.phone,
+                companyId: options.companyId,
+                companyName: options.companyName,
+                plan: options.plan,
                 value: options.value,
                 customData: options.customData,
             };

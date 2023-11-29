@@ -78,6 +78,9 @@ class GleapWeb extends core.WebPlugin {
             name: options.name,
             email: options.email,
             phone: options.phone,
+            companyId: options.companyId,
+            companyName: options.companyName,
+            plan: options.plan,
             value: options.value,
             customData: options.customData,
         };

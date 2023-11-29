@@ -97,12 +97,18 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     name?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
+    companyId?: string | undefined;
+    companyName?: string | undefined;
+    plan?: string | undefined;
     value?: number | undefined;
   }): Promise<{ identify: boolean }> {
     var userData = {
       name: options.name,
       email: options.email,
       phone: options.phone,
+      companyId: options.companyId,
+      companyName: options.companyName,
+      plan: options.plan,
       value: options.value,
       customData: options.customData,
     };
@@ -133,6 +139,9 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       name?: string | undefined;
       email?: string | undefined;
       phone?: string | undefined;
+      companyId?: string | undefined;
+      companyName?: string | undefined;
+      plan?: string | undefined;
       value?: number | undefined;
     };
   }> {

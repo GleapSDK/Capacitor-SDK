@@ -52,6 +52,15 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         if (call.getString("phone") != nil) {
             userProperty.phone = call.getString("phone") ?? ""
         }
+        if (call.getString("plan") != nil) {
+            userProperty.plan = call.getString("plan") ?? ""
+        }
+        if (call.getString("companyName") != nil) {
+            userProperty.companyName = call.getString("companyName") ?? ""
+        }
+        if (call.getString("companyId") != nil) {
+            userProperty.companyId = call.getString("companyId") ?? ""
+        }
         if (call.getObject("customData") != nil) {
             userProperty.customData = call.getObject("customData")!
         }

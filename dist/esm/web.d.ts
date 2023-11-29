@@ -35,6 +35,9 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         name?: string | undefined;
         email?: string | undefined;
         phone?: string | undefined;
+        companyId?: string | undefined;
+        companyName?: string | undefined;
+        plan?: string | undefined;
         value?: number | undefined;
     }): Promise<{
         identify: boolean;
@@ -53,6 +56,9 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
             name?: string | undefined;
             email?: string | undefined;
             phone?: string | undefined;
+            companyId?: string | undefined;
+            companyName?: string | undefined;
+            plan?: string | undefined;
             value?: number | undefined;
         };
     }>;
