@@ -515,6 +515,29 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func startClassicForm(_ call: CAPPluginCall) {
+        let formId = call.getString("formId") ?? "bugreporting"
+        let showBackButton = call.getBool("showBackButton") ?? true
+        
+        Gleap.startClassicForm(formId, showBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "classicFormStarted": true
+        ])
+    }
+    
+    @objc func startConversation(_ call: CAPPluginCall) {
+        let showBackButton = call.getBool("showBackButton") ?? true
+        
+        Gleap.startConversation(showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "conversationStarted": true
+        ])
+    }
+    
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {
         let feedbackFlow = call.getString("feedbackFlow") ?? "bugreporting"
         let showBackButton = call.getBool("showBackButton") ?? true
@@ -572,6 +595,10 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     public func widgetOpened() {
         notifyEventUpdate(name: "widget-opened", data: nil)
+    }
+
+    public func notificationCountUpdated(_ count: Int) {
+        notifyEventUpdate(name: "notification-count-updated", data: count)
     }
     
     public func feedbackFlowStarted(_ feedbackAction: [AnyHashable : Any]) {

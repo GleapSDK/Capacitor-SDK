@@ -51,7 +51,7 @@ export interface GleapPlugin {
   *
   * @since 8.1.0
   */
-   getIdentity(): Promise<{
+  getIdentity(): Promise<{
     identity: {
       userId: string;
       name?: string;
@@ -66,7 +66,7 @@ export interface GleapPlugin {
   *
   * @since 8.1.0
   */
-   isUserIdentified(): Promise<{
+  isUserIdentified(): Promise<{
     isUserIdentified: boolean;
   }>;
 
@@ -176,7 +176,7 @@ export interface GleapPlugin {
    *
    * @since 7.0.0
    */
-   setEventCallback(
+  setEventCallback(
     callback: GleapEventCallback,
   ): Promise<CallbackID>;
 
@@ -207,7 +207,7 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-   preFillForm(options: {
+  preFillForm(options: {
     data: any;
   }): Promise<{
     preFilledForm: boolean;
@@ -218,7 +218,7 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-   addAttachment(options: {
+  addAttachment(options: {
     base64data: string;
     name: string;
   }): Promise<{
@@ -230,7 +230,7 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-   removeAllAttachments(): Promise<{
+  removeAllAttachments(): Promise<{
     allAttachmentsRemoved: boolean;
   }>;
 
@@ -248,9 +248,9 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openNews(options: {
+  openNews(options: {
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     openedNews: boolean;
   }>;
 
@@ -259,10 +259,10 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openNewsArticle(options: {
+  openNewsArticle(options: {
     articleId: string;
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     opened: boolean;
   }>;
 
@@ -271,9 +271,9 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openHelpCenter(options: {
+  openHelpCenter(options: {
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     opened: boolean;
   }>;
 
@@ -282,10 +282,10 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openHelpCenterArticle(options: {
+  openHelpCenterArticle(options: {
     articleId: string;
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     opened: boolean;
   }>;
 
@@ -294,10 +294,10 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openHelpCenterCollection(options: {
+  openHelpCenterCollection(options: {
     collectionId: string;
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     opened: boolean;
   }>;
 
@@ -306,10 +306,10 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   searchHelpCenter(options: {
+  searchHelpCenter(options: {
     term: string;
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     opened: boolean;
   }>;
 
@@ -318,9 +318,9 @@ export interface GleapPlugin {
   *
   * @since 8.4.0
   */
-   openFeatureRequests(options: {
+  openFeatureRequests(options: {
     showBackButton?: boolean;
-   }): Promise<{
+  }): Promise<{
     openedFeatureRequests: boolean;
   }>;
 
@@ -329,7 +329,7 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-   close(): Promise<{
+  close(): Promise<{
     closedWidget: boolean;
   }>;
 
@@ -338,7 +338,7 @@ export interface GleapPlugin {
   *
   * @since 7.0.0
   */
-   isOpened(): Promise<{
+  isOpened(): Promise<{
     isOpened: boolean;
   }>;
 
@@ -352,6 +352,29 @@ export interface GleapPlugin {
     showBackButton?: boolean;
   }): Promise<{
     startedFeedbackFlow: boolean;
+  }>;
+
+  /**
+ * Start a classic form
+ *
+ * @since 13.1.0
+ */
+  startClassicForm(options: {
+    formId?: string;
+    showBackButton?: boolean;
+  }): Promise<{
+    classicFormStarted: boolean;
+  }>;
+
+  /**
+ * Start a new conversation
+ *
+ * @since 13.1.0
+ */
+  startConversation(options: {
+    showBackButton?: boolean;
+  }): Promise<{
+    conversationStarted: boolean;
   }>;
 
   /**
@@ -371,22 +394,22 @@ export interface GleapPlugin {
  *
  * @since 8.0.0
  */
-   showFeedbackButton(options: {
+  showFeedbackButton(options: {
     show?: boolean;
   }): Promise<{
     feedbackButtonShown: boolean;
   }>;
 
-    /**
- * Disable in app notifications.
- *
- * @since 8.6.1
- */
-    setDisableInAppNotifications(options: {
-      disableInAppNotifications?: boolean;
-    }): Promise<{
-      inAppNotificationsDisabled: boolean;
-    }>;
+  /**
+* Disable in app notifications.
+*
+* @since 8.6.1
+*/
+  setDisableInAppNotifications(options: {
+    disableInAppNotifications?: boolean;
+  }): Promise<{
+    inAppNotificationsDisabled: boolean;
+  }>;
 
   /**
  * Set Language

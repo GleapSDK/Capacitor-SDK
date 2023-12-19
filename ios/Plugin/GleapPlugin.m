@@ -43,4 +43,6 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(isUserIdentified, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setTags, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setDisableInAppNotifications, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(startClassicForm, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(startConversation, CAPPluginReturnPromise);
 )

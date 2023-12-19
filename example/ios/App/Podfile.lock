@@ -4,12 +4,12 @@ PODS:
   - CapacitorCamera (5.0.4):
     - Capacitor
   - CapacitorCordova (5.0.1)
-  - CapacitorGleapPlugin (12.1.0):
+  - CapacitorGleapPlugin (13.1.0):
     - Capacitor
-    - Gleap (= 12.1.0)
+    - Gleap (= 13.1.0)
   - CapacitorSplashScreen (5.0.4):
     - Capacitor
-  - Gleap (12.1.0)
+  - Gleap (13.1.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -38,10 +38,10 @@ SPEC CHECKSUMS:
   Capacitor: c550a8485d00d5d92b4f91a245f43555a2230eb6
   CapacitorCamera: 9b5c8e809c1042f263994f97ba846aa37e974f12
   CapacitorCordova: 4f8cf089c691f0e21032d22b1014808308cbc467
-  CapacitorGleapPlugin: 74c46c120c9f1fdff08f132a021227f6617e1fdc
+  CapacitorGleapPlugin: 5ab31a0af9e65b65e99c62a3b4aea8408c67df57
   CapacitorSplashScreen: 93a389d4f7673c08214ae25bb6f21d867d5305c5
-  Gleap: 4925db378d035b7764ee9f109c2f117a17329a9e
+  Gleap: 954c2d1dc5726c8ea13f8da5b848eb521ae416f7
 
 PODFILE CHECKSUM: 0d736eece0df97d890ce934dc764ff47c95f27f5
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.3

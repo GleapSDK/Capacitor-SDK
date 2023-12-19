@@ -318,6 +318,27 @@ export interface GleapPlugin {
         startedFeedbackFlow: boolean;
     }>;
     /**
+   * Start a classic form
+   *
+   * @since 13.1.0
+   */
+    startClassicForm(options: {
+        formId?: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        classicFormStarted: boolean;
+    }>;
+    /**
+   * Start a new conversation
+   *
+   * @since 13.1.0
+   */
+    startConversation(options: {
+        showBackButton?: boolean;
+    }): Promise<{
+        conversationStarted: boolean;
+    }>;
+    /**
    * Start bot
    *
    * @since 10.0.3
@@ -339,10 +360,10 @@ export interface GleapPlugin {
         feedbackButtonShown: boolean;
     }>;
     /**
- * Disable in app notifications.
- *
- * @since 8.6.1
- */
+  * Disable in app notifications.
+  *
+  * @since 8.6.1
+  */
     setDisableInAppNotifications(options: {
         disableInAppNotifications?: boolean;
     }): Promise<{

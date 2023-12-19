@@ -49,6 +49,8 @@ Please install the plugin version `capacitor-gleap-plugin@10.0.3` if you are usi
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
+* [`startClassicForm(...)`](#startclassicform)
+* [`startConversation(...)`](#startconversation)
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
@@ -595,6 +597,44 @@ Start feedback flow
 **Returns:** <code>Promise&lt;{ startedFeedbackFlow: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### startClassicForm(...)
+
+```typescript
+startClassicForm(options: { formId?: string; showBackButton?: boolean; }) => Promise<{ classicFormStarted: boolean; }>
+```
+
+Start a classic form
+
+| Param         | Type                                                        |
+| ------------- | ----------------------------------------------------------- |
+| **`options`** | <code>{ formId?: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ classicFormStarted: boolean; }&gt;</code>
+
+**Since:** 13.1.0
+
+--------------------
+
+
+### startConversation(...)
+
+```typescript
+startConversation(options: { showBackButton?: boolean; }) => Promise<{ conversationStarted: boolean; }>
+```
+
+Start a new conversation
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ conversationStarted: boolean; }&gt;</code>
+
+**Since:** 13.1.0
 
 --------------------
 

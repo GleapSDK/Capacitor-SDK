@@ -12,6 +12,17 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     registerCallbackListeners(): void;
     notifyCallbacks(event: string, data: any): void;
+    startClassicForm(options: {
+        formId?: string | undefined;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        classicFormStarted: boolean;
+    }>;
+    startConversation(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        conversationStarted: boolean;
+    }>;
     showSurvey(options: {
         surveyId: string;
         format?: 'survey' | 'survey_full' | undefined;

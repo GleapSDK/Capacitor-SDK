@@ -48,6 +48,9 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].on('register-pushmessage-group', groupName => {
             this.notifyCallbacks('register-pushmessage-group', groupName);
         });
+        Gleap__default["default"].on('unread-count-changed', groupName => {
+            this.notifyCallbacks('notification-count-updated', groupName);
+        });
         Gleap__default["default"].registerCustomAction(customAction => {
             this.notifyCallbacks('custom-action-called', customAction);
         });
@@ -59,6 +62,15 @@ class GleapWeb extends core.WebPlugin {
         for (var callbackId in GleapWeb.callbacks) {
             GleapWeb.callbacks[callbackId](event, data);
         }
+    }
+    async startClassicForm(options) {
+        var _a;
+        Gleap__default["default"].startClassicForm((_a = options.formId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+        return { classicFormStarted: true };
+    }
+    async startConversation(options) {
+        Gleap__default["default"].startConversation(options.showBackButton);
+        return { conversationStarted: true };
     }
     async showSurvey(options) {
         Gleap__default["default"].showSurvey(options.surveyId, options.format);

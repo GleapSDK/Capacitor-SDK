@@ -595,6 +595,48 @@
         "slug": "startfeedbackflow"
       },
       {
+        "name": "startClassicForm",
+        "signature": "(options: { formId?: string; showBackButton?: boolean; }) => Promise<{ classicFormStarted: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ formId?: string | undefined; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ classicFormStarted: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.1.0"
+          }
+        ],
+        "docs": "Start a classic form",
+        "complexTypes": [],
+        "slug": "startclassicform"
+      },
+      {
+        "name": "startConversation",
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ conversationStarted: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ conversationStarted: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.1.0"
+          }
+        ],
+        "docs": "Start a new conversation",
+        "complexTypes": [],
+        "slug": "startconversation"
+      },
+      {
         "name": "startBot",
         "signature": "(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>",
         "parameters": [

@@ -27,6 +27,7 @@ import io.gleap.callbacks.RegisterPushMessageGroupCallback;
 import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
 import io.gleap.callbacks.WidgetClosedCallback;
 import io.gleap.callbacks.WidgetOpenedCallback;
+import io.gleap.callbacks.NotificationUnreadCountUpdatedCallback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -147,7 +148,7 @@ public class GleapPlugin extends Plugin {
 
                 if (userProps != null) {
                     identityObj.put("userId", gleapUser.getUserId());
-                    identityObj.put("phone", userProps.getPhoneNumber());
+                    identityObj.put("phone", userProps.getPhone());
                     identityObj.put("email", userProps.getEmail());
                     identityObj.put("name", userProps.getName());
                     identityObj.put("value", userProps.getValue());
@@ -714,6 +715,37 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void startConversation(PluginCall call) throws GleapNotInitialisedException {
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        // Start conversation
+        implementation.startConversation(showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("conversationStarted", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void startClassicForm(PluginCall call) throws GleapNotInitialisedException {
+        if (!call.getData().has("formId")) {
+            call.reject("No formId provided");
+            return;
+        }
+
+        // Start feedback flow
+        boolean showBackButton = call.getBoolean("showBackButton");
+        String formId = call.getString("formId");
+        implementation.startClassicForm(formId, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("classicFormStarted", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void setLanguage(PluginCall call) {
         // If languageCode is empty, then pass back error
         if (!call.getData().has("languageCode")) {
@@ -741,6 +773,18 @@ public class GleapPlugin extends Plugin {
                 public void invoke() {
                     JSObject data = new JSObject();
                     data.put("name", "widget-opened");
+                    call.resolve(data);
+                }
+            }
+        );
+
+        implementation.setNotificationUnreadCountUpdatedCallback(new NotificationUnreadCountUpdatedCallback() {
+            @Override
+            public void invoke(int count) {
+                    // called when the sending of the feedback failed
+                    JSObject data = new JSObject();
+                    data.put("name", "notification-count-updated");
+                    data.put("data", count);
                     call.resolve(data);
                 }
             }

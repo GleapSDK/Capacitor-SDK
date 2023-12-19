@@ -35,6 +35,9 @@ export class GleapWeb extends WebPlugin {
         Gleap.on('register-pushmessage-group', groupName => {
             this.notifyCallbacks('register-pushmessage-group', groupName);
         });
+        Gleap.on('unread-count-changed', groupName => {
+            this.notifyCallbacks('notification-count-updated', groupName);
+        });
         Gleap.registerCustomAction(customAction => {
             this.notifyCallbacks('custom-action-called', customAction);
         });
@@ -46,6 +49,15 @@ export class GleapWeb extends WebPlugin {
         for (var callbackId in GleapWeb.callbacks) {
             GleapWeb.callbacks[callbackId](event, data);
         }
+    }
+    async startClassicForm(options) {
+        var _a;
+        Gleap.startClassicForm((_a = options.formId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+        return { classicFormStarted: true };
+    }
+    async startConversation(options) {
+        Gleap.startConversation(options.showBackButton);
+        return { conversationStarted: true };
     }
     async showSurvey(options) {
         Gleap.showSurvey(options.surveyId, options.format);
