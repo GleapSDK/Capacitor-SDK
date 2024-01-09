@@ -58,7 +58,6 @@ Please install the plugin version `capacitor-gleap-plugin@10.0.3` if you are usi
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
 * [Interfaces](#interfaces)
-* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -158,7 +157,7 @@ Submit a custom log message with the given level
 
 | Param         | Type                                                                         |
 | ------------- | ---------------------------------------------------------------------------- |
-| **`options`** | <code>{ message: string; logLevel?: 'ERROR' \| 'WARNING' \| 'INFO'; }</code> |
+| **`options`** | <code>{ message: string; logLevel?: "ERROR" \| "WARNING" \| "INFO"; }</code> |
 
 **Returns:** <code>Promise&lt;{ logged: boolean; }&gt;</code>
 
@@ -177,7 +176,7 @@ Manually show a survey.
 
 | Param         | Type                                                                   |
 | ------------- | ---------------------------------------------------------------------- |
-| **`options`** | <code>{ surveyId: string; format?: 'survey' \| 'survey_full'; }</code> |
+| **`options`** | <code>{ surveyId: string; format?: "survey" \| "survey_full"; }</code> |
 
 **Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
 
@@ -321,9 +320,9 @@ Track a page view
 setEventCallback(callback: GleapEventCallback) => Promise<CallbackID>
 ```
 
-| Param          | Type                                                              |
-| -------------- | ----------------------------------------------------------------- |
-| **`callback`** | <code><a href="#gleapeventcallback">GleapEventCallback</a></code> |
+| Param          | Type                                               |
+| -------------- | -------------------------------------------------- |
+| **`callback`** | <code>(name: string, data?: any) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;string&gt;</code>
 
@@ -342,7 +341,7 @@ Log event to Gleap
 
 | Param         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ description: string; severity?: 'LOW' \| 'MEDIUM' \| 'HIGH'; dataExclusion?: { customData: <a href="#boolean">Boolean</a>; metaData: <a href="#boolean">Boolean</a>; attachments: <a href="#boolean">Boolean</a>; consoleLog: <a href="#boolean">Boolean</a>; networkLogs: <a href="#boolean">Boolean</a>; customEventLog: <a href="#boolean">Boolean</a>; screenshot: <a href="#boolean">Boolean</a>; replays: <a href="#boolean">Boolean</a>; }; }</code> |
+| **`options`** | <code>{ description: string; severity?: "LOW" \| "MEDIUM" \| "HIGH"; dataExclusion?: { customData: <a href="#boolean">Boolean</a>; metaData: <a href="#boolean">Boolean</a>; attachments: <a href="#boolean">Boolean</a>; consoleLog: <a href="#boolean">Boolean</a>; networkLogs: <a href="#boolean">Boolean</a>; customEventLog: <a href="#boolean">Boolean</a>; screenshot: <a href="#boolean">Boolean</a>; replays: <a href="#boolean">Boolean</a>; }; }</code> |
 
 **Returns:** <code>Promise&lt;{ sentSilentBugReport: boolean; }&gt;</code>
 
@@ -756,14 +755,14 @@ Provides functionality common to all JavaScript objects.
 | ----------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | **`constructor`** | <code><a href="#function">Function</a></code> | The initial value of <a href="#object">Object</a>.prototype.constructor is the standard built-in <a href="#object">Object</a> constructor. |
 
-| Method                   | Signature                                                 | Description                                                              |
-| ------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **toString**             | () =&gt; string                                           | Returns a string representation of an object.                            |
-| **toLocaleString**       | () =&gt; string                                           | Returns a date converted to a string using the current locale.           |
-| **valueOf**              | () =&gt; <a href="#object">Object</a>                     | Returns the primitive value of the specified object.                     |
-| **hasOwnProperty**       | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether an object has a property with the specified name.     |
-| **isPrototypeOf**        | (v: <a href="#object">Object</a>) =&gt; boolean           | Determines whether an object exists in another object's prototype chain. |
-| **propertyIsEnumerable** | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether a specified property is enumerable.                   |
+| Method                   | Signature                                       | Description                                                              |
+| ------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------ |
+| **toString**             | () =&gt; string                                 | Returns a string representation of an object.                            |
+| **toLocaleString**       | () =&gt; string                                 | Returns a date converted to a string using the current locale.           |
+| **valueOf**              | () =&gt; <a href="#object">Object</a>           | Returns the primitive value of the specified object.                     |
+| **hasOwnProperty**       | (v: PropertyKey) =&gt; boolean                  | Determines whether an object has a property with the specified name.     |
+| **isPrototypeOf**        | (v: <a href="#object">Object</a>) =&gt; boolean | Determines whether an object exists in another object's prototype chain. |
+| **propertyIsEnumerable** | (v: PropertyKey) =&gt; boolean                  | Determines whether a specified property is enumerable.                   |
 
 
 #### Function
@@ -790,23 +789,5 @@ Creates a new function.
 | Method      | Signature        | Description                                          |
 | ----------- | ---------------- | ---------------------------------------------------- |
 | **valueOf** | () =&gt; boolean | Returns the primitive value of the specified object. |
-
-
-### Type Aliases
-
-
-#### PropertyKey
-
-<code>string | number | symbol</code>
-
-
-#### GleapEventCallback
-
-<code>(name: string, data?: any): void</code>
-
-
-#### CallbackID
-
-<code>string</code>
 
 </docgen-api>
