@@ -13,7 +13,7 @@ npx cap sync
 
 ## Capacitor 4 or earlier
 
-Please install the plugin version `capacitor-gleap-plugin@10.0.3` if you are using capacitor 4 or earlier.
+Please install the plugin version from our capacitor-v4 brunch with `npm install GleapSDK/Capacitor-SDK#capacitor-v4 --save` if you are using capacitor 4 or earlier.
 
 ## API
 
