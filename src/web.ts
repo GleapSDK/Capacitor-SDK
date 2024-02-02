@@ -137,6 +137,24 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { identify: true };
   }
 
+  async updateContact(options: { name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }): Promise<{ identify: boolean; }> {
+    Gleap.updateContact(options);
+
+    return { identify: true };
+  }
+
+  async setNetworkLogsBlacklist(options: { blacklist: string[]; }): Promise<{ blacklistSet: boolean; }> {
+    Gleap.setNetworkLogsBlacklist(options.blacklist);
+
+    return { blacklistSet: true };
+  }
+
+  async setNetworkLogPropsToIgnore(options: { propsToIgnore: string[]; }): Promise<{ propsToIgnoreSet: boolean; }> {
+    Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
+
+    return { propsToIgnoreSet: true };
+  }
+
   async setTags(options: { tags: string[]; }): Promise<{ tagsSet: boolean; }> {
     Gleap.setTags(options.tags);
 

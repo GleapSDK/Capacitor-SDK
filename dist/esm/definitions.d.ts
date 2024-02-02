@@ -31,6 +31,23 @@ export interface GleapPlugin {
         identify: boolean;
     }>;
     /**
+    * Update user properties
+    *
+    * @since 13.2.1
+    */
+    updateContact(options: {
+        name?: string;
+        email?: string;
+        phone?: string;
+        companyId?: string;
+        companyName?: string;
+        plan?: string;
+        value?: number;
+        customData?: Object;
+    }): Promise<{
+        identify: boolean;
+    }>;
+    /**
     * Clear user identity
     *
     * @since 7.0.0
@@ -101,6 +118,26 @@ export interface GleapPlugin {
         tags: string[];
     }): Promise<{
         tagsSet: boolean;
+    }>;
+    /**
+    * Set network logs blacklist
+    *
+    * @since 13.2.1
+    */
+    setNetworkLogsBlacklist(options: {
+        blacklist: string[];
+    }): Promise<{
+        blacklistSet: boolean;
+    }>;
+    /**
+    * Set network logs props to ignore
+    *
+    * @since 13.2.1
+    */
+    setNetworkLogPropsToIgnore(options: {
+        propsToIgnore: string[];
+    }): Promise<{
+        propsToIgnoreSet: boolean;
     }>;
     /**
     * Set custom data

@@ -50,6 +50,29 @@
         "slug": "identify"
       },
       {
+        "name": "updateContact",
+        "signature": "(options: { name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ identify: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.2.1"
+          }
+        ],
+        "docs": "Update user properties",
+        "complexTypes": [
+          "Object"
+        ],
+        "slug": "updatecontact"
+      },
+      {
         "name": "clearIdentity",
         "signature": "() => Promise<{ clearIdentity: boolean; }>",
         "parameters": [],
@@ -177,6 +200,48 @@
         "docs": "Set tags",
         "complexTypes": [],
         "slug": "settags"
+      },
+      {
+        "name": "setNetworkLogsBlacklist",
+        "signature": "(options: { blacklist: string[]; }) => Promise<{ blacklistSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ blacklist: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ blacklistSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.2.1"
+          }
+        ],
+        "docs": "Set network logs blacklist",
+        "complexTypes": [],
+        "slug": "setnetworklogsblacklist"
+      },
+      {
+        "name": "setNetworkLogPropsToIgnore",
+        "signature": "(options: { propsToIgnore: string[]; }) => Promise<{ propsToIgnoreSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ propsToIgnore: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ propsToIgnoreSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.2.1"
+          }
+        ],
+        "docs": "Set network logs props to ignore",
+        "complexTypes": [],
+        "slug": "setnetworklogpropstoignore"
       },
       {
         "name": "setCustomData",

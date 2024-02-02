@@ -66,10 +66,46 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         }
         
         if let userHash = call.getString("userHash") {
-            Gleap.identifyUser(with: userId, andData:  userProperty, andUserHash: userHash)
+            Gleap.identifyContact(userId, andData:  userProperty, andUserHash: userHash)
         } else {
-            Gleap.identifyUser(with: userId, andData: userProperty)
+            Gleap.identifyContact(userId, andData: userProperty)
         }
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "identify": true
+        ])
+    }
+    
+    @objc func updateContact(_ call: CAPPluginCall) {
+        // Map all values
+        let userProperty = GleapUserProperty()
+        if (call.getString("name") != nil) {
+            userProperty.name = call.getString("name") ?? ""
+        }
+        if (call.getString("email") != nil) {
+            userProperty.email = call.getString("email") ?? ""
+        }
+        if (call.getDouble("value") != nil) {
+            userProperty.value = (call.getDouble("value") ?? 0.0) as NSNumber
+        }
+        if (call.getString("phone") != nil) {
+            userProperty.phone = call.getString("phone") ?? ""
+        }
+        if (call.getString("plan") != nil) {
+            userProperty.plan = call.getString("plan") ?? ""
+        }
+        if (call.getString("companyName") != nil) {
+            userProperty.companyName = call.getString("companyName") ?? ""
+        }
+        if (call.getString("companyId") != nil) {
+            userProperty.companyId = call.getString("companyId") ?? ""
+        }
+        if (call.getObject("customData") != nil) {
+            userProperty.customData = call.getObject("customData")!
+        }
+        
+        Gleap.updateContact(userProperty)
         
         // Provide feedback that it has been success
         call.resolve([
@@ -144,6 +180,38 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "addedCustomData": true
+        ])
+    }
+    
+    @objc func setNetworkLogsBlacklist(_ call: CAPPluginCall) {
+        // If value is empty, then pass back error
+        guard let blacklist = call.options["blacklist"] as? [String] else {
+            call.reject("Must provide a blacklist array")
+            return;
+        }
+        
+        // Append custom data
+        Gleap.setNetworkLogsBlacklist(blacklist)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "blacklistSet": true
+        ])
+    }
+    
+    @objc func setNetworkLogPropsToIgnore(_ call: CAPPluginCall) {
+        // If value is empty, then pass back error
+        guard let propsToIgnore = call.options["propsToIgnore"] as? [String] else {
+            call.reject("Must provide a propsToIgnore array")
+            return;
+        }
+        
+        // Append custom data
+        Gleap.setNetworkLogPropsToIgnore(propsToIgnore)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "propsToIgnoreSet": true
         ])
     }
     

@@ -91,6 +91,18 @@ export class GleapWeb extends WebPlugin {
         }
         return { identify: true };
     }
+    async updateContact(options) {
+        Gleap.updateContact(options);
+        return { identify: true };
+    }
+    async setNetworkLogsBlacklist(options) {
+        Gleap.setNetworkLogsBlacklist(options.blacklist);
+        return { blacklistSet: true };
+    }
+    async setNetworkLogPropsToIgnore(options) {
+        Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
+        return { propsToIgnoreSet: true };
+    }
     async setTags(options) {
         Gleap.setTags(options.tags);
         return { tagsSet: true };

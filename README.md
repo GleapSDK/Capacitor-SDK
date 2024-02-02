@@ -21,6 +21,7 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 
 * [`initialize(...)`](#initialize)
 * [`identify(...)`](#identify)
+* [`updateContact(...)`](#updatecontact)
 * [`clearIdentity()`](#clearidentity)
 * [`getIdentity()`](#getidentity)
 * [`isUserIdentified()`](#isuseridentified)
@@ -28,6 +29,8 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`showSurvey(...)`](#showsurvey)
 * [`attachCustomData(...)`](#attachcustomdata)
 * [`setTags(...)`](#settags)
+* [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
+* [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
@@ -98,6 +101,25 @@ Set user identity
 **Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### updateContact(...)
+
+```typescript
+updateContact(options: { name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
+```
+
+Update user properties
+
+| Param         | Type                                                                                                                                                                                |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
+
+**Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
+
+**Since:** 13.2.1
 
 --------------------
 
@@ -219,6 +241,44 @@ Set tags
 **Returns:** <code>Promise&lt;{ tagsSet: boolean; }&gt;</code>
 
 **Since:** 8.6.0
+
+--------------------
+
+
+### setNetworkLogsBlacklist(...)
+
+```typescript
+setNetworkLogsBlacklist(options: { blacklist: string[]; }) => Promise<{ blacklistSet: boolean; }>
+```
+
+Set network logs blacklist
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ blacklist: string[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ blacklistSet: boolean; }&gt;</code>
+
+**Since:** 13.2.1
+
+--------------------
+
+
+### setNetworkLogPropsToIgnore(...)
+
+```typescript
+setNetworkLogPropsToIgnore(options: { propsToIgnore: string[]; }) => Promise<{ propsToIgnoreSet: boolean; }>
+```
+
+Set network logs props to ignore
+
+| Param         | Type                                      |
+| ------------- | ----------------------------------------- |
+| **`options`** | <code>{ propsToIgnore: string[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ propsToIgnoreSet: boolean; }&gt;</code>
+
+**Since:** 13.2.1
 
 --------------------
 

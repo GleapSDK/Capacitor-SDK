@@ -53,6 +53,28 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         identify: boolean;
     }>;
+    updateContact(options: {
+        name?: string | undefined;
+        email?: string | undefined;
+        phone?: string | undefined;
+        companyId?: string | undefined;
+        companyName?: string | undefined;
+        plan?: string | undefined;
+        value?: number | undefined;
+        customData?: Object | undefined;
+    }): Promise<{
+        identify: boolean;
+    }>;
+    setNetworkLogsBlacklist(options: {
+        blacklist: string[];
+    }): Promise<{
+        blacklistSet: boolean;
+    }>;
+    setNetworkLogPropsToIgnore(options: {
+        propsToIgnore: string[];
+    }): Promise<{
+        propsToIgnoreSet: boolean;
+    }>;
     setTags(options: {
         tags: string[];
     }): Promise<{
