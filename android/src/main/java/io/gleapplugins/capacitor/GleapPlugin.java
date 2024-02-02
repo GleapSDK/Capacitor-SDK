@@ -14,8 +14,7 @@ import io.gleap.APPLICATIONTYPE;
 import io.gleap.Gleap;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
-import io.gleap.GleapUser;
-import io.gleap.GleapUserProperties;
+import io.gleap.GleapSessionProperties;
 import io.gleap.SurveyType;
 import io.gleap.callbacks.InitializedCallback;
 import io.gleap.callbacks.ConfigLoadedCallback;
@@ -85,37 +84,37 @@ public class GleapPlugin extends Plugin {
             return;
         }
 
-        GleapUserProperties userProperties = new GleapUserProperties();
+        GleapSessionProperties sessionProperties = new GleapSessionProperties();
         if (call.getData().has("email")) {
-            userProperties.setEmail(call.getString("email"));
+            sessionProperties.setEmail(call.getString("email"));
         }
         if (call.getData().has("name")) {
-            userProperties.setName(call.getString("name"));
+            sessionProperties.setName(call.getString("name"));
         }
         if (call.getData().has("phone")) {
-            userProperties.setPhone(call.getString("phone"));
+            sessionProperties.setPhone(call.getString("phone"));
         }
         if (call.getData().has("plan")) {
-            userProperties.setPlan(call.getString("plan"));
+            sessionProperties.setPlan(call.getString("plan"));
         }
         if (call.getData().has("companyName")) {
-            userProperties.setCompanyName(call.getString("companyName"));
+            sessionProperties.setCompanyName(call.getString("companyName"));
         }
         if (call.getData().has("companyId")) {
-            userProperties.setCompanyId(call.getString("companyId"));
+            sessionProperties.setCompanyId(call.getString("companyId"));
         }
         if (call.getData().has("value")) {
-            userProperties.setValue(call.getDouble("value"));
+            sessionProperties.setValue(call.getDouble("value"));
         }
         if (call.getData().has("userHash")) {
-            userProperties.setHash(call.getString("userHash"));
+            sessionProperties.setHash(call.getString("userHash"));
         }
         if (call.getData().has("customData")) {
-            userProperties.setCustomData(call.getObject("customData"));
+            sessionProperties.setCustomData(call.getObject("customData"));
         }
 
         String userId = call.getString("userId");
-        implementation.identifyUser(userId, userProperties);
+        implementation.identifyContact(userId, sessionProperties);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -140,20 +139,15 @@ public class GleapPlugin extends Plugin {
         JSObject ret = new JSObject();
 
         try {
-            GleapUser gleapUser = implementation.getIdentity();
-            if (gleapUser != null) {
-                GleapUserProperties userProps = gleapUser.getGleapUserProperties();
+            GleapSessionProperties userProps = implementation.getIdentity();
 
-                JSObject identityObj = new JSObject();
-
-                if (userProps != null) {
-                    identityObj.put("userId", gleapUser.getUserId());
-                    identityObj.put("phone", userProps.getPhone());
-                    identityObj.put("email", userProps.getEmail());
-                    identityObj.put("name", userProps.getName());
-                    identityObj.put("value", userProps.getValue());
-                }
-
+            JSObject identityObj = new JSObject();
+            if (userProps != null) {
+                identityObj.put("userId", userProps.getUserId());
+                identityObj.put("phone", userProps.getPhone());
+                identityObj.put("email", userProps.getEmail());
+                identityObj.put("name", userProps.getName());
+                identityObj.put("value", userProps.getValue());
                 ret.put("identity", identityObj);
             } else {
                 ret.put("identity", null);
@@ -220,6 +214,62 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("tagsSet", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setNetworkLogsBlacklist(PluginCall call) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("blacklist")) {
+            call.reject("Must provide a blacklist array");
+            return;
+        }
+
+        try {
+            // Set custom data
+            JSArray jsonBlacklist = call.getArray("blacklist");
+            String[] blacklist = new String[jsonBlacklist.length()];
+            for (int i = 0; i < jsonBlacklist.length(); i++) {
+                blacklist[i] = jsonBlacklist.getString(i);
+            }
+
+            implementation.setNetworkLogsBlacklist(blacklist);
+        } catch (Exception ex) {}
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("blacklistSet", true);
+        call.resolve(ret);
+    }
+    /**
+     * Sets properties to be ignored in network logs.
+     *
+     * @since 13.2.1
+     */
+    @PluginMethod
+    public void setNetworkLogPropsToIgnore(PluginCall call) {
+        // Check if 'propsToIgnore' key is provided, return error if not
+        if (!call.getData().has("propsToIgnore")) {
+            call.reject("Must provide a propsToIgnore array");
+            return;
+        }
+
+        try {
+            // Retrieve and set the properties to be ignored
+            JSArray jsonPropsToIgnore = call.getArray("propsToIgnore");
+            String[] propsToIgnore = new String[jsonPropsToIgnore.length()];
+            for (int i = 0; i < jsonPropsToIgnore.length(); i++) {
+                propsToIgnore[i] = jsonPropsToIgnore.getString(i);
+            }
+
+            implementation.setNetworkLogPropsToIgnore(propsToIgnore);
+        } catch (Exception ex) {
+            // Handle exceptions if necessary
+        }
+
+        // Confirm successful setting of properties to ignore
+        JSObject ret = new JSObject();
+        ret.put("propsToIgnoreSet", true);
         call.resolve(ret);
     }
 

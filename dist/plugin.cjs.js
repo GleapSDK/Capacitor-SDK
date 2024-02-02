@@ -104,6 +104,18 @@ class GleapWeb extends core.WebPlugin {
         }
         return { identify: true };
     }
+    async updateContact(options) {
+        Gleap__default["default"].updateContact(options);
+        return { identify: true };
+    }
+    async setNetworkLogsBlacklist(options) {
+        Gleap__default["default"].setNetworkLogsBlacklist(options.blacklist);
+        return { blacklistSet: true };
+    }
+    async setNetworkLogPropsToIgnore(options) {
+        Gleap__default["default"].setNetworkLogPropsToIgnore(options.propsToIgnore);
+        return { propsToIgnoreSet: true };
+    }
     async setTags(options) {
         Gleap__default["default"].setTags(options.tags);
         return { tagsSet: true };
