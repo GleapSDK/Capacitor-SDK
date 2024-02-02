@@ -124,7 +124,7 @@
           {
             "name": "options",
             "docs": "",
-            "type": "{ message: string; logLevel?: \"ERROR\" | \"WARNING\" | \"INFO\" | undefined; }"
+            "type": "{ message: string; logLevel?: 'ERROR' | 'WARNING' | 'INFO' | undefined; }"
           }
         ],
         "returns": "Promise<{ logged: boolean; }>",
@@ -145,7 +145,7 @@
           {
             "name": "options",
             "docs": "",
-            "type": "{ surveyId: string; format?: \"survey\" | \"survey_full\" | undefined; }"
+            "type": "{ surveyId: string; format?: 'survey' | 'survey_full' | undefined; }"
           }
         ],
         "returns": "Promise<{ opened: boolean; }>",
@@ -349,7 +349,7 @@
           {
             "name": "callback",
             "docs": "",
-            "type": "(name: string, data?: any) => void"
+            "type": "GleapEventCallback"
           }
         ],
         "returns": "Promise<string>",
@@ -373,7 +373,7 @@
           {
             "name": "options",
             "docs": "",
-            "type": "{ description: string; severity?: \"LOW\" | \"MEDIUM\" | \"HIGH\" | undefined; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; } | undefined; }"
+            "type": "{ description: string; severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined; dataExclusion?: { customData: Boolean; metaData: Boolean; attachments: Boolean; consoleLog: Boolean; networkLogs: Boolean; customEventLog: Boolean; screenshot: Boolean; replays: Boolean; } | undefined; }"
           }
         ],
         "returns": "Promise<{ sentSilentBugReport: boolean; }>",
@@ -864,7 +864,7 @@
             {
               "name": "v",
               "docs": "A property name.",
-              "type": "string | number | symbol"
+              "type": "PropertyKey"
             }
           ],
           "returns": "boolean",
@@ -910,7 +910,7 @@
             {
               "name": "v",
               "docs": "A property name.",
-              "type": "string | number | symbol"
+              "type": "PropertyKey"
             }
           ],
           "returns": "boolean",
@@ -1105,5 +1105,49 @@
       "properties": []
     }
   ],
-  "enums": []
+  "enums": [],
+  "typeAliases": [
+    {
+      "name": "PropertyKey",
+      "slug": "propertykey",
+      "docs": "",
+      "types": [
+        {
+          "text": "string",
+          "complexTypes": []
+        },
+        {
+          "text": "number",
+          "complexTypes": []
+        },
+        {
+          "text": "symbol",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "GleapEventCallback",
+      "slug": "gleapeventcallback",
+      "docs": "",
+      "types": [
+        {
+          "text": "(name: string, data?: any): void",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "CallbackID",
+      "slug": "callbackid",
+      "docs": "",
+      "types": [
+        {
+          "text": "string",
+          "complexTypes": []
+        }
+      ]
+    }
+  ],
+  "pluginConfigs": []
 }
