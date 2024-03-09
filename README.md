@@ -31,6 +31,8 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`setTags(...)`](#settags)
 * [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
+* [`setAiTools(...)`](#setaitools)
+* [`setTicketAttribute(...)`](#setticketattribute)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
@@ -280,6 +282,44 @@ Set network logs props to ignore
 **Returns:** <code>Promise&lt;{ propsToIgnoreSet: boolean; }&gt;</code>
 
 **Since:** 13.2.1
+
+--------------------
+
+
+### setAiTools(...)
+
+```typescript
+setAiTools(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: "string" | "number" | "boolean"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>
+```
+
+Sets the AI tools to use
+
+| Param         | Type                                                                                                                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' \| 'number' \| 'boolean'; required: boolean; enums?: string[]; }[]; }[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ aiToolsSet: boolean; }&gt;</code>
+
+**Since:** 13.5.0
+
+--------------------
+
+
+### setTicketAttribute(...)
+
+```typescript
+setTicketAttribute(options: { key: string; value: string; }) => Promise<{ setTicketAttribute: boolean; }>
+```
+
+Sets the value of a ticket attribute
+
+| Param         | Type                                         |
+| ------------- | -------------------------------------------- |
+| **`options`** | <code>{ key: string; value: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ setTicketAttribute: boolean; }&gt;</code>
+
+**Since:** 13.5.0
 
 --------------------
 
@@ -845,6 +885,14 @@ Creates a new function.
 | **toString** | () =&gt; string                                                                      | Returns a string representation of a function.                                                                                                                                                                           |
 
 
+#### GleapEventMessage
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+| **`data`** | <code>any</code>    |
+
+
 #### Boolean
 
 | Method      | Signature        | Description                                          |
@@ -862,7 +910,7 @@ Creates a new function.
 
 #### GleapEventCallback
 
-<code>(name: string, data?: any): void</code>
+<code>(message: <a href="#gleapeventmessage">GleapEventMessage</a> | null, err?: any): void</code>
 
 
 #### CallbackID

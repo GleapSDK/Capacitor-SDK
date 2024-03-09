@@ -32,6 +32,9 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].on('feedback-sent', formData => {
                 this.notifyCallbacks('feedback-sent', formData);
             });
+            Gleap__default["default"].on('tool-execution', toolExecution => {
+                this.notifyCallbacks('tool-execution', toolExecution);
+            });
             Gleap__default["default"].on('flow-started', flow => {
                 this.notifyCallbacks('flow-started', flow);
             });
@@ -51,12 +54,23 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
                 this.notifyCallbacks('custom-action-called', customAction);
             });
         }
+        async setAiTools(options) {
+            Gleap__default["default"].setAiTools(options.tools);
+            return { aiToolsSet: true };
+        }
+        async setTicketAttribute(options) {
+            Gleap__default["default"].setTicketAttribute(options.key, options.value);
+            return { setTicketAttribute: true };
+        }
         notifyCallbacks(event, data) {
             if (!GleapWeb.callbacks) {
                 return;
             }
             for (var callbackId in GleapWeb.callbacks) {
-                GleapWeb.callbacks[callbackId](event, data);
+                GleapWeb.callbacks[callbackId]({
+                    name: event,
+                    data
+                });
             }
         }
         async startClassicForm(options) {

@@ -23,6 +23,9 @@ export class GleapWeb extends WebPlugin {
         Gleap.on('feedback-sent', formData => {
             this.notifyCallbacks('feedback-sent', formData);
         });
+        Gleap.on('tool-execution', toolExecution => {
+            this.notifyCallbacks('tool-execution', toolExecution);
+        });
         Gleap.on('flow-started', flow => {
             this.notifyCallbacks('flow-started', flow);
         });
@@ -42,12 +45,23 @@ export class GleapWeb extends WebPlugin {
             this.notifyCallbacks('custom-action-called', customAction);
         });
     }
+    async setAiTools(options) {
+        Gleap.setAiTools(options.tools);
+        return { aiToolsSet: true };
+    }
+    async setTicketAttribute(options) {
+        Gleap.setTicketAttribute(options.key, options.value);
+        return { setTicketAttribute: true };
+    }
     notifyCallbacks(event, data) {
         if (!GleapWeb.callbacks) {
             return;
         }
         for (var callbackId in GleapWeb.callbacks) {
-            GleapWeb.callbacks[callbackId](event, data);
+            GleapWeb.callbacks[callbackId]({
+                name: event,
+                data
+            });
         }
     }
     async startClassicForm(options) {

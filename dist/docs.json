@@ -244,6 +244,48 @@
         "slug": "setnetworklogpropstoignore"
       },
       {
+        "name": "setAiTools",
+        "signature": "(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: \"string\" | \"number\" | \"boolean\"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[]; }"
+          }
+        ],
+        "returns": "Promise<{ aiToolsSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.5.0"
+          }
+        ],
+        "docs": "Sets the AI tools to use",
+        "complexTypes": [],
+        "slug": "setaitools"
+      },
+      {
+        "name": "setTicketAttribute",
+        "signature": "(options: { key: string; value: string; }) => Promise<{ setTicketAttribute: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ key: string; value: string; }"
+          }
+        ],
+        "returns": "Promise<{ setTicketAttribute: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.5.0"
+          }
+        ],
+        "docs": "Sets the value of a ticket attribute",
+        "complexTypes": [],
+        "slug": "setticketattribute"
+      },
+      {
         "name": "setCustomData",
         "signature": "(options: { key: string; value: string; }) => Promise<{ setCustomData: boolean; }>",
         "parameters": [
@@ -1086,6 +1128,29 @@
       ]
     },
     {
+      "name": "GleapEventMessage",
+      "slug": "gleapeventmessage",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "data",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "any"
+        }
+      ]
+    },
+    {
       "name": "Boolean",
       "slug": "boolean",
       "docs": "",
@@ -1132,8 +1197,10 @@
       "docs": "",
       "types": [
         {
-          "text": "(name: string, data?: any): void",
-          "complexTypes": []
+          "text": "(message: GleapEventMessage | null, err?: any): void",
+          "complexTypes": [
+            "GleapEventMessage"
+          ]
         }
       ]
     },

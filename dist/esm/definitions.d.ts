@@ -1,5 +1,9 @@
 export declare type CallbackID = string;
-export declare type GleapEventCallback = (name: string, data?: any) => void;
+export interface GleapEventMessage {
+    name: string;
+    data?: any;
+}
+export declare type GleapEventCallback = (message: GleapEventMessage | null, err?: any) => void;
 export interface GleapPlugin {
     /**
     * Initialize Gleap with an API key
@@ -138,6 +142,38 @@ export interface GleapPlugin {
         propsToIgnore: string[];
     }): Promise<{
         propsToIgnoreSet: boolean;
+    }>;
+    /**
+    * Sets the AI tools to use
+    *
+    * @since 13.5.0
+    */
+    setAiTools(options: {
+        tools: {
+            name: string;
+            description: string;
+            response: string;
+            parameters: {
+                name: string;
+                description: string;
+                type: "string" | "number" | "boolean";
+                required: boolean;
+                enums?: string[];
+            }[];
+        }[];
+    }): Promise<{
+        aiToolsSet: boolean;
+    }>;
+    /**
+    * Sets the value of a ticket attribute
+    *
+    * @since 13.5.0
+    */
+    setTicketAttribute(options: {
+        key: string;
+        value: string;
+    }): Promise<{
+        setTicketAttribute: boolean;
     }>;
     /**
     * Set custom data

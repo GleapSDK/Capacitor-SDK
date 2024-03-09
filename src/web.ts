@@ -39,6 +39,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       this.notifyCallbacks('feedback-sent', formData);
     });
 
+    Gleap.on('tool-execution', toolExecution => {
+      this.notifyCallbacks('tool-execution', toolExecution);
+    });
+
     Gleap.on('flow-started', flow => {
       this.notifyCallbacks('flow-started', flow);
     });
@@ -64,13 +68,28 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     });
   }
 
+  async setAiTools(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[] }): Promise<{ aiToolsSet: boolean; }> {
+    Gleap.setAiTools(options.tools);
+
+    return { aiToolsSet: true };
+  }
+
+  async setTicketAttribute(options: { key: string; value: string; }): Promise<{ setTicketAttribute: boolean; }> {
+    Gleap.setTicketAttribute(options.key, options.value);
+
+    return { setTicketAttribute: true };
+  }
+
   notifyCallbacks(event: string, data: any): void {
     if (!GleapWeb.callbacks) {
       return;
     }
 
     for (var callbackId in GleapWeb.callbacks) {
-      GleapWeb.callbacks[callbackId](event, data);
+      GleapWeb.callbacks[callbackId]({
+        name: event,
+        data
+      });
     }
   }
 

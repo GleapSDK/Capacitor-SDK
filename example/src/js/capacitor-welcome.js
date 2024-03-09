@@ -2,8 +2,54 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
 import { Gleap } from 'capacitor-gleap-plugin';
 
+const transactionTool = {
+  // Name the tool. Only lowecase letters and - are allowed.
+  name: 'send-money',
+  // Describe the tool. This can also contain further instructions for the LLM.
+  description: 'Send money to a given contact.',
+  // Let the LLM know what the tool is doing. This will allow Kai to update the customer accordingly.
+  response: 'The transfer got initiated but not completed yet. The user must confirm the transfer in the banking app.',
+  // Specify the parameters (it's also possible to pass an empty array)
+  parameters: [{
+      name: 'amount',
+      description: 'The amount of money to send. Must be positive and provided by the user.',
+      type: 'number',
+      required: true
+  }, {
+      name: 'contact',
+      description: 'The contact to send money to.',
+      type: 'string',
+      enum: ["Alice", "Bob"], // Optional
+      required: true
+  }]
+};
+
+// Add all available tools to the array.
+const tools = [transactionTool];
+
 Gleap.initialize({
   API_KEY: 'ogWhNhuiZcGWrva5nlDS8l7a78OfaLlV',
+});
+
+Gleap.setAiTools({
+  tools: tools,
+});
+
+Gleap.setTicketAttribute({
+  key: 'notes',
+  value: 'This is a test value.',
+});
+
+Gleap.setEventCallback((message, err) => {
+  const { name, data } = message;
+  
+  if (name === "tool-execution") {
+    const toolName = data.name;
+    const params = data.params;
+    
+    // Tool execution.
+    console.log(`Tool called: ${toolName} ${JSON.stringify(params)}`);
+  }
 });
 
 window.customElements.define(
@@ -69,7 +115,7 @@ window.customElements.define(
           Capacitor makes it easy to build powerful apps for the app stores, mobile web (Progressive Web Apps), and desktop, all
           with a single code base.
         </p>
-        <h2>Getting Started</h2>
+        <h2>Getting Started 2</h2>
         <p>
           You'll probably need a UI framework to build a full-featured app. Might we recommend
           <a target="_blank" href="http://ionicframework.com/">Ionic</a>?

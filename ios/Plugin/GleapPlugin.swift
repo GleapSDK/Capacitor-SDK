@@ -253,6 +253,87 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
             "setCustomData": true
         ])
     }
+
+    @objc func setAiTools(_ call: CAPPluginCall) {
+        guard let toolsArray = call.options["tools"] as? [[String: Any]] else {
+            call.reject("Must provide a toolsArray")
+            return
+        }
+        
+        var aiTools = [GleapAiTool]()
+        
+        for toolDict in toolsArray {
+            guard let name = toolDict["name"] as? String,
+                  let toolDescription = toolDict["description"] as? String,
+                  let response = toolDict["response"] as? String,
+                  let parametersArray = toolDict["parameters"] as? [[String: Any]] else {
+                // If any of the required properties are missing, skip this tool
+                continue
+            }
+            
+            var parameters = [GleapAiToolParameter]()
+            
+            for paramDict in parametersArray {
+                guard let paramName = paramDict["name"] as? String,
+                      let paramDescription = paramDict["description"] as? String,
+                      let type = paramDict["type"] as? String,
+                      let required = paramDict["required"] as? Bool else {
+                    // If any of the required properties are missing, skip this parameter
+                    continue
+                }
+                
+                let enums = paramDict["enum"] as? [String] ?? []
+                let parameter = GleapAiToolParameter(
+                    name: paramName,
+                    parameterDescription: paramDescription,
+                    type: type,
+                    required: required,
+                    enums: enums
+                )
+                
+                parameters.append(parameter)
+            }
+            
+            let aiTool = GleapAiTool(
+                name: name,
+                toolDescription: toolDescription,
+                response: response,
+                parameters: parameters
+            )
+            
+            aiTools.append(aiTool)
+        }
+        
+        // Set AI tools using your specific method to interact with the Gleap SDK
+        Gleap.setAiTools(aiTools)
+        
+        // Provide feedback that the AI tools have been successfully set
+        call.resolve([
+            "aiToolsSet": true
+        ])
+    }
+    
+    @objc func setTicketAttribute(_ call: CAPPluginCall) {
+        // If key is empty, then pass back error
+        guard let key = call.options["key"] as? String else {
+            call.reject("Must provide a data key")
+            return;
+        }
+        
+        // If value is empty, then pass back error
+        guard let value = call.options["value"] as? String else {
+            call.reject("Must provide a data value")
+            return;
+        }
+        
+        // Set ticket attribute
+        Gleap.setTicketAttributeWithKey(key, value: value)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "setTicketAttribute": true
+        ])
+    }
     
     @objc func removeCustomData(_ call: CAPPluginCall) {
         // If key is empty, then pass back error
@@ -413,6 +494,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     @objc func setEventCallback(_ call: CAPPluginCall) {
         call.keepAlive = true
+        
         callQueue[call.callbackId] = .event
 
         DispatchQueue.main.async {
@@ -619,7 +701,6 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     @objc func setLanguage(_ call: CAPPluginCall) {
-        
         // If languageCode is empty, then pass back error
         guard let languageCode = call.options["languageCode"] as? String else {
             call.reject("No language provided")
@@ -665,8 +746,12 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         notifyEventUpdate(name: "widget-opened", data: nil)
     }
 
-    public func notificationCountUpdated(_ count: Int) {
+    public func notificationCountUpdated(_ count: Int32) {
         notifyEventUpdate(name: "notification-count-updated", data: count)
+    }
+    
+    public func onToolExecution(_ toolExecution: [AnyHashable : Any]) {
+        notifyEventUpdate(name: "tool-execution", data: toolExecution)
     }
     
     public func feedbackFlowStarted(_ feedbackAction: [AnyHashable : Any]) {

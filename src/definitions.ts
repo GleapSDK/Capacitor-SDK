@@ -1,9 +1,11 @@
 export type CallbackID = string;
 
-export type GleapEventCallback = (
+export interface GleapEventMessage {
   name: string,
   data?: any,
-) => void;
+}
+
+export type GleapEventCallback = (message: GleapEventMessage | null, err?: any) => void;
 
 export interface GleapPlugin {
   /**
@@ -154,6 +156,40 @@ export interface GleapPlugin {
     propsToIgnore: string[];
   }): Promise<{
     propsToIgnoreSet: boolean;
+  }>;
+
+  /**
+  * Sets the AI tools to use
+  *
+  * @since 13.5.0
+  */
+  setAiTools(options: {
+    tools: {
+      name: string;
+      description: string;
+      response: string;
+      parameters: {
+        name: string;
+        description: string;
+        type: "string" | "number" | "boolean";
+        required: boolean;
+        enums?: string[];
+      }[];
+    }[];
+  }): Promise<{
+    aiToolsSet: boolean;
+  }>;
+
+  /**
+  * Sets the value of a ticket attribute
+  *
+  * @since 13.5.0
+  */
+  setTicketAttribute(options: {
+    key: string;
+    value: string;
+  }): Promise<{
+    setTicketAttribute: boolean;
   }>;
 
   /**

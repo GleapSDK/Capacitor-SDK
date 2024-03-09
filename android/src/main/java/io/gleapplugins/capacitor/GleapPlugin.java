@@ -12,10 +12,13 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import io.gleap.APPLICATIONTYPE;
 import io.gleap.Gleap;
+import io.gleap.GleapAiTool;
+import io.gleap.GleapAiToolParameter;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapSessionProperties;
 import io.gleap.SurveyType;
+import io.gleap.callbacks.AiToolExecutedCallback;
 import io.gleap.callbacks.InitializedCallback;
 import io.gleap.callbacks.ConfigLoadedCallback;
 import io.gleap.callbacks.CustomActionCallback;
@@ -35,6 +38,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @CapacitorPlugin(
@@ -152,7 +157,8 @@ public class GleapPlugin extends Plugin {
             } else {
                 ret.put("identity", null);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         call.resolve(ret);
     }
@@ -163,7 +169,8 @@ public class GleapPlugin extends Plugin {
         JSObject ret = new JSObject();
         try {
             ret.put("isUserIdentified", implementation.isUserIdentified());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
         call.resolve(ret);
     }
 
@@ -209,7 +216,8 @@ public class GleapPlugin extends Plugin {
             }
 
             implementation.setTags(tags);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -234,13 +242,121 @@ public class GleapPlugin extends Plugin {
             }
 
             implementation.setNetworkLogsBlacklist(blacklist);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("blacklistSet", true);
         call.resolve(ret);
     }
+
+    @PluginMethod
+    public void setTicketAttribute(PluginCall call) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("key")) {
+            call.reject("Must provide a data key");
+            return;
+        }
+
+        // If value is empty, then pass back error
+        if (!call.getData().has("value")) {
+            call.reject("Must provide a data value");
+            return;
+        }
+
+        // Set custom data
+        String key = call.getString("key");
+        String value = call.getString("value");
+        implementation.setTicketAttribute(key, value);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("setTicketAttribute", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setAiTools(PluginCall call) {
+        JSONArray toolsArray = call.getArray("tools");
+        if (toolsArray == null) {
+            call.reject("Must provide tools");
+            return;
+        }
+
+        List<GleapAiTool> aiTools = new ArrayList<>();
+
+        for (int i = 0; i < toolsArray.length(); i++) {
+            JSONObject toolDict = toolsArray.optJSONObject(i);
+            if (toolDict == null) {
+                continue; // Skip if it's not a JSONObject
+            }
+
+            String name = toolDict.optString("name", null);
+            String toolDescription = toolDict.optString("description", null);
+            String response = toolDict.optString("response", null);
+            JSONArray parametersArray = toolDict.optJSONArray("parameters");
+
+            if (name == null || toolDescription == null || response == null || parametersArray == null) {
+                continue; // Skip if any required fields are missing
+            }
+
+            List<GleapAiToolParameter> parameters = new ArrayList<>();
+
+            for (int j = 0; j < parametersArray.length(); j++) {
+                JSONObject paramDict = parametersArray.optJSONObject(j);
+                if (paramDict == null) {
+                    continue; // Skip if it's not a JSONObject
+                }
+
+                String paramName = paramDict.optString("name", null);
+                String paramDescription = paramDict.optString("description", null);
+                String type = paramDict.optString("type", null);
+                boolean required = paramDict.optBoolean("required", false);
+                JSONArray enumArray = paramDict.optJSONArray
+                        ("enum");
+                String[] enums = null;
+                if (enumArray != null) {
+                    enums = new String[enumArray.length()];
+                    for (int k = 0; k < enumArray.length(); k++) {
+                        enums[k] = enumArray.optString(k);
+                    }
+                }
+
+                if (paramName == null || paramDescription == null || type == null) {
+                    continue; // Skip if any required parameter fields are missing
+                }
+
+                GleapAiToolParameter parameter = new GleapAiToolParameter(
+                        paramName,
+                        paramDescription,
+                        type,
+                        required,
+                        enums
+                );
+
+                parameters.add(parameter);
+            }
+
+            GleapAiTool aiTool = new GleapAiTool(
+                    name,
+                    toolDescription,
+                    response,
+                    parameters.toArray(new GleapAiToolParameter[0]) // Convert List to Array
+            );
+
+            aiTools.add(aiTool);
+        }
+
+        // Set the AI tools using the static method from Gleap SDK
+        Gleap.getInstance().setAiTools(aiTools.toArray(new GleapAiTool[0])); // Convert List to Array
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("aiToolsSet", true);
+        call.resolve(ret);
+    }
+
     /**
      * Sets properties to be ignored in network logs.
      *
@@ -885,6 +1001,16 @@ public class GleapPlugin extends Plugin {
                 }
             }
         );
+
+        implementation.setAiToolExecutedCallback(new AiToolExecutedCallback() {
+            @Override
+            public void aiToolExecuted(JSONObject jsonObject) {
+                JSObject data = new JSObject();
+                data.put("name", "tool-execution");
+                data.put("data", jsonObject);
+                call.resolve(data);
+            }
+        });
 
         implementation.setFeedbackSendingFailedCallback(
             new FeedbackSendingFailedCallback() {

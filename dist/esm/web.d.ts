@@ -11,6 +11,28 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         initialized: boolean;
     }>;
     registerCallbackListeners(): void;
+    setAiTools(options: {
+        tools: {
+            name: string;
+            description: string;
+            response: string;
+            parameters: {
+                name: string;
+                description: string;
+                type: 'string' | 'number' | 'boolean';
+                required: boolean;
+                enums?: string[] | undefined;
+            }[];
+        }[];
+    }): Promise<{
+        aiToolsSet: boolean;
+    }>;
+    setTicketAttribute(options: {
+        key: string;
+        value: string;
+    }): Promise<{
+        setTicketAttribute: boolean;
+    }>;
     notifyCallbacks(event: string, data: any): void;
     startClassicForm(options: {
         formId?: string | undefined;
