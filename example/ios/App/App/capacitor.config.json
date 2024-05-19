@@ -7,5 +7,11 @@
 		"SplashScreen": {
 			"launchShowDuration": 0
 		}
-	}
+	},
+	"packageClassList": [
+		"CAPCameraPlugin",
+		"SplashScreenPlugin",
+		"GleapPlugin",
+		"GleapPlugin"
+	]
 }
