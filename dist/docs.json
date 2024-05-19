@@ -245,12 +245,12 @@
       },
       {
         "name": "setAiTools",
-        "signature": "(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: \"string\" | \"number\" | \"boolean\"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>",
+        "signature": "(options: { tools: { name: string; description: string; response: string; executionType: \"auto\" | \"button\"; parameters: { name: string; description: string; type: \"string\" | \"number\" | \"boolean\"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[]; }"
+            "type": "{ tools: { name: string; description: string; response: string; executionType: 'auto' | 'button'; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[]; }"
           }
         ],
         "returns": "Promise<{ aiToolsSet: boolean; }>",

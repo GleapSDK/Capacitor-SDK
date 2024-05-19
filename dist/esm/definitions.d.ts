@@ -153,6 +153,7 @@ export interface GleapPlugin {
             name: string;
             description: string;
             response: string;
+            executionType: "auto" | "button";
             parameters: {
                 name: string;
                 description: string;

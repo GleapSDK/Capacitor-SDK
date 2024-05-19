@@ -16,6 +16,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
             name: string;
             description: string;
             response: string;
+            executionType: 'auto' | 'button';
             parameters: {
                 name: string;
                 description: string;

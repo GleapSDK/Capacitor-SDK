@@ -68,7 +68,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     });
   }
 
-  async setAiTools(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[] }): Promise<{ aiToolsSet: boolean; }> {
+  async setAiTools(options: { tools: { name: string; description: string; response: string; executionType: 'auto' | 'button'; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[] }): Promise<{ aiToolsSet: boolean; }> {
     Gleap.setAiTools(options.tools);
 
     return { aiToolsSet: true };

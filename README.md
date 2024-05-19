@@ -289,14 +289,14 @@ Set network logs props to ignore
 ### setAiTools(...)
 
 ```typescript
-setAiTools(options: { tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: "string" | "number" | "boolean"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>
+setAiTools(options: { tools: { name: string; description: string; response: string; executionType: "auto" | "button"; parameters: { name: string; description: string; type: "string" | "number" | "boolean"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>
 ```
 
 Sets the AI tools to use
 
-| Param         | Type                                                                                                                                                                                                                    |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ tools: { name: string; description: string; response: string; parameters: { name: string; description: string; type: 'string' \| 'number' \| 'boolean'; required: boolean; enums?: string[]; }[]; }[]; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                       |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ tools: { name: string; description: string; response: string; executionType: 'auto' \| 'button'; parameters: { name: string; description: string; type: 'string' \| 'number' \| 'boolean'; required: boolean; enums?: string[]; }[]; }[]; }</code> |
 
 **Returns:** <code>Promise&lt;{ aiToolsSet: boolean; }&gt;</code>
 

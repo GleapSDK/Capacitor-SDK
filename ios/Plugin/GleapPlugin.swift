@@ -266,6 +266,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
             guard let name = toolDict["name"] as? String,
                   let toolDescription = toolDict["description"] as? String,
                   let response = toolDict["response"] as? String,
+                  let executionType = toolDict["executionType"] as? String,
                   let parametersArray = toolDict["parameters"] as? [[String: Any]] else {
                 // If any of the required properties are missing, skip this tool
                 continue
@@ -298,6 +299,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
                 name: name,
                 toolDescription: toolDescription,
                 response: response,
+                executionType: executionType,
                 parameters: parameters
             )
             

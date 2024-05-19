@@ -295,6 +295,7 @@ public class GleapPlugin extends Plugin {
             String name = toolDict.optString("name", null);
             String toolDescription = toolDict.optString("description", null);
             String response = toolDict.optString("response", null);
+            String executionType = toolDict.optString("executionType", null);
             JSONArray parametersArray = toolDict.optJSONArray("parameters");
 
             if (name == null || toolDescription == null || response == null || parametersArray == null) {
@@ -342,6 +343,7 @@ public class GleapPlugin extends Plugin {
                     name,
                     toolDescription,
                     response,
+                    executionType,
                     parameters.toArray(new GleapAiToolParameter[0]) // Convert List to Array
             );
 
