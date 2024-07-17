@@ -96,14 +96,14 @@ Initialize Gleap with an API key
 ### identify(...)
 
 ```typescript
-identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
+identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; sla?: number; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
 ```
 
 Set user identity
 
-| Param         | Type                                                                                                                                                                                                                   |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
+| Param         | Type                                                                                                                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; sla?: number; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
 
 **Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
@@ -115,14 +115,14 @@ Set user identity
 ### updateContact(...)
 
 ```typescript
-updateContact(options: { name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
+updateContact(options: { name?: string; email?: string; phone?: string; companyId?: string; sla?: number; companyName?: string; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
 ```
 
 Update user properties
 
-| Param         | Type                                                                                                                                                                                |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
+| Param         | Type                                                                                                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ name?: string; email?: string; phone?: string; companyId?: string; sla?: number; companyName?: string; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
 
 **Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
