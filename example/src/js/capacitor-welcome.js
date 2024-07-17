@@ -145,16 +145,12 @@ window.customElements.define(
 
       self.shadowRoot.querySelector('#take-photo').addEventListener('click', async function (e) {
         try {
-          const photo = await Camera.getPhoto({
-            resultType: 'uri',
-          });
-
-          const image = self.shadowRoot.querySelector('#image');
-          if (!image) {
-            return;
-          }
-
-          image.src = photo.webPath;
+          Gleap.identify({
+            userId: '12222222',
+            email: 'lukas@gleap.io',
+            name: 'Lukas',
+            sla: 600,
+          })
         } catch (e) {
           console.warn('User cancelled', e);
         }

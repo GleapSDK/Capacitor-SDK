@@ -134,6 +134,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     phone?: string | undefined;
     companyId?: string | undefined;
     companyName?: string | undefined;
+    sla?: number | undefined;
     plan?: string | undefined;
     value?: number | undefined;
   }): Promise<{ identify: boolean }> {
@@ -143,6 +144,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       phone: options.phone,
       companyId: options.companyId,
       companyName: options.companyName,
+      sla: options.sla,
       plan: options.plan,
       value: options.value,
       customData: options.customData,
@@ -156,7 +158,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { identify: true };
   }
 
-  async updateContact(options: { name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }): Promise<{ identify: boolean; }> {
+  async updateContact(options: { name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; sla?: number | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }): Promise<{ identify: boolean; }> {
     Gleap.updateContact(options);
 
     return { identify: true };
@@ -194,6 +196,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       phone?: string | undefined;
       companyId?: string | undefined;
       companyName?: string | undefined;
+      sla?: number | undefined;
       plan?: string | undefined;
       value?: number | undefined;
     };

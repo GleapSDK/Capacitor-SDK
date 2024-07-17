@@ -32,6 +32,7 @@ export interface GleapPlugin {
     phone?: string;
     companyId?: string;
     companyName?: string;
+    sla?: number;
     plan?: string;
     value?: number;
     customData?: Object;
@@ -49,6 +50,7 @@ export interface GleapPlugin {
     email?: string;
     phone?: string;
     companyId?: string;
+    sla?: number;
     companyName?: string;
     plan?: string;
     value?: number;

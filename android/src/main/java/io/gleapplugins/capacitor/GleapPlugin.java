@@ -105,6 +105,9 @@ public class GleapPlugin extends Plugin {
         if (call.getData().has("companyName")) {
             sessionProperties.setCompanyName(call.getString("companyName"));
         }
+        if (call.getData().has("sla")) {
+            sessionProperties.setSla(call.getDouble("sla"));
+        }
         if (call.getData().has("companyId")) {
             sessionProperties.setCompanyId(call.getString("companyId"));
         }
@@ -152,7 +155,11 @@ public class GleapPlugin extends Plugin {
                 identityObj.put("phone", userProps.getPhone());
                 identityObj.put("email", userProps.getEmail());
                 identityObj.put("name", userProps.getName());
+                identityObj.put("companyId", userProps.getCompanyId());
+                identityObj.put("companyName", userProps.getCompanyName());
+                identityObj.put("plan", userProps.getPlan());
                 identityObj.put("value", userProps.getValue());
+                identityObj.put("sla", userProps.getSla());
                 ret.put("identity", identityObj);
             } else {
                 ret.put("identity", null);

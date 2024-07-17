@@ -55,6 +55,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         if (call.getString("plan") != nil) {
             userProperty.plan = call.getString("plan") ?? ""
         }
+        if (call.getDouble("sla") != nil) {
+            userProperty.sla = (call.getDouble("sla") ?? 0.0) as NSNumber
+        }
         if (call.getString("companyName") != nil) {
             userProperty.companyName = call.getString("companyName") ?? ""
         }
@@ -94,6 +97,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         }
         if (call.getString("plan") != nil) {
             userProperty.plan = call.getString("plan") ?? ""
+        }
+        if (call.getDouble("sla") != nil) {
+            userProperty.sla = (call.getDouble("sla") ?? 0.0) as NSNumber
         }
         if (call.getString("companyName") != nil) {
             userProperty.companyName = call.getString("companyName") ?? ""
