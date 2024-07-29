@@ -739,7 +739,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     public func customActionCalled(_ customAction: String) {
-        notifyEventUpdate(name: "custom-action-called", data: nil)
+        notifyEventUpdate(name: "custom-action-called", data: customAction)
     }
     
     public func widgetClosed() {
