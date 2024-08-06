@@ -457,6 +457,17 @@ export interface GleapPlugin {
   }>;
 
   /**
+ * Opens the conversations tab.
+ *
+ * @since 13.9.0
+ */
+  openConversation(options: {
+    showBackButton?: boolean;
+  }): Promise<{
+    conversationsOpened: boolean;
+  }>;
+
+  /**
  * Start bot
  *
  * @since 10.0.3

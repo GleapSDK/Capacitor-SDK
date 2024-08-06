@@ -68,13 +68,30 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     });
   }
 
-  async setAiTools(options: { tools: { name: string; description: string; response: string; executionType: 'auto' | 'button'; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[] }): Promise<{ aiToolsSet: boolean; }> {
+  async setAiTools(options: {
+    tools: {
+      name: string;
+      description: string;
+      response: string;
+      executionType: 'auto' | 'button';
+      parameters: {
+        name: string;
+        description: string;
+        type: 'string' | 'number' | 'boolean';
+        required: boolean;
+        enums?: string[] | undefined;
+      }[];
+    }[];
+  }): Promise<{ aiToolsSet: boolean }> {
     Gleap.setAiTools(options.tools);
 
     return { aiToolsSet: true };
   }
 
-  async setTicketAttribute(options: { key: string; value: string; }): Promise<{ setTicketAttribute: boolean; }> {
+  async setTicketAttribute(options: {
+    key: string;
+    value: string;
+  }): Promise<{ setTicketAttribute: boolean }> {
     Gleap.setTicketAttribute(options.key, options.value);
 
     return { setTicketAttribute: true };
@@ -88,24 +105,40 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     for (var callbackId in GleapWeb.callbacks) {
       GleapWeb.callbacks[callbackId]({
         name: event,
-        data
+        data,
       });
     }
   }
 
-  async startClassicForm(options: { formId?: string | undefined; showBackButton?: boolean | undefined; }): Promise<{ classicFormStarted: boolean; }> {
+  async startClassicForm(options: {
+    formId?: string | undefined;
+    showBackButton?: boolean | undefined;
+  }): Promise<{ classicFormStarted: boolean }> {
     Gleap.startClassicForm(options.formId ?? '', options.showBackButton);
 
     return { classicFormStarted: true };
   }
 
-  async startConversation(options: { showBackButton?: boolean | undefined; }): Promise<{ conversationStarted: boolean; }> {
+  async startConversation(options: {
+    showBackButton?: boolean | undefined;
+  }): Promise<{ conversationStarted: boolean }> {
     Gleap.startConversation(options.showBackButton);
 
     return { conversationStarted: true };
   }
 
-  async showSurvey(options: { surveyId: string; format?: 'survey' | 'survey_full' | undefined; }): Promise<{ opened: boolean; }> {
+  async openConversation(options: {
+    showBackButton?: boolean | undefined;
+  }): Promise<{ conversationsOpened: boolean }> {
+    Gleap.openConversations(options.showBackButton);
+
+    return { conversationsOpened: true };
+  }
+
+  async showSurvey(options: {
+    surveyId: string;
+    format?: 'survey' | 'survey_full' | undefined;
+  }): Promise<{ opened: boolean }> {
     Gleap.showSurvey(options.surveyId, options.format);
 
     return { opened: true };
@@ -119,8 +152,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { feedbackButtonShown: true };
   }
 
-  async setDisableInAppNotifications(options: { disableInAppNotifications?: boolean | undefined; }): Promise<{ inAppNotificationsDisabled: boolean; }> {
-    Gleap.setDisableInAppNotifications(options.disableInAppNotifications ?? false);
+  async setDisableInAppNotifications(options: {
+    disableInAppNotifications?: boolean | undefined;
+  }): Promise<{ inAppNotificationsDisabled: boolean }> {
+    Gleap.setDisableInAppNotifications(
+      options.disableInAppNotifications ?? false,
+    );
 
     return { inAppNotificationsDisabled: true };
   }
@@ -158,25 +195,39 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { identify: true };
   }
 
-  async updateContact(options: { name?: string | undefined; email?: string | undefined; phone?: string | undefined; companyId?: string | undefined; companyName?: string | undefined; sla?: number | undefined; plan?: string | undefined; value?: number | undefined; customData?: Object | undefined; }): Promise<{ identify: boolean; }> {
+  async updateContact(options: {
+    name?: string | undefined;
+    email?: string | undefined;
+    phone?: string | undefined;
+    companyId?: string | undefined;
+    companyName?: string | undefined;
+    sla?: number | undefined;
+    plan?: string | undefined;
+    value?: number | undefined;
+    customData?: Object | undefined;
+  }): Promise<{ identify: boolean }> {
     Gleap.updateContact(options);
 
     return { identify: true };
   }
 
-  async setNetworkLogsBlacklist(options: { blacklist: string[]; }): Promise<{ blacklistSet: boolean; }> {
+  async setNetworkLogsBlacklist(options: {
+    blacklist: string[];
+  }): Promise<{ blacklistSet: boolean }> {
     Gleap.setNetworkLogsBlacklist(options.blacklist);
 
     return { blacklistSet: true };
   }
 
-  async setNetworkLogPropsToIgnore(options: { propsToIgnore: string[]; }): Promise<{ propsToIgnoreSet: boolean; }> {
+  async setNetworkLogPropsToIgnore(options: {
+    propsToIgnore: string[];
+  }): Promise<{ propsToIgnoreSet: boolean }> {
     Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
 
     return { propsToIgnoreSet: true };
   }
 
-  async setTags(options: { tags: string[]; }): Promise<{ tagsSet: boolean; }> {
+  async setTags(options: { tags: string[] }): Promise<{ tagsSet: boolean }> {
     Gleap.setTags(options.tags);
 
     return { tagsSet: true };
@@ -280,10 +331,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     if (!options.botId) {
     }
 
-    Gleap.startBot(
-      options.botId ?? '',
-      options.showBackButton,
-    );
+    Gleap.startBot(options.botId ?? '', options.showBackButton);
 
     return { startedBot: true };
   }
@@ -315,17 +363,17 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     description: string;
     severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
     dataExclusion?:
-    | {
-      customData: Boolean;
-      metaData: Boolean;
-      attachments: Boolean;
-      consoleLog: Boolean;
-      networkLogs: Boolean;
-      customEventLog: Boolean;
-      screenshot: Boolean;
-      replays: Boolean;
-    }
-    | undefined;
+      | {
+          customData: Boolean;
+          metaData: Boolean;
+          attachments: Boolean;
+          consoleLog: Boolean;
+          networkLogs: Boolean;
+          customEventLog: Boolean;
+          screenshot: Boolean;
+          replays: Boolean;
+        }
+      | undefined;
   }): Promise<{ sentSilentBugReport: boolean }> {
     Gleap.sendSilentCrashReport(
       options.description,

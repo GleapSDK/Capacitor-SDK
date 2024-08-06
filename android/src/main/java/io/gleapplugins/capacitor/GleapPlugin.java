@@ -903,6 +903,19 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void openConversations(PluginCall call) throws GleapNotInitialisedException {
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        // Start conversation
+        implementation.openConversations(showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("conversationsOpened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void startClassicForm(PluginCall call) throws GleapNotInitialisedException {
         if (!call.getData().has("formId")) {
             call.reject("No formId provided");
