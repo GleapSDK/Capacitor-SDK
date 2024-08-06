@@ -60,6 +60,7 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
 * [`startClassicForm(...)`](#startclassicform)
 * [`startConversation(...)`](#startconversation)
+* [`openConversation(...)`](#openconversation)
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
@@ -739,6 +740,25 @@ Start a new conversation
 **Returns:** <code>Promise&lt;{ conversationStarted: boolean; }&gt;</code>
 
 **Since:** 13.1.0
+
+--------------------
+
+
+### openConversation(...)
+
+```typescript
+openConversation(options: { showBackButton?: boolean; }) => Promise<{ conversationsOpened: boolean; }>
+```
+
+Opens the conversations tab.
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ conversationsOpened: boolean; }&gt;</code>
+
+**Since:** 13.9.0
 
 --------------------
 

@@ -60,7 +60,7 @@ export class GleapWeb extends WebPlugin {
         for (var callbackId in GleapWeb.callbacks) {
             GleapWeb.callbacks[callbackId]({
                 name: event,
-                data
+                data,
             });
         }
     }
@@ -72,6 +72,10 @@ export class GleapWeb extends WebPlugin {
     async startConversation(options) {
         Gleap.startConversation(options.showBackButton);
         return { conversationStarted: true };
+    }
+    async openConversation(options) {
+        Gleap.openConversations(options.showBackButton);
+        return { conversationsOpened: true };
     }
     async showSurvey(options) {
         Gleap.showSurvey(options.surveyId, options.format);

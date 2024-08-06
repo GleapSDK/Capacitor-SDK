@@ -46,6 +46,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         conversationStarted: boolean;
     }>;
+    openConversation(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        conversationsOpened: boolean;
+    }>;
     showSurvey(options: {
         surveyId: string;
         format?: 'survey' | 'survey_full' | undefined;

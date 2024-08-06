@@ -744,6 +744,27 @@
         "slug": "startconversation"
       },
       {
+        "name": "openConversation",
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ conversationsOpened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ conversationsOpened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "13.9.0"
+          }
+        ],
+        "docs": "Opens the conversations tab.",
+        "complexTypes": [],
+        "slug": "openconversation"
+      },
+      {
         "name": "startBot",
         "signature": "(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>",
         "parameters": [

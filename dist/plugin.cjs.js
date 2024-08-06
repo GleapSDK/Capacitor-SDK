@@ -73,7 +73,7 @@ class GleapWeb extends core.WebPlugin {
         for (var callbackId in GleapWeb.callbacks) {
             GleapWeb.callbacks[callbackId]({
                 name: event,
-                data
+                data,
             });
         }
     }
@@ -85,6 +85,10 @@ class GleapWeb extends core.WebPlugin {
     async startConversation(options) {
         Gleap__default["default"].startConversation(options.showBackButton);
         return { conversationStarted: true };
+    }
+    async openConversation(options) {
+        Gleap__default["default"].openConversations(options.showBackButton);
+        return { conversationsOpened: true };
     }
     async showSurvey(options) {
         Gleap__default["default"].showSurvey(options.surveyId, options.format);
