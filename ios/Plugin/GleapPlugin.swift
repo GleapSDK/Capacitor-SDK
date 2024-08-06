@@ -699,7 +699,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     @objc func openConversations(_ call: CAPPluginCall) {
         let showBackButton = call.getBool("showBackButton") ?? true
         
-        Gleap.openCo showBackButton)
+        Gleap.openConversations(showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([
