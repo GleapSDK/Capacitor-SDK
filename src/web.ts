@@ -39,6 +39,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       this.notifyCallbacks('feedback-sent', formData);
     });
 
+    Gleap.on('outbound-sent', formData => {
+      this.notifyCallbacks('outbound-sent', formData);
+    });
+
     Gleap.on('tool-execution', toolExecution => {
       this.notifyCallbacks('tool-execution', toolExecution);
     });

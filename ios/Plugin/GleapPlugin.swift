@@ -781,6 +781,10 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         notifyEventUpdate(name: "feedback-sent", data: data)
     }
     
+    public func outboundSent(_ data: [AnyHashable : Any]) {
+        notifyEventUpdate(name: "outbound-sent", data: data)
+    }
+    
     public func feedbackSendingFailed() {
         notifyEventUpdate(name: "error-while-sending", data: nil)
     }

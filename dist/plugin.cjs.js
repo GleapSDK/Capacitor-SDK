@@ -36,6 +36,9 @@ class GleapWeb extends core.WebPlugin {
         Gleap__default["default"].on('feedback-sent', formData => {
             this.notifyCallbacks('feedback-sent', formData);
         });
+        Gleap__default["default"].on('outbound-sent', formData => {
+            this.notifyCallbacks('outbound-sent', formData);
+        });
         Gleap__default["default"].on('tool-execution', toolExecution => {
             this.notifyCallbacks('tool-execution', toolExecution);
         });

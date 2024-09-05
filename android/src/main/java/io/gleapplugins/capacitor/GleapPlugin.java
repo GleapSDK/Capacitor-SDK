@@ -25,6 +25,7 @@ import io.gleap.callbacks.CustomActionCallback;
 import io.gleap.callbacks.FeedbackFlowStartedCallback;
 import io.gleap.callbacks.FeedbackSendingFailedCallback;
 import io.gleap.callbacks.FeedbackSentCallback;
+import io.gleap.callbacks.OutboundSentCallback;
 import io.gleap.callbacks.RegisterPushMessageGroupCallback;
 import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
 import io.gleap.callbacks.WidgetClosedCallback;
@@ -1015,10 +1016,22 @@ public class GleapPlugin extends Plugin {
         implementation.setFeedbackSentCallback(
             new FeedbackSentCallback() {
                 @Override
-                public void invoke(String message) {
+                public void invoke(JSONObject jsonObject) {
                     JSObject data = new JSObject();
                     data.put("name", "feedback-sent");
-                    data.put("data", message);
+                    data.put("data", jsonObject);
+                    call.resolve(data);
+                }
+            }
+        );
+
+        implementation.setOutboundSentCallback(
+            new OutboundSentCallback() {
+                @Override
+                public void invoke(JSONObject jsonObject) {
+                    JSObject data = new JSObject();
+                    data.put("name", "outbound-sent");
+                    data.put("data", jsonObject);
                     call.resolve(data);
                 }
             }
