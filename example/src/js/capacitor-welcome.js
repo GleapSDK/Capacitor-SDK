@@ -28,7 +28,11 @@ const transactionTool = {
 const tools = [transactionTool];
 
 Gleap.initialize({
-  API_KEY: 'ogWhNhuiZcGWrva5nlDS8l7a78OfaLlV',
+  API_KEY: 'nKT6erqDUjwqfVN2xRkOG4XOf8NEEJ52',
+});
+
+Gleap.setEventCallback((message, err) => {
+  console.log(message);
 });
 
 Gleap.setAiTools({

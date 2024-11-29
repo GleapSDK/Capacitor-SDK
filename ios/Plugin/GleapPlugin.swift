@@ -736,11 +736,18 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     func notifyEventUpdate(name: String, data: Any?) {
+        notifyEventUpdate(name: name, data: data, shareToken: nil)
+    }
+    
+    func notifyEventUpdate(name: String, data: Any?, shareToken: String?) {
         var eventData: PluginCallResultData = [
             "name": name
         ];
         if let data = data {
             eventData["data"] = data
+        }
+        if let shareToken = shareToken {
+            eventData["shareToken"] = shareToken
         }
         for (id, callType) in callQueue {
             if let call = bridge?.savedCall(withID: id), callType == .event {
@@ -749,8 +756,8 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         }
     }
     
-    public func customActionCalled(_ customAction: String) {
-        notifyEventUpdate(name: "custom-action-called", data: customAction)
+    public func customActionCalled(_ customAction: String, withShareToken shareToken: String?) {
+        notifyEventUpdate(name: "custom-action-called", data: customAction, shareToken: shareToken)
     }
     
     public func widgetClosed() {

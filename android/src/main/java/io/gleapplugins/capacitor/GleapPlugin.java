@@ -1063,11 +1063,12 @@ public class GleapPlugin extends Plugin {
         implementation.registerCustomAction(
             new CustomActionCallback() {
                 @Override
-                public void invoke(String message) {
+                public void invoke(String message, String shareToken) {
                     // called when a custom action from the widget is issued
                     JSObject data = new JSObject();
                     data.put("name", "custom-action-called");
                     data.put("data", message);
+                    data.put("shareToken", shareToken);
                     call.resolve(data);
                 }
             }
