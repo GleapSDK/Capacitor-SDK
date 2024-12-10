@@ -34,6 +34,14 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         setTicketAttribute: boolean;
     }>;
+    unsetTicketAttribute(options: {
+        key: string;
+    }): Promise<{
+        unsetTicketAttribute: boolean;
+    }>;
+    clearTicketAttributes(): Promise<{
+        clearTicketAttributes: boolean;
+    }>;
     notifyCallbacks(event: string, data: any): void;
     startClassicForm(options: {
         formId?: string | undefined;

@@ -56,6 +56,14 @@ export class GleapWeb extends WebPlugin {
         Gleap.setTicketAttribute(options.key, options.value);
         return { setTicketAttribute: true };
     }
+    async unsetTicketAttribute(options) {
+        Gleap.unsetTicketAttribute(options.key);
+        return { unsetTicketAttribute: true };
+    }
+    async clearTicketAttributes() {
+        Gleap.clearTicketAttributes();
+        return { clearTicketAttributes: true };
+    }
     notifyCallbacks(event, data) {
         if (!GleapWeb.callbacks) {
             return;

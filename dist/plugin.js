@@ -65,6 +65,14 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap__default["default"].setTicketAttribute(options.key, options.value);
             return { setTicketAttribute: true };
         }
+        async unsetTicketAttribute(options) {
+            Gleap__default["default"].unsetTicketAttribute(options.key);
+            return { unsetTicketAttribute: true };
+        }
+        async clearTicketAttributes() {
+            Gleap__default["default"].clearTicketAttributes();
+            return { clearTicketAttributes: true };
+        }
         notifyCallbacks(event, data) {
             if (!GleapWeb.callbacks) {
                 return;

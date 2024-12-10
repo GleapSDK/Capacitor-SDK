@@ -179,6 +179,24 @@ export interface GleapPlugin {
         setTicketAttribute: boolean;
     }>;
     /**
+    * Unset a ticket attribute
+    *
+    * @since 14.1.0
+    */
+    unsetTicketAttribute(options: {
+        key: string;
+    }): Promise<{
+        unsetTicketAttribute: boolean;
+    }>;
+    /**
+    * Clear all ticket attributes
+    *
+    * @since 14.1.0
+    */
+    clearTicketAttributes(): Promise<{
+        clearTicketAttributes: boolean;
+    }>;
+    /**
     * Set custom data
     *
     * @since 7.0.0

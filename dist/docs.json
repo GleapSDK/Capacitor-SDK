@@ -286,6 +286,42 @@
         "slug": "setticketattribute"
       },
       {
+        "name": "unsetTicketAttribute",
+        "signature": "(options: { key: string; }) => Promise<{ unsetTicketAttribute: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ key: string; }"
+          }
+        ],
+        "returns": "Promise<{ unsetTicketAttribute: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "14.1.0"
+          }
+        ],
+        "docs": "Unset a ticket attribute",
+        "complexTypes": [],
+        "slug": "unsetticketattribute"
+      },
+      {
+        "name": "clearTicketAttributes",
+        "signature": "() => Promise<{ clearTicketAttributes: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ clearTicketAttributes: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "14.1.0"
+          }
+        ],
+        "docs": "Clear all ticket attributes",
+        "complexTypes": [],
+        "slug": "clearticketattributes"
+      },
+      {
         "name": "setCustomData",
         "signature": "(options: { key: string; value: string; }) => Promise<{ setCustomData: boolean; }>",
         "parameters": [

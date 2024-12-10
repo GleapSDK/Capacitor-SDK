@@ -342,6 +342,33 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
             "setTicketAttribute": true
         ])
     }
+
+    @objc func unsetTicketAttribute(_ call: CAPPluginCall) {
+        // If key is empty, then pass back error
+        guard let key = call.options["key"] as? String else {
+            call.reject("Must provide a data key")
+            return;
+        }
+        
+        // Unset ticket attribute
+        Gleap.unsetTicketAttribute(withKey: key)
+
+        // Provide feedback that it has been success
+        call.resolve([
+            "unsetTicketAttribute": true
+        ])
+    }
+
+    @objc func clearTicketAttributes(_ call: CAPPluginCall) {
+        // Clear ticket attributes
+        Gleap.clearTicketAttributes()
+
+        // Provide feedback that it has been success
+        call.resolve([
+            "clearTicketAttributes": true
+        ])
+    }
+
     
     @objc func removeCustomData(_ call: CAPPluginCall) {
         // If key is empty, then pass back error

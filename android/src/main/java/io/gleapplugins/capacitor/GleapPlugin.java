@@ -285,6 +285,33 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void unsetTicketAttribute(PluginCall call) {
+        // If key is empty, then pass back error
+        if (!call.getData().has("key")) {
+            call.reject("Must provide a data key");
+            return;
+        }
+
+        String key = call.getString("key");
+        implementation.unsetTicketAttribute(key);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("unsetTicketAttribute", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void clearTicketAttributes(PluginCall call) {
+        implementation.clearTicketAttributes();
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("clearTicketAttributes", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void setAiTools(PluginCall call) {
         JSONArray toolsArray = call.getArray("tools");
         if (toolsArray == null) {

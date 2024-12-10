@@ -37,6 +37,8 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
 * [`setAiTools(...)`](#setaitools)
 * [`setTicketAttribute(...)`](#setticketattribute)
+* [`unsetTicketAttribute(...)`](#unsetticketattribute)
+* [`clearTicketAttributes()`](#clearticketattributes)
 * [`setCustomData(...)`](#setcustomdata)
 * [`removeCustomData(...)`](#removecustomdata)
 * [`clearCustomData()`](#clearcustomdata)
@@ -325,6 +327,40 @@ Sets the value of a ticket attribute
 **Returns:** <code>Promise&lt;{ setTicketAttribute: boolean; }&gt;</code>
 
 **Since:** 13.5.0
+
+--------------------
+
+
+### unsetTicketAttribute(...)
+
+```typescript
+unsetTicketAttribute(options: { key: string; }) => Promise<{ unsetTicketAttribute: boolean; }>
+```
+
+Unset a ticket attribute
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ key: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ unsetTicketAttribute: boolean; }&gt;</code>
+
+**Since:** 14.1.0
+
+--------------------
+
+
+### clearTicketAttributes()
+
+```typescript
+clearTicketAttributes() => Promise<{ clearTicketAttributes: boolean; }>
+```
+
+Clear all ticket attributes
+
+**Returns:** <code>Promise&lt;{ clearTicketAttributes: boolean; }&gt;</code>
+
+**Since:** 14.1.0
 
 --------------------
 
