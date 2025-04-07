@@ -2,7 +2,7 @@
 
 Gleap SDK for Capacitor is the easiest way to integrate Gleap into your Ionic apps! Achieve better app quality with comprehensive in-app bug reporting & customer feedback for your web-apps and websites. Many thanks to Stephan Nagel (congrapp) for his work on the Gleap capacitor plugin.
 
-This plugin supports capacitor 6. See the instructions below for earlier capacitor versions.
+This plugin supports capacitor 7. See the instructions below for earlier capacitor versions.
 
 ## Install
 
@@ -10,6 +10,10 @@ This plugin supports capacitor 6. See the instructions below for earlier capacit
 npm install capacitor-gleap-plugin
 npx cap sync
 ```
+
+## Capacitor 6
+
+Please install the plugin version from our capacitor-v6 brunch with `npm install GleapSDK/Capacitor-SDK#capacitor-v6 --save` if you are using capacitor 6.
 
 ## Capacitor 5
 
@@ -23,54 +27,54 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 
 <docgen-index>
 
-* [`initialize(...)`](#initialize)
-* [`identify(...)`](#identify)
-* [`updateContact(...)`](#updatecontact)
-* [`clearIdentity()`](#clearidentity)
-* [`getIdentity()`](#getidentity)
-* [`isUserIdentified()`](#isuseridentified)
-* [`log(...)`](#log)
-* [`showSurvey(...)`](#showsurvey)
-* [`attachCustomData(...)`](#attachcustomdata)
-* [`setTags(...)`](#settags)
-* [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
-* [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
-* [`setAiTools(...)`](#setaitools)
-* [`setTicketAttribute(...)`](#setticketattribute)
-* [`unsetTicketAttribute(...)`](#unsetticketattribute)
-* [`clearTicketAttributes()`](#clearticketattributes)
-* [`setCustomData(...)`](#setcustomdata)
-* [`removeCustomData(...)`](#removecustomdata)
-* [`clearCustomData()`](#clearcustomdata)
-* [`trackEvent(...)`](#trackevent)
-* [`trackPage(...)`](#trackpage)
-* [`setEventCallback(...)`](#seteventcallback)
-* [`sendSilentCrashReport(...)`](#sendsilentcrashreport)
-* [`preFillForm(...)`](#prefillform)
-* [`addAttachment(...)`](#addattachment)
-* [`removeAllAttachments()`](#removeallattachments)
-* [`open()`](#open)
-* [`openNews(...)`](#opennews)
-* [`openNewsArticle(...)`](#opennewsarticle)
-* [`openHelpCenter(...)`](#openhelpcenter)
-* [`openHelpCenterArticle(...)`](#openhelpcenterarticle)
-* [`openHelpCenterCollection(...)`](#openhelpcentercollection)
-* [`searchHelpCenter(...)`](#searchhelpcenter)
-* [`openFeatureRequests(...)`](#openfeaturerequests)
-* [`close()`](#close)
-* [`isOpened()`](#isopened)
-* [`startFeedbackFlow(...)`](#startfeedbackflow)
-* [`startClassicForm(...)`](#startclassicform)
-* [`startConversation(...)`](#startconversation)
-* [`openConversation(...)`](#openconversation)
-* [`startBot(...)`](#startbot)
-* [`showFeedbackButton(...)`](#showfeedbackbutton)
-* [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
-* [`setLanguage(...)`](#setlanguage)
-* [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
-* [`enableDebugConsoleLog()`](#enabledebugconsolelog)
-* [Interfaces](#interfaces)
-* [Type Aliases](#type-aliases)
+- [`initialize(...)`](#initialize)
+- [`identify(...)`](#identify)
+- [`updateContact(...)`](#updatecontact)
+- [`clearIdentity()`](#clearidentity)
+- [`getIdentity()`](#getidentity)
+- [`isUserIdentified()`](#isuseridentified)
+- [`log(...)`](#log)
+- [`showSurvey(...)`](#showsurvey)
+- [`attachCustomData(...)`](#attachcustomdata)
+- [`setTags(...)`](#settags)
+- [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
+- [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
+- [`setAiTools(...)`](#setaitools)
+- [`setTicketAttribute(...)`](#setticketattribute)
+- [`unsetTicketAttribute(...)`](#unsetticketattribute)
+- [`clearTicketAttributes()`](#clearticketattributes)
+- [`setCustomData(...)`](#setcustomdata)
+- [`removeCustomData(...)`](#removecustomdata)
+- [`clearCustomData()`](#clearcustomdata)
+- [`trackEvent(...)`](#trackevent)
+- [`trackPage(...)`](#trackpage)
+- [`setEventCallback(...)`](#seteventcallback)
+- [`sendSilentCrashReport(...)`](#sendsilentcrashreport)
+- [`preFillForm(...)`](#prefillform)
+- [`addAttachment(...)`](#addattachment)
+- [`removeAllAttachments()`](#removeallattachments)
+- [`open()`](#open)
+- [`openNews(...)`](#opennews)
+- [`openNewsArticle(...)`](#opennewsarticle)
+- [`openHelpCenter(...)`](#openhelpcenter)
+- [`openHelpCenterArticle(...)`](#openhelpcenterarticle)
+- [`openHelpCenterCollection(...)`](#openhelpcentercollection)
+- [`searchHelpCenter(...)`](#searchhelpcenter)
+- [`openFeatureRequests(...)`](#openfeaturerequests)
+- [`close()`](#close)
+- [`isOpened()`](#isopened)
+- [`startFeedbackFlow(...)`](#startfeedbackflow)
+- [`startClassicForm(...)`](#startclassicform)
+- [`startConversation(...)`](#startconversation)
+- [`openConversation(...)`](#openconversation)
+- [`startBot(...)`](#startbot)
+- [`showFeedbackButton(...)`](#showfeedbackbutton)
+- [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
+- [`setLanguage(...)`](#setlanguage)
+- [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
+- [`enableDebugConsoleLog()`](#enabledebugconsolelog)
+- [Interfaces](#interfaces)
+- [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -93,8 +97,7 @@ Initialize Gleap with an API key
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### identify(...)
 
@@ -112,8 +115,7 @@ Set user identity
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### updateContact(...)
 
@@ -131,8 +133,7 @@ Update user properties
 
 **Since:** 13.2.1
 
---------------------
-
+---
 
 ### clearIdentity()
 
@@ -146,8 +147,7 @@ Clear user identity
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### getIdentity()
 
@@ -161,8 +161,7 @@ Get the current user identity
 
 **Since:** 8.1.0
 
---------------------
-
+---
 
 ### isUserIdentified()
 
@@ -176,8 +175,7 @@ User identified status.
 
 **Since:** 8.1.0
 
---------------------
-
+---
 
 ### log(...)
 
@@ -195,8 +193,7 @@ Submit a custom log message with the given level
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### showSurvey(...)
 
@@ -214,8 +211,7 @@ Manually show a survey.
 
 **Since:** 8.5.1
 
---------------------
-
+---
 
 ### attachCustomData(...)
 
@@ -233,8 +229,7 @@ Add custom data
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### setTags(...)
 
@@ -252,8 +247,7 @@ Set tags
 
 **Since:** 8.6.0
 
---------------------
-
+---
 
 ### setNetworkLogsBlacklist(...)
 
@@ -271,8 +265,7 @@ Set network logs blacklist
 
 **Since:** 13.2.1
 
---------------------
-
+---
 
 ### setNetworkLogPropsToIgnore(...)
 
@@ -290,8 +283,7 @@ Set network logs props to ignore
 
 **Since:** 13.2.1
 
---------------------
-
+---
 
 ### setAiTools(...)
 
@@ -309,8 +301,7 @@ Sets the AI tools to use
 
 **Since:** 13.5.0
 
---------------------
-
+---
 
 ### setTicketAttribute(...)
 
@@ -328,8 +319,7 @@ Sets the value of a ticket attribute
 
 **Since:** 13.5.0
 
---------------------
-
+---
 
 ### unsetTicketAttribute(...)
 
@@ -347,8 +337,7 @@ Unset a ticket attribute
 
 **Since:** 14.1.0
 
---------------------
-
+---
 
 ### clearTicketAttributes()
 
@@ -362,8 +351,7 @@ Clear all ticket attributes
 
 **Since:** 14.1.0
 
---------------------
-
+---
 
 ### setCustomData(...)
 
@@ -381,8 +369,7 @@ Set custom data
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### removeCustomData(...)
 
@@ -400,8 +387,7 @@ Remove custom data by key
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### clearCustomData()
 
@@ -415,8 +401,7 @@ Clear custom data
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### trackEvent(...)
 
@@ -434,8 +419,7 @@ Log event to Gleap
 
 **Since:** 8.0.0
 
---------------------
-
+---
 
 ### trackPage(...)
 
@@ -453,8 +437,7 @@ Track a page view
 
 **Since:** 8.4.1
 
---------------------
-
+---
 
 ### setEventCallback(...)
 
@@ -470,8 +453,7 @@ setEventCallback(callback: GleapEventCallback) => Promise<CallbackID>
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### sendSilentCrashReport(...)
 
@@ -489,8 +471,7 @@ Log event to Gleap
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### preFillForm(...)
 
@@ -508,8 +489,7 @@ Prefills the widget's form data
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### addAttachment(...)
 
@@ -527,8 +507,7 @@ Add attachment as bas64 string
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### removeAllAttachments()
 
@@ -542,8 +521,7 @@ All attachments removed
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### open()
 
@@ -557,8 +535,7 @@ Open widget
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### openNews(...)
 
@@ -576,8 +553,7 @@ Open news
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### openNewsArticle(...)
 
@@ -595,8 +571,7 @@ Open news article
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### openHelpCenter(...)
 
@@ -614,8 +589,7 @@ Open help center
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### openHelpCenterArticle(...)
 
@@ -633,8 +607,7 @@ Open help center article
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### openHelpCenterCollection(...)
 
@@ -652,8 +625,7 @@ Open help center collection
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### searchHelpCenter(...)
 
@@ -671,8 +643,7 @@ Search help center
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### openFeatureRequests(...)
 
@@ -690,8 +661,7 @@ Open feature requests
 
 **Since:** 8.4.0
 
---------------------
-
+---
 
 ### close()
 
@@ -705,8 +675,7 @@ Close widget
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### isOpened()
 
@@ -720,8 +689,7 @@ Check widget status code
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### startFeedbackFlow(...)
 
@@ -739,8 +707,7 @@ Start feedback flow
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### startClassicForm(...)
 
@@ -758,8 +725,7 @@ Start a classic form
 
 **Since:** 13.1.0
 
---------------------
-
+---
 
 ### startConversation(...)
 
@@ -777,8 +743,7 @@ Start a new conversation
 
 **Since:** 13.1.0
 
---------------------
-
+---
 
 ### openConversation(...)
 
@@ -796,8 +761,7 @@ Opens the conversations tab.
 
 **Since:** 13.9.0
 
---------------------
-
+---
 
 ### startBot(...)
 
@@ -815,8 +779,7 @@ Start bot
 
 **Since:** 10.0.3
 
---------------------
-
+---
 
 ### showFeedbackButton(...)
 
@@ -834,8 +797,7 @@ Show or hide the feedback button.
 
 **Since:** 8.0.0
 
---------------------
-
+---
 
 ### setDisableInAppNotifications(...)
 
@@ -853,8 +815,7 @@ Disable in app notifications.
 
 **Since:** 8.6.1
 
---------------------
-
+---
 
 ### setLanguage(...)
 
@@ -872,8 +833,7 @@ Set Language
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### disableConsoleLogOverwrite()
 
@@ -887,8 +847,7 @@ Disable console log overwrite
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### enableDebugConsoleLog()
 
@@ -902,11 +861,9 @@ Enable debug console log
 
 **Since:** 7.0.0
 
---------------------
-
+---
 
 ### Interfaces
-
 
 #### Object
 
@@ -924,7 +881,6 @@ Provides functionality common to all JavaScript objects.
 | **hasOwnProperty**       | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether an object has a property with the specified name.     |
 | **isPrototypeOf**        | (v: <a href="#object">Object</a>) =&gt; boolean           | Determines whether an object exists in another object's prototype chain. |
 | **propertyIsEnumerable** | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether a specified property is enumerable.                   |
-
 
 #### Function
 
@@ -944,7 +900,6 @@ Creates a new function.
 | **bind**     | (this: <a href="#function">Function</a>, thisArg: any, ...argArray: any[]) =&gt; any | For a given function, creates a bound function that has the same body as the original function. The this object of the bound function is associated with the specified object, and has the specified initial parameters. |
 | **toString** | () =&gt; string                                                                      | Returns a string representation of a function.                                                                                                                                                                           |
 
-
 #### GleapEventMessage
 
 | Prop       | Type                |
@@ -952,26 +907,23 @@ Creates a new function.
 | **`name`** | <code>string</code> |
 | **`data`** | <code>any</code>    |
 
-
 #### Boolean
 
 | Method      | Signature        | Description                                          |
 | ----------- | ---------------- | ---------------------------------------------------- |
 | **valueOf** | () =&gt; boolean | Returns the primitive value of the specified object. |
 
-
 ### Type Aliases
-
 
 #### PropertyKey
 
 <code>string | number | symbol</code>
 
-
 #### GleapEventCallback
 
-<code>(message: <a href="#gleapeventmessage">GleapEventMessage</a> | null, err?: any): void</code>
-
+<code>
+  (message: <a href="#gleapeventmessage">GleapEventMessage</a> | null, err?: any): void
+</code>
 
 #### CallbackID
 
