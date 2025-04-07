@@ -1,13 +1,7 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var core = require('@capacitor/core');
 var Gleap$1 = require('gleap');
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var Gleap__default = /*#__PURE__*/_interopDefaultLegacy(Gleap$1);
 
 const Gleap = core.registerPlugin('Gleap', {
     web: () => Promise.resolve().then(function () { return web; }).then(m => new m.GleapWeb()),
@@ -18,63 +12,63 @@ class GleapWeb extends core.WebPlugin {
         if (GleapWeb.initialized) {
             return { initialized: true };
         }
-        Gleap__default["default"].initialize(options.API_KEY);
+        Gleap$1.initialize(options.API_KEY);
         GleapWeb.initialized = true;
         this.registerCallbackListeners();
         return { initialized: true };
     }
     registerCallbackListeners() {
-        Gleap__default["default"].on('open', () => {
+        Gleap$1.on('open', () => {
             this.notifyCallbacks('open', {});
         });
-        Gleap__default["default"].on('initialized', () => {
+        Gleap$1.on('initialized', () => {
             this.notifyCallbacks('initialized', {});
         });
-        Gleap__default["default"].on('close', () => {
+        Gleap$1.on('close', () => {
             this.notifyCallbacks('close', {});
         });
-        Gleap__default["default"].on('feedback-sent', formData => {
+        Gleap$1.on('feedback-sent', formData => {
             this.notifyCallbacks('feedback-sent', formData);
         });
-        Gleap__default["default"].on('outbound-sent', formData => {
+        Gleap$1.on('outbound-sent', formData => {
             this.notifyCallbacks('outbound-sent', formData);
         });
-        Gleap__default["default"].on('tool-execution', toolExecution => {
+        Gleap$1.on('tool-execution', toolExecution => {
             this.notifyCallbacks('tool-execution', toolExecution);
         });
-        Gleap__default["default"].on('flow-started', flow => {
+        Gleap$1.on('flow-started', flow => {
             this.notifyCallbacks('flow-started', flow);
         });
-        Gleap__default["default"].on('error-while-sending', () => {
+        Gleap$1.on('error-while-sending', () => {
             this.notifyCallbacks('error-while-sending', {});
         });
-        Gleap__default["default"].on('unregister-pushmessage-group', groupName => {
+        Gleap$1.on('unregister-pushmessage-group', groupName => {
             this.notifyCallbacks('unregister-pushmessage-group', groupName);
         });
-        Gleap__default["default"].on('register-pushmessage-group', groupName => {
+        Gleap$1.on('register-pushmessage-group', groupName => {
             this.notifyCallbacks('register-pushmessage-group', groupName);
         });
-        Gleap__default["default"].on('unread-count-changed', groupName => {
+        Gleap$1.on('unread-count-changed', groupName => {
             this.notifyCallbacks('notification-count-updated', groupName);
         });
-        Gleap__default["default"].registerCustomAction(customAction => {
+        Gleap$1.registerCustomAction(customAction => {
             this.notifyCallbacks('custom-action-called', customAction);
         });
     }
     async setAiTools(options) {
-        Gleap__default["default"].setAiTools(options.tools);
+        Gleap$1.setAiTools(options.tools);
         return { aiToolsSet: true };
     }
     async setTicketAttribute(options) {
-        Gleap__default["default"].setTicketAttribute(options.key, options.value);
+        Gleap$1.setTicketAttribute(options.key, options.value);
         return { setTicketAttribute: true };
     }
     async unsetTicketAttribute(options) {
-        Gleap__default["default"].unsetTicketAttribute(options.key);
+        Gleap$1.unsetTicketAttribute(options.key);
         return { unsetTicketAttribute: true };
     }
     async clearTicketAttributes() {
-        Gleap__default["default"].clearTicketAttributes();
+        Gleap$1.clearTicketAttributes();
         return { clearTicketAttributes: true };
     }
     notifyCallbacks(event, data) {
@@ -90,28 +84,28 @@ class GleapWeb extends core.WebPlugin {
     }
     async startClassicForm(options) {
         var _a;
-        Gleap__default["default"].startClassicForm((_a = options.formId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+        Gleap$1.startClassicForm((_a = options.formId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
         return { classicFormStarted: true };
     }
     async startConversation(options) {
-        Gleap__default["default"].startConversation(options.showBackButton);
+        Gleap$1.startConversation(options.showBackButton);
         return { conversationStarted: true };
     }
     async openConversation(options) {
-        Gleap__default["default"].openConversations(options.showBackButton);
+        Gleap$1.openConversations(options.showBackButton);
         return { conversationsOpened: true };
     }
     async showSurvey(options) {
-        Gleap__default["default"].showSurvey(options.surveyId, options.format);
+        Gleap$1.showSurvey(options.surveyId, options.format);
         return { opened: true };
     }
     async showFeedbackButton(options) {
-        Gleap__default["default"].showFeedbackButton(options.show ? true : false);
+        Gleap$1.showFeedbackButton(options.show ? true : false);
         return { feedbackButtonShown: true };
     }
     async setDisableInAppNotifications(options) {
         var _a;
-        Gleap__default["default"].setDisableInAppNotifications((_a = options.disableInAppNotifications) !== null && _a !== void 0 ? _a : false);
+        Gleap$1.setDisableInAppNotifications((_a = options.disableInAppNotifications) !== null && _a !== void 0 ? _a : false);
         return { inAppNotificationsDisabled: true };
     }
     async identify(options) {
@@ -127,61 +121,61 @@ class GleapWeb extends core.WebPlugin {
             customData: options.customData,
         };
         if (options.userHash) {
-            Gleap__default["default"].identify(options.userId, userData, options.userHash);
+            Gleap$1.identify(options.userId, userData, options.userHash);
         }
         else {
-            Gleap__default["default"].identify(options.userId, userData);
+            Gleap$1.identify(options.userId, userData);
         }
         return { identify: true };
     }
     async updateContact(options) {
-        Gleap__default["default"].updateContact(options);
+        Gleap$1.updateContact(options);
         return { identify: true };
     }
     async setNetworkLogsBlacklist(options) {
-        Gleap__default["default"].setNetworkLogsBlacklist(options.blacklist);
+        Gleap$1.setNetworkLogsBlacklist(options.blacklist);
         return { blacklistSet: true };
     }
     async setNetworkLogPropsToIgnore(options) {
-        Gleap__default["default"].setNetworkLogPropsToIgnore(options.propsToIgnore);
+        Gleap$1.setNetworkLogPropsToIgnore(options.propsToIgnore);
         return { propsToIgnoreSet: true };
     }
     async setTags(options) {
-        Gleap__default["default"].setTags(options.tags);
+        Gleap$1.setTags(options.tags);
         return { tagsSet: true };
     }
     async clearIdentity() {
-        Gleap__default["default"].clearIdentity();
+        Gleap$1.clearIdentity();
         return { clearIdentity: true };
     }
     async getIdentity() {
-        return { identity: Gleap__default["default"].getIdentity() };
+        return { identity: Gleap$1.getIdentity() };
     }
     async isUserIdentified() {
-        return { isUserIdentified: Gleap__default["default"].isUserIdentified() };
+        return { isUserIdentified: Gleap$1.isUserIdentified() };
     }
     async attachCustomData(options) {
-        Gleap__default["default"].attachCustomData(options.data);
+        Gleap$1.attachCustomData(options.data);
         return { attachedCustomData: true };
     }
     async setCustomData(options) {
-        Gleap__default["default"].setCustomData(options.key, options.value);
+        Gleap$1.setCustomData(options.key, options.value);
         return { setCustomData: true };
     }
     async removeCustomData(options) {
-        Gleap__default["default"].removeCustomData(options.key);
+        Gleap$1.removeCustomData(options.key);
         return { removedCustomData: true };
     }
     async clearCustomData() {
-        Gleap__default["default"].clearCustomData();
+        Gleap$1.clearCustomData();
         return { clearedCustomData: true };
     }
     async trackEvent(options) {
-        Gleap__default["default"].trackEvent(options.name, options.data);
+        Gleap$1.trackEvent(options.name, options.data);
         return { loggedEvent: true };
     }
     async trackPage(options) {
-        Gleap__default["default"].trackEvent('pageView', {
+        Gleap$1.trackEvent('pageView', {
             page: options.pageName,
         });
         return { trackedPage: true };
@@ -189,21 +183,21 @@ class GleapWeb extends core.WebPlugin {
     async startFeedbackFlow(options) {
         var _a;
         if (!options.feedbackFlow) ;
-        Gleap__default["default"].startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : 'bugreporting', options.showBackButton);
+        Gleap$1.startFeedbackFlow((_a = options.feedbackFlow) !== null && _a !== void 0 ? _a : 'bugreporting', options.showBackButton);
         return { startedFeedbackFlow: true };
     }
     async startBot(options) {
         var _a;
         if (!options.botId) ;
-        Gleap__default["default"].startBot((_a = options.botId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
+        Gleap$1.startBot((_a = options.botId) !== null && _a !== void 0 ? _a : '', options.showBackButton);
         return { startedBot: true };
     }
     async setLanguage(options) {
-        Gleap__default["default"].setLanguage(options.languageCode);
+        Gleap$1.setLanguage(options.languageCode);
         return { setLanguage: options.languageCode };
     }
     async log(options) {
-        Gleap__default["default"].log(options.message, options.logLevel);
+        Gleap$1.log(options.message, options.logLevel);
         return { logged: true };
     }
     async setEventCallback(callback) {
@@ -212,57 +206,57 @@ class GleapWeb extends core.WebPlugin {
         return callbackId;
     }
     async sendSilentCrashReport(options) {
-        Gleap__default["default"].sendSilentCrashReport(options.description, options.severity, options.dataExclusion);
+        Gleap$1.sendSilentCrashReport(options.description, options.severity, options.dataExclusion);
         return { sentSilentBugReport: true };
     }
     async open() {
-        Gleap__default["default"].open();
+        Gleap$1.open();
         return { openedWidget: true };
     }
     async openFeatureRequests(options) {
-        Gleap__default["default"].openFeatureRequests(options.showBackButton);
+        Gleap$1.openFeatureRequests(options.showBackButton);
         return { openedFeatureRequests: true };
     }
     async openNews(options) {
-        Gleap__default["default"].openNews(options.showBackButton);
+        Gleap$1.openNews(options.showBackButton);
         return { openedNews: true };
     }
     async openNewsArticle(options) {
-        Gleap__default["default"].openNewsArticle(options.articleId, options.showBackButton);
+        Gleap$1.openNewsArticle(options.articleId, options.showBackButton);
         return { opened: true };
     }
     async openHelpCenter(options) {
-        Gleap__default["default"].openHelpCenter(options.showBackButton);
+        Gleap$1.openHelpCenter(options.showBackButton);
         return { opened: true };
     }
     async openHelpCenterArticle(options) {
-        Gleap__default["default"].openHelpCenterArticle(options.articleId, options.showBackButton);
+        Gleap$1.openHelpCenterArticle(options.articleId, options.showBackButton);
         return { opened: true };
     }
     async openHelpCenterCollection(options) {
-        Gleap__default["default"].openHelpCenterCollection(options.collectionId, options.showBackButton);
+        Gleap$1.openHelpCenterCollection(options.collectionId, options.showBackButton);
         return { opened: true };
     }
     async searchHelpCenter(options) {
-        Gleap__default["default"].searchHelpCenter(options.term, options.showBackButton);
+        Gleap$1.searchHelpCenter(options.term, options.showBackButton);
         return { opened: true };
     }
     async close() {
-        Gleap__default["default"].close();
+        Gleap$1.close();
         return { closedWidget: true };
     }
     async isOpened() {
-        return { isOpened: Gleap__default["default"].isOpened() };
+        return { isOpened: Gleap$1.isOpened() };
     }
     async disableConsoleLogOverwrite() {
-        Gleap__default["default"].disableConsoleLogOverwrite();
+        Gleap$1.disableConsoleLogOverwrite();
         return { consoleLogDisabled: true };
     }
     async enableDebugConsoleLog() {
         return { debugConsoleLogEnabled: true };
     }
     async preFillForm(options) {
-        Gleap__default["default"].preFillForm(options.data);
+        Gleap$1.preFillForm(options.data);
         return { preFilledForm: true };
     }
     async addAttachment(_options) {

@@ -1185,6 +1185,3128 @@
       ]
     },
     {
+      "name": "FunctionDeclaration",
+      "slug": "functiondeclaration",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "It is null when a function declaration is a part of the `export default function` statement",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        }
+      ]
+    },
+    {
+      "name": "Identifier",
+      "slug": "identifier",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Identifier'"
+        },
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "FunctionExpression",
+      "slug": "functionexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier | null | undefined"
+        },
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'FunctionExpression'"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BlockStatement"
+          ],
+          "type": "BlockStatement"
+        }
+      ]
+    },
+    {
+      "name": "BlockStatement",
+      "slug": "blockstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'BlockStatement'"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement[]"
+        },
+        {
+          "name": "innerComments",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Comment"
+          ],
+          "type": "Comment[] | undefined"
+        }
+      ]
+    },
+    {
+      "name": "ExpressionStatement",
+      "slug": "expressionstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ExpressionStatement'"
+        },
+        {
+          "name": "expression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "ExpressionMap",
+      "slug": "expressionmap",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "ArrayExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ArrayExpression"
+          ],
+          "type": "ArrayExpression"
+        },
+        {
+          "name": "ArrowFunctionExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ArrowFunctionExpression"
+          ],
+          "type": "ArrowFunctionExpression"
+        },
+        {
+          "name": "AssignmentExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "AssignmentExpression"
+          ],
+          "type": "AssignmentExpression"
+        },
+        {
+          "name": "AwaitExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "AwaitExpression"
+          ],
+          "type": "AwaitExpression"
+        },
+        {
+          "name": "BinaryExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BinaryExpression"
+          ],
+          "type": "BinaryExpression"
+        },
+        {
+          "name": "CallExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "CallExpression"
+          ],
+          "type": "CallExpression"
+        },
+        {
+          "name": "ChainExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ChainExpression"
+          ],
+          "type": "ChainExpression"
+        },
+        {
+          "name": "ClassExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ClassExpression"
+          ],
+          "type": "ClassExpression"
+        },
+        {
+          "name": "ConditionalExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ConditionalExpression"
+          ],
+          "type": "ConditionalExpression"
+        },
+        {
+          "name": "FunctionExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "FunctionExpression"
+          ],
+          "type": "FunctionExpression"
+        },
+        {
+          "name": "Identifier",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        },
+        {
+          "name": "ImportExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ImportExpression"
+          ],
+          "type": "ImportExpression"
+        },
+        {
+          "name": "Literal",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Literal"
+          ],
+          "type": "Literal"
+        },
+        {
+          "name": "LogicalExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "LogicalExpression"
+          ],
+          "type": "LogicalExpression"
+        },
+        {
+          "name": "MemberExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "MemberExpression"
+          ],
+          "type": "MemberExpression"
+        },
+        {
+          "name": "MetaProperty",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "MetaProperty"
+          ],
+          "type": "MetaProperty"
+        },
+        {
+          "name": "NewExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "NewExpression"
+          ],
+          "type": "NewExpression"
+        },
+        {
+          "name": "ObjectExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ObjectExpression"
+          ],
+          "type": "ObjectExpression"
+        },
+        {
+          "name": "SequenceExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "SequenceExpression"
+          ],
+          "type": "SequenceExpression"
+        },
+        {
+          "name": "TaggedTemplateExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "TaggedTemplateExpression"
+          ],
+          "type": "TaggedTemplateExpression"
+        },
+        {
+          "name": "TemplateLiteral",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "TemplateLiteral"
+          ],
+          "type": "TemplateLiteral"
+        },
+        {
+          "name": "ThisExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ThisExpression"
+          ],
+          "type": "ThisExpression"
+        },
+        {
+          "name": "UnaryExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "UnaryExpression"
+          ],
+          "type": "UnaryExpression"
+        },
+        {
+          "name": "UpdateExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "UpdateExpression"
+          ],
+          "type": "UpdateExpression"
+        },
+        {
+          "name": "YieldExpression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "YieldExpression"
+          ],
+          "type": "YieldExpression"
+        }
+      ]
+    },
+    {
+      "name": "ArrayExpression",
+      "slug": "arrayexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ArrayExpression'"
+        },
+        {
+          "name": "elements",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Array",
+            "Expression",
+            "SpreadElement"
+          ],
+          "type": "Array<Expression | SpreadElement | null>"
+        }
+      ]
+    },
+    {
+      "name": "Array",
+      "slug": "array",
+      "docs": "",
+      "tags": [],
+      "methods": [
+        {
+          "name": "toString",
+          "signature": "() => string",
+          "parameters": [],
+          "returns": "string",
+          "tags": [],
+          "docs": "Returns a string representation of an array.",
+          "complexTypes": [],
+          "slug": "tostring"
+        },
+        {
+          "name": "toLocaleString",
+          "signature": "() => string",
+          "parameters": [],
+          "returns": "string",
+          "tags": [],
+          "docs": "Returns a string representation of an array. The elements are converted to string using their toLocalString methods.",
+          "complexTypes": [],
+          "slug": "tolocalestring"
+        },
+        {
+          "name": "pop",
+          "signature": "() => T | undefined",
+          "parameters": [],
+          "returns": "T | undefined",
+          "tags": [],
+          "docs": "Removes the last element from an array and returns it.\r\nIf the array is empty, undefined is returned and the array is not modified.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "pop"
+        },
+        {
+          "name": "push",
+          "signature": "(...items: T[]) => number",
+          "parameters": [
+            {
+              "name": "items",
+              "docs": "New elements to add to the array.",
+              "type": "T[]"
+            }
+          ],
+          "returns": "number",
+          "tags": [
+            {
+              "name": "param",
+              "text": "items New elements to add to the array."
+            }
+          ],
+          "docs": "Appends new elements to the end of an array, and returns the new length of the array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "push"
+        },
+        {
+          "name": "concat",
+          "signature": "(...items: ConcatArray<T>[]) => T[]",
+          "parameters": [
+            {
+              "name": "items",
+              "docs": "Additional arrays and/or items to add to the end of the array.",
+              "type": "ConcatArray<T>[]"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "items Additional arrays and/or items to add to the end of the array."
+            }
+          ],
+          "docs": "Combines two or more arrays.\r\nThis method returns a new array without modifying any existing arrays.",
+          "complexTypes": [
+            "T",
+            "ConcatArray"
+          ],
+          "slug": "concat"
+        },
+        {
+          "name": "concat",
+          "signature": "(...items: (T | ConcatArray<T>)[]) => T[]",
+          "parameters": [
+            {
+              "name": "items",
+              "docs": "Additional arrays and/or items to add to the end of the array.",
+              "type": "(T | ConcatArray<T>)[]"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "items Additional arrays and/or items to add to the end of the array."
+            }
+          ],
+          "docs": "Combines two or more arrays.\r\nThis method returns a new array without modifying any existing arrays.",
+          "complexTypes": [
+            "T",
+            "ConcatArray"
+          ],
+          "slug": "concat"
+        },
+        {
+          "name": "join",
+          "signature": "(separator?: string | undefined) => string",
+          "parameters": [
+            {
+              "name": "separator",
+              "docs": "A string used to separate one element of the array from the next in the resulting string. If omitted, the array elements are separated with a comma.",
+              "type": "string | undefined"
+            }
+          ],
+          "returns": "string",
+          "tags": [
+            {
+              "name": "param",
+              "text": "separator A string used to separate one element of the array from the next in the resulting string. If omitted, the array elements are separated with a comma."
+            }
+          ],
+          "docs": "Adds all the elements of an array into a string, separated by the specified separator string.",
+          "complexTypes": [],
+          "slug": "join"
+        },
+        {
+          "name": "reverse",
+          "signature": "() => T[]",
+          "parameters": [],
+          "returns": "T[]",
+          "tags": [],
+          "docs": "Reverses the elements in an array in place.\r\nThis method mutates the array and returns a reference to the same array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "reverse"
+        },
+        {
+          "name": "shift",
+          "signature": "() => T | undefined",
+          "parameters": [],
+          "returns": "T | undefined",
+          "tags": [],
+          "docs": "Removes the first element from an array and returns it.\r\nIf the array is empty, undefined is returned and the array is not modified.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "shift"
+        },
+        {
+          "name": "slice",
+          "signature": "(start?: number | undefined, end?: number | undefined) => T[]",
+          "parameters": [
+            {
+              "name": "start",
+              "docs": "The beginning index of the specified portion of the array.\r\nIf start is undefined, then the slice begins at index 0.",
+              "type": "number | undefined"
+            },
+            {
+              "name": "end",
+              "docs": "The end index of the specified portion of the array. This is exclusive of the element at the index 'end'.\r\nIf end is undefined, then the slice extends to the end of the array.",
+              "type": "number | undefined"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "start The beginning index of the specified portion of the array.\r\nIf start is undefined, then the slice begins at index 0."
+            },
+            {
+              "name": "param",
+              "text": "end The end index of the specified portion of the array. This is exclusive of the element at the index 'end'.\r\nIf end is undefined, then the slice extends to the end of the array."
+            }
+          ],
+          "docs": "Returns a copy of a section of an array.\r\nFor both start and end, a negative index can be used to indicate an offset from the end of the array.\r\nFor example, -2 refers to the second to last element of the array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "slice"
+        },
+        {
+          "name": "sort",
+          "signature": "(compareFn?: ((a: T, b: T) => number) | undefined) => this",
+          "parameters": [
+            {
+              "name": "compareFn",
+              "docs": "Function used to determine the order of the elements. It is expected to return\r\na negative value if first argument is less than second argument, zero if they're equal and a positive\r\nvalue otherwise. If omitted, the elements are sorted in ascending, ASCII character order.\r\n```ts\r\n[11,2,22,1].sort((a, b) => a - b)\r\n```",
+              "type": "((a: T, b: T) => number) | undefined"
+            }
+          ],
+          "returns": "this",
+          "tags": [
+            {
+              "name": "param",
+              "text": "compareFn Function used to determine the order of the elements. It is expected to return\r\na negative value if first argument is less than second argument, zero if they're equal and a positive\r\nvalue otherwise. If omitted, the elements are sorted in ascending, ASCII character order.\r\n```ts\r\n[11,2,22,1].sort((a, b) => a - b)\r\n```"
+            }
+          ],
+          "docs": "Sorts an array in place.\r\nThis method mutates the array and returns a reference to the same array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "sort"
+        },
+        {
+          "name": "splice",
+          "signature": "(start: number, deleteCount?: number | undefined) => T[]",
+          "parameters": [
+            {
+              "name": "start",
+              "docs": "The zero-based location in the array from which to start removing elements.",
+              "type": "number"
+            },
+            {
+              "name": "deleteCount",
+              "docs": "The number of elements to remove.",
+              "type": "number | undefined"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "start The zero-based location in the array from which to start removing elements."
+            },
+            {
+              "name": "param",
+              "text": "deleteCount The number of elements to remove."
+            },
+            {
+              "name": "returns",
+              "text": "An array containing the elements that were deleted."
+            }
+          ],
+          "docs": "Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "splice"
+        },
+        {
+          "name": "splice",
+          "signature": "(start: number, deleteCount: number, ...items: T[]) => T[]",
+          "parameters": [
+            {
+              "name": "start",
+              "docs": "The zero-based location in the array from which to start removing elements.",
+              "type": "number"
+            },
+            {
+              "name": "deleteCount",
+              "docs": "The number of elements to remove.",
+              "type": "number"
+            },
+            {
+              "name": "items",
+              "docs": "Elements to insert into the array in place of the deleted elements.",
+              "type": "T[]"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "start The zero-based location in the array from which to start removing elements."
+            },
+            {
+              "name": "param",
+              "text": "deleteCount The number of elements to remove."
+            },
+            {
+              "name": "param",
+              "text": "items Elements to insert into the array in place of the deleted elements."
+            },
+            {
+              "name": "returns",
+              "text": "An array containing the elements that were deleted."
+            }
+          ],
+          "docs": "Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "splice"
+        },
+        {
+          "name": "unshift",
+          "signature": "(...items: T[]) => number",
+          "parameters": [
+            {
+              "name": "items",
+              "docs": "Elements to insert at the start of the array.",
+              "type": "T[]"
+            }
+          ],
+          "returns": "number",
+          "tags": [
+            {
+              "name": "param",
+              "text": "items Elements to insert at the start of the array."
+            }
+          ],
+          "docs": "Inserts new elements at the start of an array, and returns the new length of the array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "unshift"
+        },
+        {
+          "name": "indexOf",
+          "signature": "(searchElement: T, fromIndex?: number | undefined) => number",
+          "parameters": [
+            {
+              "name": "searchElement",
+              "docs": "The value to locate in the array.",
+              "type": "T"
+            },
+            {
+              "name": "fromIndex",
+              "docs": "The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.",
+              "type": "number | undefined"
+            }
+          ],
+          "returns": "number",
+          "tags": [
+            {
+              "name": "param",
+              "text": "searchElement The value to locate in the array."
+            },
+            {
+              "name": "param",
+              "text": "fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0."
+            }
+          ],
+          "docs": "Returns the index of the first occurrence of a value in an array, or -1 if it is not present.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "indexof"
+        },
+        {
+          "name": "lastIndexOf",
+          "signature": "(searchElement: T, fromIndex?: number | undefined) => number",
+          "parameters": [
+            {
+              "name": "searchElement",
+              "docs": "The value to locate in the array.",
+              "type": "T"
+            },
+            {
+              "name": "fromIndex",
+              "docs": "The array index at which to begin searching backward. If fromIndex is omitted, the search starts at the last index in the array.",
+              "type": "number | undefined"
+            }
+          ],
+          "returns": "number",
+          "tags": [
+            {
+              "name": "param",
+              "text": "searchElement The value to locate in the array."
+            },
+            {
+              "name": "param",
+              "text": "fromIndex The array index at which to begin searching backward. If fromIndex is omitted, the search starts at the last index in the array."
+            }
+          ],
+          "docs": "Returns the index of the last occurrence of a specified value in an array, or -1 if it is not present.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "lastindexof"
+        },
+        {
+          "name": "every",
+          "signature": "<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any) => this is S[]",
+          "parameters": [
+            {
+              "name": "predicate",
+              "docs": "A function that accepts up to three arguments. The every method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value false, or until the end of the array.",
+              "type": "(value: T, index: number, array: T[]) => value is S"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "predicate A function that accepts up to three arguments. The every method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value false, or until the end of the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Determines whether all the members of an array satisfy the specified test.",
+          "complexTypes": [
+            "T",
+            "S"
+          ],
+          "slug": "every"
+        },
+        {
+          "name": "every",
+          "signature": "(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any) => boolean",
+          "parameters": [
+            {
+              "name": "predicate",
+              "docs": "A function that accepts up to three arguments. The every method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value false, or until the end of the array.",
+              "type": "(value: T, index: number, array: T[]) => unknown"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "predicate A function that accepts up to three arguments. The every method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value false, or until the end of the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Determines whether all the members of an array satisfy the specified test.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "every"
+        },
+        {
+          "name": "some",
+          "signature": "(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any) => boolean",
+          "parameters": [
+            {
+              "name": "predicate",
+              "docs": "A function that accepts up to three arguments. The some method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value true, or until the end of the array.",
+              "type": "(value: T, index: number, array: T[]) => unknown"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "predicate A function that accepts up to three arguments. The some method calls\r\nthe predicate function for each element in the array until the predicate returns a value\r\nwhich is coercible to the Boolean value true, or until the end of the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the predicate function.\r\nIf thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Determines whether the specified callback function returns true for any element of an array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "some"
+        },
+        {
+          "name": "forEach",
+          "signature": "(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any) => void",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array.",
+              "type": "(value: T, index: number, array: T[]) => void"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "void",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Performs the specified action for each element in an array.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "foreach"
+        },
+        {
+          "name": "map",
+          "signature": "<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any) => U[]",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.",
+              "type": "(value: T, index: number, array: T[]) => U"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "U[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Calls a defined callback function on each element of an array, and returns an array that contains the results.",
+          "complexTypes": [
+            "U",
+            "T"
+          ],
+          "slug": "map"
+        },
+        {
+          "name": "filter",
+          "signature": "<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any) => S[]",
+          "parameters": [
+            {
+              "name": "predicate",
+              "docs": "A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array.",
+              "type": "(value: T, index: number, array: T[]) => value is S"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "S[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "predicate A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Returns the elements of an array that meet the condition specified in a callback function.",
+          "complexTypes": [
+            "S",
+            "T"
+          ],
+          "slug": "filter"
+        },
+        {
+          "name": "filter",
+          "signature": "(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any) => T[]",
+          "parameters": [
+            {
+              "name": "predicate",
+              "docs": "A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array.",
+              "type": "(value: T, index: number, array: T[]) => unknown"
+            },
+            {
+              "name": "thisArg",
+              "docs": "An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.",
+              "type": "any"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [
+            {
+              "name": "param",
+              "text": "predicate A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "thisArg An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value."
+            }
+          ],
+          "docs": "Returns the elements of an array that meet the condition specified in a callback function.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "filter"
+        },
+        {
+          "name": "reduce",
+          "signature": "(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T) => T",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.",
+              "type": "(previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T"
+            }
+          ],
+          "returns": "T",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value."
+            }
+          ],
+          "docs": "Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "reduce"
+        },
+        {
+          "name": "reduce",
+          "signature": "(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue: T) => T",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "",
+              "type": "(previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T"
+            },
+            {
+              "name": "initialValue",
+              "docs": "",
+              "type": "T"
+            }
+          ],
+          "returns": "T",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "reduce"
+        },
+        {
+          "name": "reduce",
+          "signature": "<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U) => U",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.",
+              "type": "(previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U"
+            },
+            {
+              "name": "initialValue",
+              "docs": "If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.",
+              "type": "U"
+            }
+          ],
+          "returns": "U",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value."
+            }
+          ],
+          "docs": "Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+          "complexTypes": [
+            "U",
+            "T"
+          ],
+          "slug": "reduce"
+        },
+        {
+          "name": "reduceRight",
+          "signature": "(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T) => T",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.",
+              "type": "(previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T"
+            }
+          ],
+          "returns": "T",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value."
+            }
+          ],
+          "docs": "Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "reduceright"
+        },
+        {
+          "name": "reduceRight",
+          "signature": "(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue: T) => T",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "",
+              "type": "(previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T"
+            },
+            {
+              "name": "initialValue",
+              "docs": "",
+              "type": "T"
+            }
+          ],
+          "returns": "T",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "reduceright"
+        },
+        {
+          "name": "reduceRight",
+          "signature": "<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U) => U",
+          "parameters": [
+            {
+              "name": "callbackfn",
+              "docs": "A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.",
+              "type": "(previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U"
+            },
+            {
+              "name": "initialValue",
+              "docs": "If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.",
+              "type": "U"
+            }
+          ],
+          "returns": "U",
+          "tags": [
+            {
+              "name": "param",
+              "text": "callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array."
+            },
+            {
+              "name": "param",
+              "text": "initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value."
+            }
+          ],
+          "docs": "Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+          "complexTypes": [
+            "U",
+            "T"
+          ],
+          "slug": "reduceright"
+        }
+      ],
+      "properties": [
+        {
+          "name": "length",
+          "tags": [],
+          "docs": "Gets or sets the length of the array. This is a number one higher than the highest index in the array.",
+          "complexTypes": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "ConcatArray",
+      "slug": "concatarray",
+      "docs": "",
+      "tags": [],
+      "methods": [
+        {
+          "name": "join",
+          "signature": "(separator?: string | undefined) => string",
+          "parameters": [
+            {
+              "name": "separator",
+              "docs": "",
+              "type": "string | undefined"
+            }
+          ],
+          "returns": "string",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "slug": "join"
+        },
+        {
+          "name": "slice",
+          "signature": "(start?: number | undefined, end?: number | undefined) => T[]",
+          "parameters": [
+            {
+              "name": "start",
+              "docs": "",
+              "type": "number | undefined"
+            },
+            {
+              "name": "end",
+              "docs": "",
+              "type": "number | undefined"
+            }
+          ],
+          "returns": "T[]",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "T"
+          ],
+          "slug": "slice"
+        }
+      ],
+      "properties": [
+        {
+          "name": "length",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "SpreadElement",
+      "slug": "spreadelement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'SpreadElement'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "ArrowFunctionExpression",
+      "slug": "arrowfunctionexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ArrowFunctionExpression'"
+        },
+        {
+          "name": "expression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BlockStatement",
+            "Expression"
+          ],
+          "type": "Expression | BlockStatement"
+        }
+      ]
+    },
+    {
+      "name": "AssignmentExpression",
+      "slug": "assignmentexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'AssignmentExpression'"
+        },
+        {
+          "name": "operator",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "AssignmentOperator"
+          ],
+          "type": "AssignmentOperator"
+        },
+        {
+          "name": "left",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern",
+            "MemberExpression"
+          ],
+          "type": "Pattern"
+        },
+        {
+          "name": "right",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "ObjectPattern",
+      "slug": "objectpattern",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ObjectPattern'"
+        },
+        {
+          "name": "properties",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Array",
+            "AssignmentProperty",
+            "RestElement"
+          ],
+          "type": "Array<AssignmentProperty | RestElement>"
+        }
+      ]
+    },
+    {
+      "name": "AssignmentProperty",
+      "slug": "assignmentproperty",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern"
+          ],
+          "type": "Pattern"
+        },
+        {
+          "name": "kind",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'init'"
+        },
+        {
+          "name": "method",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "RestElement",
+      "slug": "restelement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'RestElement'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern"
+          ],
+          "type": "Pattern"
+        }
+      ]
+    },
+    {
+      "name": "ArrayPattern",
+      "slug": "arraypattern",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ArrayPattern'"
+        },
+        {
+          "name": "elements",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Array",
+            "Pattern"
+          ],
+          "type": "Array<Pattern | null>"
+        }
+      ]
+    },
+    {
+      "name": "AssignmentPattern",
+      "slug": "assignmentpattern",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'AssignmentPattern'"
+        },
+        {
+          "name": "left",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern"
+          ],
+          "type": "Pattern"
+        },
+        {
+          "name": "right",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "MemberExpression",
+      "slug": "memberexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'MemberExpression'"
+        },
+        {
+          "name": "object",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression",
+            "Super"
+          ],
+          "type": "Expression | Super"
+        },
+        {
+          "name": "property",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression",
+            "PrivateIdentifier"
+          ],
+          "type": "Expression | PrivateIdentifier"
+        },
+        {
+          "name": "computed",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "optional",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "Super",
+      "slug": "super",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Super'"
+        }
+      ]
+    },
+    {
+      "name": "PrivateIdentifier",
+      "slug": "privateidentifier",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'PrivateIdentifier'"
+        },
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "AwaitExpression",
+      "slug": "awaitexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'AwaitExpression'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "BinaryExpression",
+      "slug": "binaryexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'BinaryExpression'"
+        },
+        {
+          "name": "operator",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BinaryOperator"
+          ],
+          "type": "BinaryOperator"
+        },
+        {
+          "name": "left",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression",
+            "PrivateIdentifier"
+          ],
+          "type": "Expression | PrivateIdentifier"
+        },
+        {
+          "name": "right",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "SimpleCallExpression",
+      "slug": "simplecallexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'CallExpression'"
+        },
+        {
+          "name": "optional",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "NewExpression",
+      "slug": "newexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'NewExpression'"
+        }
+      ]
+    },
+    {
+      "name": "ChainExpression",
+      "slug": "chainexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ChainExpression'"
+        },
+        {
+          "name": "expression",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "ChainElement"
+          ],
+          "type": "ChainElement"
+        }
+      ]
+    },
+    {
+      "name": "ClassExpression",
+      "slug": "classexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ClassExpression'"
+        },
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "ConditionalExpression",
+      "slug": "conditionalexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ConditionalExpression'"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "alternate",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "consequent",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "ImportExpression",
+      "slug": "importexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ImportExpression'"
+        },
+        {
+          "name": "source",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "options",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "SimpleLiteral",
+      "slug": "simpleliteral",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Literal'"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | number | boolean | null"
+        },
+        {
+          "name": "raw",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
+    {
+      "name": "RegExpLiteral",
+      "slug": "regexpliteral",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Literal'"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "RegExp"
+          ],
+          "type": "RegExp | null | undefined"
+        },
+        {
+          "name": "regex",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "{ pattern: string; flags: string; }"
+        },
+        {
+          "name": "raw",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
+    {
+      "name": "RegExp",
+      "slug": "regexp",
+      "docs": "",
+      "tags": [],
+      "methods": [
+        {
+          "name": "exec",
+          "signature": "(string: string) => RegExpExecArray | null",
+          "parameters": [
+            {
+              "name": "string",
+              "docs": "The String object or string literal on which to perform the search.",
+              "type": "string"
+            }
+          ],
+          "returns": "RegExpExecArray | null",
+          "tags": [
+            {
+              "name": "param",
+              "text": "string The String object or string literal on which to perform the search."
+            }
+          ],
+          "docs": "Executes a search on a string using a regular expression pattern, and returns an array containing the results of that search.",
+          "complexTypes": [
+            "RegExpExecArray"
+          ],
+          "slug": "exec"
+        },
+        {
+          "name": "test",
+          "signature": "(string: string) => boolean",
+          "parameters": [
+            {
+              "name": "string",
+              "docs": "String on which to perform the search.",
+              "type": "string"
+            }
+          ],
+          "returns": "boolean",
+          "tags": [
+            {
+              "name": "param",
+              "text": "string String on which to perform the search."
+            }
+          ],
+          "docs": "Returns a Boolean value that indicates whether or not a pattern exists in a searched string.",
+          "complexTypes": [],
+          "slug": "test"
+        },
+        {
+          "name": "compile",
+          "signature": "() => this",
+          "parameters": [],
+          "returns": "this",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "slug": "compile"
+        }
+      ],
+      "properties": [
+        {
+          "name": "source",
+          "tags": [],
+          "docs": "Returns a copy of the text of the regular expression pattern. Read-only. The regExp argument is a Regular expression object. It can be a variable name or a literal.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "global",
+          "tags": [],
+          "docs": "Returns a Boolean value indicating the state of the global flag (g) used with a regular expression. Default is false. Read-only.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "ignoreCase",
+          "tags": [],
+          "docs": "Returns a Boolean value indicating the state of the ignoreCase flag (i) used with a regular expression. Default is false. Read-only.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "multiline",
+          "tags": [],
+          "docs": "Returns a Boolean value indicating the state of the multiline flag (m) used with a regular expression. Default is false. Read-only.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "lastIndex",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "RegExpExecArray",
+      "slug": "regexpexecarray",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "index",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "input",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "BigIntLiteral",
+      "slug": "bigintliteral",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Literal'"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "bigint | null | undefined"
+        },
+        {
+          "name": "bigint",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "raw",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
+    {
+      "name": "LogicalExpression",
+      "slug": "logicalexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'LogicalExpression'"
+        },
+        {
+          "name": "operator",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "LogicalOperator"
+          ],
+          "type": "LogicalOperator"
+        },
+        {
+          "name": "left",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "right",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "MetaProperty",
+      "slug": "metaproperty",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'MetaProperty'"
+        },
+        {
+          "name": "meta",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        },
+        {
+          "name": "property",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        }
+      ]
+    },
+    {
+      "name": "ObjectExpression",
+      "slug": "objectexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ObjectExpression'"
+        },
+        {
+          "name": "properties",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Array",
+            "Property",
+            "SpreadElement"
+          ],
+          "type": "Array<Property | SpreadElement>"
+        }
+      ]
+    },
+    {
+      "name": "Property",
+      "slug": "property",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Property'"
+        },
+        {
+          "name": "key",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression",
+            "PrivateIdentifier"
+          ],
+          "type": "Expression | PrivateIdentifier"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression",
+            "Pattern"
+          ],
+          "type": "ClassExpression | ArrayExpression | ArrowFunctionExpression | AssignmentExpression | AwaitExpression | BinaryExpression | SimpleCallExpression | NewExpression | ChainExpression | ConditionalExpression | FunctionExpression | Identifier | ImportExpression | SimpleLiteral | RegExpLiteral | BigIntLiteral | LogicalExpression | MemberExpression | MetaProperty | ObjectExpression | SequenceExpression | TaggedTemplateExpression | TemplateLiteral | ThisExpression | UnaryExpression | UpdateExpression | YieldExpression | ObjectPattern | ArrayPattern | RestElement | AssignmentPattern"
+        },
+        {
+          "name": "kind",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'init' | 'get' | 'set'"
+        },
+        {
+          "name": "method",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "shorthand",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "computed",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "SequenceExpression",
+      "slug": "sequenceexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'SequenceExpression'"
+        },
+        {
+          "name": "expressions",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression[]"
+        }
+      ]
+    },
+    {
+      "name": "TaggedTemplateExpression",
+      "slug": "taggedtemplateexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'TaggedTemplateExpression'"
+        },
+        {
+          "name": "tag",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "quasi",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "TemplateLiteral"
+          ],
+          "type": "TemplateLiteral"
+        }
+      ]
+    },
+    {
+      "name": "TemplateLiteral",
+      "slug": "templateliteral",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'TemplateLiteral'"
+        },
+        {
+          "name": "quasis",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "TemplateElement"
+          ],
+          "type": "TemplateElement[]"
+        },
+        {
+          "name": "expressions",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression[]"
+        }
+      ]
+    },
+    {
+      "name": "TemplateElement",
+      "slug": "templateelement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'TemplateElement'"
+        },
+        {
+          "name": "tail",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "{ cooked?: string | null | undefined; raw: string; }"
+        }
+      ]
+    },
+    {
+      "name": "ThisExpression",
+      "slug": "thisexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ThisExpression'"
+        }
+      ]
+    },
+    {
+      "name": "UnaryExpression",
+      "slug": "unaryexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'UnaryExpression'"
+        },
+        {
+          "name": "operator",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "UnaryOperator"
+          ],
+          "type": "UnaryOperator"
+        },
+        {
+          "name": "prefix",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "true"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "UpdateExpression",
+      "slug": "updateexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'UpdateExpression'"
+        },
+        {
+          "name": "operator",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "UpdateOperator"
+          ],
+          "type": "UpdateOperator"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "prefix",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "YieldExpression",
+      "slug": "yieldexpression",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'YieldExpression'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        },
+        {
+          "name": "delegate",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "StaticBlock",
+      "slug": "staticblock",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'StaticBlock'"
+        }
+      ]
+    },
+    {
+      "name": "EmptyStatement",
+      "slug": "emptystatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'EmptyStatement'"
+        }
+      ]
+    },
+    {
+      "name": "DebuggerStatement",
+      "slug": "debuggerstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'DebuggerStatement'"
+        }
+      ]
+    },
+    {
+      "name": "WithStatement",
+      "slug": "withstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'WithStatement'"
+        },
+        {
+          "name": "object",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        }
+      ]
+    },
+    {
+      "name": "ReturnStatement",
+      "slug": "returnstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ReturnStatement'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "LabeledStatement",
+      "slug": "labeledstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'LabeledStatement'"
+        },
+        {
+          "name": "label",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        }
+      ]
+    },
+    {
+      "name": "BreakStatement",
+      "slug": "breakstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'BreakStatement'"
+        },
+        {
+          "name": "label",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "ContinueStatement",
+      "slug": "continuestatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ContinueStatement'"
+        },
+        {
+          "name": "label",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "IfStatement",
+      "slug": "ifstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'IfStatement'"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "consequent",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        },
+        {
+          "name": "alternate",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "SwitchStatement",
+      "slug": "switchstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'SwitchStatement'"
+        },
+        {
+          "name": "discriminant",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "cases",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "SwitchCase"
+          ],
+          "type": "SwitchCase[]"
+        }
+      ]
+    },
+    {
+      "name": "SwitchCase",
+      "slug": "switchcase",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'SwitchCase'"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        },
+        {
+          "name": "consequent",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement[]"
+        }
+      ]
+    },
+    {
+      "name": "ThrowStatement",
+      "slug": "throwstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ThrowStatement'"
+        },
+        {
+          "name": "argument",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "TryStatement",
+      "slug": "trystatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'TryStatement'"
+        },
+        {
+          "name": "block",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BlockStatement"
+          ],
+          "type": "BlockStatement"
+        },
+        {
+          "name": "handler",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "CatchClause"
+          ],
+          "type": "CatchClause | null | undefined"
+        },
+        {
+          "name": "finalizer",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BlockStatement"
+          ],
+          "type": "BlockStatement | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "CatchClause",
+      "slug": "catchclause",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'CatchClause'"
+        },
+        {
+          "name": "param",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern"
+          ],
+          "type": "Pattern | null"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "BlockStatement"
+          ],
+          "type": "BlockStatement"
+        }
+      ]
+    },
+    {
+      "name": "WhileStatement",
+      "slug": "whilestatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'WhileStatement'"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        }
+      ]
+    },
+    {
+      "name": "DoWhileStatement",
+      "slug": "dowhilestatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'DoWhileStatement'"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression"
+        }
+      ]
+    },
+    {
+      "name": "ForStatement",
+      "slug": "forstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ForStatement'"
+        },
+        {
+          "name": "init",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "VariableDeclaration",
+            "Expression"
+          ],
+          "type": "Expression | VariableDeclaration | null | undefined"
+        },
+        {
+          "name": "test",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        },
+        {
+          "name": "update",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        },
+        {
+          "name": "body",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Statement"
+          ],
+          "type": "Statement"
+        }
+      ]
+    },
+    {
+      "name": "VariableDeclaration",
+      "slug": "variabledeclaration",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'VariableDeclaration'"
+        },
+        {
+          "name": "declarations",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "VariableDeclarator"
+          ],
+          "type": "VariableDeclarator[]"
+        },
+        {
+          "name": "kind",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'var' | 'let' | 'const'"
+        }
+      ]
+    },
+    {
+      "name": "VariableDeclarator",
+      "slug": "variabledeclarator",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'VariableDeclarator'"
+        },
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Pattern"
+          ],
+          "type": "Pattern"
+        },
+        {
+          "name": "init",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Expression"
+          ],
+          "type": "Expression | null | undefined"
+        }
+      ]
+    },
+    {
+      "name": "ForInStatement",
+      "slug": "forinstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ForInStatement'"
+        }
+      ]
+    },
+    {
+      "name": "ForOfStatement",
+      "slug": "forofstatement",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'ForOfStatement'"
+        },
+        {
+          "name": "await",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "ClassDeclaration",
+      "slug": "classdeclaration",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "It is null when a class declaration is a part of the `export default class` statement",
+          "complexTypes": [
+            "Identifier"
+          ],
+          "type": "Identifier"
+        }
+      ]
+    },
+    {
+      "name": "Comment",
+      "slug": "comment",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "'Line' | 'Block'"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "GleapEventMessage",
       "slug": "gleapeventmessage",
       "docs": "",
@@ -1245,6 +4367,537 @@
         {
           "text": "symbol",
           "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "Function",
+      "slug": "function",
+      "docs": "",
+      "types": [
+        {
+          "text": "FunctionDeclaration",
+          "complexTypes": [
+            "FunctionDeclaration"
+          ]
+        },
+        {
+          "text": "FunctionExpression",
+          "complexTypes": [
+            "FunctionExpression"
+          ]
+        },
+        {
+          "text": "ArrowFunctionExpression",
+          "complexTypes": [
+            "ArrowFunctionExpression"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Statement",
+      "slug": "statement",
+      "docs": "",
+      "types": [
+        {
+          "text": "ExpressionStatement",
+          "complexTypes": [
+            "ExpressionStatement"
+          ]
+        },
+        {
+          "text": "BlockStatement",
+          "complexTypes": [
+            "BlockStatement"
+          ]
+        },
+        {
+          "text": "StaticBlock",
+          "complexTypes": [
+            "StaticBlock"
+          ]
+        },
+        {
+          "text": "EmptyStatement",
+          "complexTypes": [
+            "EmptyStatement"
+          ]
+        },
+        {
+          "text": "DebuggerStatement",
+          "complexTypes": [
+            "DebuggerStatement"
+          ]
+        },
+        {
+          "text": "WithStatement",
+          "complexTypes": [
+            "WithStatement"
+          ]
+        },
+        {
+          "text": "ReturnStatement",
+          "complexTypes": [
+            "ReturnStatement"
+          ]
+        },
+        {
+          "text": "LabeledStatement",
+          "complexTypes": [
+            "LabeledStatement"
+          ]
+        },
+        {
+          "text": "BreakStatement",
+          "complexTypes": [
+            "BreakStatement"
+          ]
+        },
+        {
+          "text": "ContinueStatement",
+          "complexTypes": [
+            "ContinueStatement"
+          ]
+        },
+        {
+          "text": "IfStatement",
+          "complexTypes": [
+            "IfStatement"
+          ]
+        },
+        {
+          "text": "SwitchStatement",
+          "complexTypes": [
+            "SwitchStatement"
+          ]
+        },
+        {
+          "text": "ThrowStatement",
+          "complexTypes": [
+            "ThrowStatement"
+          ]
+        },
+        {
+          "text": "TryStatement",
+          "complexTypes": [
+            "TryStatement"
+          ]
+        },
+        {
+          "text": "WhileStatement",
+          "complexTypes": [
+            "WhileStatement"
+          ]
+        },
+        {
+          "text": "DoWhileStatement",
+          "complexTypes": [
+            "DoWhileStatement"
+          ]
+        },
+        {
+          "text": "ForStatement",
+          "complexTypes": [
+            "ForStatement"
+          ]
+        },
+        {
+          "text": "ForInStatement",
+          "complexTypes": [
+            "ForInStatement"
+          ]
+        },
+        {
+          "text": "ForOfStatement",
+          "complexTypes": [
+            "ForOfStatement"
+          ]
+        },
+        {
+          "text": "Declaration",
+          "complexTypes": [
+            "Declaration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Expression",
+      "slug": "expression",
+      "docs": "",
+      "types": [
+        {
+          "text": "ExpressionMap[keyof ExpressionMap]",
+          "complexTypes": [
+            "ExpressionMap"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AssignmentOperator",
+      "slug": "assignmentoperator",
+      "docs": "",
+      "types": [
+        {
+          "text": "\"=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"+=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"-=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"*=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"/=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"%=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"**=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"<<=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">>=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">>>=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"|=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"^=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"&=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"||=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"&&=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"??=\"",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "Pattern",
+      "slug": "pattern",
+      "docs": "",
+      "types": [
+        {
+          "text": "Identifier",
+          "complexTypes": [
+            "Identifier"
+          ]
+        },
+        {
+          "text": "ObjectPattern",
+          "complexTypes": [
+            "ObjectPattern"
+          ]
+        },
+        {
+          "text": "ArrayPattern",
+          "complexTypes": [
+            "ArrayPattern"
+          ]
+        },
+        {
+          "text": "RestElement",
+          "complexTypes": [
+            "RestElement"
+          ]
+        },
+        {
+          "text": "AssignmentPattern",
+          "complexTypes": [
+            "AssignmentPattern"
+          ]
+        },
+        {
+          "text": "MemberExpression",
+          "complexTypes": [
+            "MemberExpression"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BinaryOperator",
+      "slug": "binaryoperator",
+      "docs": "",
+      "types": [
+        {
+          "text": "\"==\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"!=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"===\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"!==\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"<\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"<=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">=\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"<<\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">>\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\">>>\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"+\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"-\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"*\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"/\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"%\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"**\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"|\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"^\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"&\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"in\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"instanceof\"",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "CallExpression",
+      "slug": "callexpression",
+      "docs": "",
+      "types": [
+        {
+          "text": "SimpleCallExpression",
+          "complexTypes": [
+            "SimpleCallExpression"
+          ]
+        },
+        {
+          "text": "NewExpression",
+          "complexTypes": [
+            "NewExpression"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ChainElement",
+      "slug": "chainelement",
+      "docs": "",
+      "types": [
+        {
+          "text": "SimpleCallExpression",
+          "complexTypes": [
+            "SimpleCallExpression"
+          ]
+        },
+        {
+          "text": "MemberExpression",
+          "complexTypes": [
+            "MemberExpression"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Literal",
+      "slug": "literal",
+      "docs": "",
+      "types": [
+        {
+          "text": "SimpleLiteral",
+          "complexTypes": [
+            "SimpleLiteral"
+          ]
+        },
+        {
+          "text": "RegExpLiteral",
+          "complexTypes": [
+            "RegExpLiteral"
+          ]
+        },
+        {
+          "text": "BigIntLiteral",
+          "complexTypes": [
+            "BigIntLiteral"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LogicalOperator",
+      "slug": "logicaloperator",
+      "docs": "",
+      "types": [
+        {
+          "text": "\"||\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"&&\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"??\"",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "UnaryOperator",
+      "slug": "unaryoperator",
+      "docs": "",
+      "types": [
+        {
+          "text": "\"-\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"+\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"!\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"~\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"typeof\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"void\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"delete\"",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "UpdateOperator",
+      "slug": "updateoperator",
+      "docs": "",
+      "types": [
+        {
+          "text": "\"++\"",
+          "complexTypes": []
+        },
+        {
+          "text": "\"--\"",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "Declaration",
+      "slug": "declaration",
+      "docs": "",
+      "types": [
+        {
+          "text": "FunctionDeclaration",
+          "complexTypes": [
+            "FunctionDeclaration"
+          ]
+        },
+        {
+          "text": "VariableDeclaration",
+          "complexTypes": [
+            "VariableDeclaration"
+          ]
+        },
+        {
+          "text": "ClassDeclaration",
+          "complexTypes": [
+            "ClassDeclaration"
+          ]
         }
       ]
     },
