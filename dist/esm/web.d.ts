@@ -84,6 +84,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         phone?: string | undefined;
         companyId?: string | undefined;
         companyName?: string | undefined;
+        avatar?: string | undefined;
         sla?: number | undefined;
         plan?: string | undefined;
         value?: number | undefined;
@@ -96,6 +97,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         phone?: string | undefined;
         companyId?: string | undefined;
         companyName?: string | undefined;
+        avatar?: string | undefined;
         sla?: number | undefined;
         plan?: string | undefined;
         value?: number | undefined;
@@ -129,6 +131,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
             phone?: string | undefined;
             companyId?: string | undefined;
             companyName?: string | undefined;
+            avatar?: string | undefined;
             sla?: number | undefined;
             plan?: string | undefined;
             value?: number | undefined;

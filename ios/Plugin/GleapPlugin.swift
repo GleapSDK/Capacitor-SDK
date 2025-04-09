@@ -64,6 +64,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         if (call.getString("companyId") != nil) {
             userProperty.companyId = call.getString("companyId") ?? ""
         }
+        if (call.getString("avatar") != nil) {
+            userProperty.avatar = call.getString("avatar") ?? ""
+        }
         if (call.getObject("customData") != nil) {
             userProperty.customData = call.getObject("customData")!
         }
@@ -106,6 +109,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         }
         if (call.getString("companyId") != nil) {
             userProperty.companyId = call.getString("companyId") ?? ""
+        }
+        if (call.getString("avatar") != nil) {
+            userProperty.avatar = call.getString("avatar") ?? ""
         }
         if (call.getObject("customData") != nil) {
             userProperty.customData = call.getObject("customData")!

@@ -189,6 +189,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     phone?: string | undefined;
     companyId?: string | undefined;
     companyName?: string | undefined;
+    avatar?: string | undefined;
     sla?: number | undefined;
     plan?: string | undefined;
     value?: number | undefined;
@@ -199,6 +200,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       phone: options.phone,
       companyId: options.companyId,
       companyName: options.companyName,
+      avatar: options.avatar,
       sla: options.sla,
       plan: options.plan,
       value: options.value,
@@ -219,6 +221,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     phone?: string | undefined;
     companyId?: string | undefined;
     companyName?: string | undefined;
+    avatar?: string | undefined;
     sla?: number | undefined;
     plan?: string | undefined;
     value?: number | undefined;
@@ -265,6 +268,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       phone?: string | undefined;
       companyId?: string | undefined;
       companyName?: string | undefined;
+      avatar?: string | undefined;
       sla?: number | undefined;
       plan?: string | undefined;
       value?: number | undefined;
