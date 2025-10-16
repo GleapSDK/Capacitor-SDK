@@ -58,6 +58,7 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`openNewsArticle(...)`](#opennewsarticle)
 * [`openHelpCenter(...)`](#openhelpcenter)
 * [`openHelpCenterArticle(...)`](#openhelpcenterarticle)
+* [`askAI(...)`](#askai)
 * [`openHelpCenterCollection(...)`](#openhelpcentercollection)
 * [`searchHelpCenter(...)`](#searchhelpcenter)
 * [`openFeatureRequests(...)`](#openfeaturerequests)
@@ -636,6 +637,25 @@ Open help center article
 **Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
 
 **Since:** 8.4.0
+
+--------------------
+
+
+### askAI(...)
+
+```typescript
+askAI(options: { question: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Ask the AI a question
+
+| Param         | Type                                                         |
+| ------------- | ------------------------------------------------------------ |
+| **`options`** | <code>{ question: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 15.0.0
 
 --------------------
 

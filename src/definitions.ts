@@ -391,6 +391,18 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Ask the AI a question
+  *
+  * @since 15.0.0
+  */
+  askAI(options: {
+    question: string;
+    showBackButton?: boolean;
+  }): Promise<{
+    opened: boolean;
+  }>;
+
+  /**
   * Open help center collection
   *
   * @since 8.4.0

@@ -454,6 +454,15 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { opened: true };
   }
 
+  async askAI(options: {
+    question: string;
+    showBackButton?: boolean | undefined;
+  }): Promise<{ opened: boolean }> {
+    Gleap.askAI(options.question, options.showBackButton);
+
+    return { opened: true };
+  }
+
   async openHelpCenterCollection(options: {
     collectionId: string;
     showBackButton?: boolean | undefined;

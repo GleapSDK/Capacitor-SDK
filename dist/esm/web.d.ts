@@ -240,6 +240,12 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         opened: boolean;
     }>;
+    askAI(options: {
+        question: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
     openHelpCenterCollection(options: {
         collectionId: string;
         showBackButton?: boolean | undefined;

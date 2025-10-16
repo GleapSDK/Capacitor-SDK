@@ -30,6 +30,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(openNewsArticle, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openHelpCenter, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openHelpCenterArticle, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(askAI, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openHelpCenterCollection, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(searchHelpCenter, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openFeatureRequests, CAPPluginReturnPromise);

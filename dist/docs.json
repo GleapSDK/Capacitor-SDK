@@ -624,6 +624,27 @@
         "slug": "openhelpcenterarticle"
       },
       {
+        "name": "askAI",
+        "signature": "(options: { question: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ question: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "15.0.0"
+          }
+        ],
+        "docs": "Ask the AI a question",
+        "complexTypes": [],
+        "slug": "askai"
+      },
+      {
         "name": "openHelpCenterCollection",
         "signature": "(options: { collectionId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
         "parameters": [

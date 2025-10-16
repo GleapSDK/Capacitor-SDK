@@ -234,6 +234,10 @@ class GleapWeb extends core.WebPlugin {
         Gleap$1.openHelpCenterArticle(options.articleId, options.showBackButton);
         return { opened: true };
     }
+    async askAI(options) {
+        Gleap$1.askAI(options.question, options.showBackButton);
+        return { opened: true };
+    }
     async openHelpCenterCollection(options) {
         Gleap$1.openHelpCenterCollection(options.collectionId, options.showBackButton);
         return { opened: true };

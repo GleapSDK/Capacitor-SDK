@@ -229,6 +229,10 @@ export class GleapWeb extends WebPlugin {
         Gleap.openHelpCenterArticle(options.articleId, options.showBackButton);
         return { opened: true };
     }
+    async askAI(options) {
+        Gleap.askAI(options.question, options.showBackButton);
+        return { opened: true };
+    }
     async openHelpCenterCollection(options) {
         Gleap.openHelpCenterCollection(options.collectionId, options.showBackButton);
         return { opened: true };

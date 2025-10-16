@@ -626,6 +626,19 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func askAI(_ call: CAPPluginCall) {
+        let question = call.getString("question") ?? ""
+        let showBackButton = call.getBool("showBackButton") ?? true
+        
+        // Open news
+        Gleap.askAI(question, andShowBackButton: showBackButton)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "opened": true
+        ])
+    }
+    
     @objc func openHelpCenterArticle(_ call: CAPPluginCall) {
         let articleId = call.getString("articleId") ?? ""
         let showBackButton = call.getBool("showBackButton") ?? true

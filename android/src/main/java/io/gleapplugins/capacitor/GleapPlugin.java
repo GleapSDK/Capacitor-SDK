@@ -821,6 +821,20 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void askAI(PluginCall call) throws GleapNotInitialisedException {
+        // Open news
+        String question = call.getString("question");
+        boolean showBackButton = call.getBoolean("showBackButton");
+
+        implementation.askAI(question, showBackButton);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void openHelpCenterArticle(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String articleId = call.getString("articleId");
