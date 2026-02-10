@@ -268,6 +268,9 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
         async removeAllAttachments() {
             throw this.unavailable('removeAllAttachments not available for browsers');
         }
+        async setNotificationContainerOffset(_options) {
+            return { notificationContainerOffsetSet: true };
+        }
         makeid(length) {
             var result = '';
             var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

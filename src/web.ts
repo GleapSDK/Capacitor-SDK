@@ -523,6 +523,13 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     throw this.unavailable('removeAllAttachments not available for browsers');
   }
 
+  async setNotificationContainerOffset(_options: {
+    x: number;
+    y: number;
+  }): Promise<{ notificationContainerOffsetSet: boolean }> {
+    return { notificationContainerOffsetSet: true };
+  }
+
   private makeid(length: number): string {
     var result = '';
     var characters =

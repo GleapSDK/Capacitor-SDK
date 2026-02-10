@@ -765,6 +765,18 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func setNotificationContainerOffset(_ call: CAPPluginCall) {
+        let x = call.getInt("x") ?? 0
+        let y = call.getInt("y") ?? 0
+        
+        Gleap.setNotificationContainerOffsetX(Int32(x), y: Int32(y))
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "notificationContainerOffsetSet": true
+        ])
+    }
+    
     @objc func setLanguage(_ call: CAPPluginCall) {
         // If languageCode is empty, then pass back error
         guard let languageCode = call.options["languageCode"] as? String else {

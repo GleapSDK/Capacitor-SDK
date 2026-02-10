@@ -934,6 +934,27 @@
         "docs": "Enable debug console log",
         "complexTypes": [],
         "slug": "enabledebugconsolelog"
+      },
+      {
+        "name": "setNotificationContainerOffset",
+        "signature": "(options: { x: number; y: number; }) => Promise<{ notificationContainerOffsetSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ x: number; y: number; }"
+          }
+        ],
+        "returns": "Promise<{ notificationContainerOffsetSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "15.2.0"
+          }
+        ],
+        "docs": "Set the notification container offset",
+        "complexTypes": [],
+        "slug": "setnotificationcontaineroffset"
       }
     ],
     "properties": []

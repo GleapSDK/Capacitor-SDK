@@ -512,4 +512,15 @@ export interface GleapPlugin {
     enableDebugConsoleLog(): Promise<{
         debugConsoleLogEnabled: boolean;
     }>;
+    /**
+   * Set the notification container offset
+   *
+   * @since 15.2.0
+   */
+    setNotificationContainerOffset(options: {
+        x: number;
+        y: number;
+    }): Promise<{
+        notificationContainerOffsetSet: boolean;
+    }>;
 }

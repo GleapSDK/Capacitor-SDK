@@ -284,5 +284,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     removeAllAttachments(): Promise<{
         allAttachmentsRemoved: boolean;
     }>;
+    setNotificationContainerOffset(_options: {
+        x: number;
+        y: number;
+    }): Promise<{
+        notificationContainerOffsetSet: boolean;
+    }>;
     private makeid;
 }

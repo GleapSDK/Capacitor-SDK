@@ -74,6 +74,7 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
+* [`setNotificationContainerOffset(...)`](#setnotificationcontaineroffset)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -925,6 +926,25 @@ Enable debug console log
 **Returns:** <code>Promise&lt;{ debugConsoleLogEnabled: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### setNotificationContainerOffset(...)
+
+```typescript
+setNotificationContainerOffset(options: { x: number; y: number; }) => Promise<{ notificationContainerOffsetSet: boolean; }>
+```
+
+Set the notification container offset
+
+| Param         | Type                                   |
+| ------------- | -------------------------------------- |
+| **`options`** | <code>{ x: number; y: number; }</code> |
+
+**Returns:** <code>Promise&lt;{ notificationContainerOffsetSet: boolean; }&gt;</code>
+
+**Since:** 15.2.0
 
 --------------------
 

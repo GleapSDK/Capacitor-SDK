@@ -645,6 +645,19 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void setNotificationContainerOffset(PluginCall call) {
+        int x = call.getInt("x", 0);
+        int y = call.getInt("y", 0);
+
+        implementation.setNotificationContainerOffset(x, y);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("notificationContainerOffsetSet", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void setDisableInAppNotifications(PluginCall call) {
         boolean disableInAppNotifications = call.getBoolean("disableInAppNotifications");
 
