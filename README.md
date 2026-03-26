@@ -1601,7 +1601,7 @@ Creates a new function.
 | ------------------ | --------------------------------------------------------------------- |
 | **`type`**         | <code>'<a href="#variabledeclaration">VariableDeclaration</a>'</code> |
 | **`declarations`** | <code>VariableDeclarator[]</code>                                     |
-| **`kind`**         | <code>'var' \| 'let' \| 'const'</code>                                |
+| **`kind`**         | <code>'var' \| 'let' \| 'const' \| 'using' \| 'await using'</code>    |
 
 
 #### VariableDeclarator

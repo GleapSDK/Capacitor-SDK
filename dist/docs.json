@@ -4230,7 +4230,7 @@
           "tags": [],
           "docs": "",
           "complexTypes": [],
-          "type": "'var' | 'let' | 'const'"
+          "type": "'var' | 'let' | 'const' | 'using' | 'await using'"
         }
       ]
     },
