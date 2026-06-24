@@ -76,6 +76,6 @@
     }
   },
   "dependencies": {
-    "gleap": "15.3.0"
+    "gleap": "16.1.1"
   }
 }
