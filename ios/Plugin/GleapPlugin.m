@@ -17,7 +17,8 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(setTicketAttribute, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(unsetTicketAttribute, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(clearTicketAttributes, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(setAiTools, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(registerAgentTool, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(sendAgentToolResult, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(trackEvent, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(trackPage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(sendSilentCrashReport, CAPPluginReturnPromise);
