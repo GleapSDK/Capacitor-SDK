@@ -244,25 +244,74 @@
         "slug": "setnetworklogpropstoignore"
       },
       {
-        "name": "setAiTools",
-        "signature": "(options: { tools: { name: string; description: string; response: string; executionType: \"auto\" | \"button\"; parameters: { name: string; description: string; type: \"string\" | \"number\" | \"boolean\"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>",
+        "name": "registerAgentTool",
+        "signature": "(options: { name: string; }) => Promise<void>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ tools: { name: string; description: string; response: string; executionType: 'auto' | 'button'; parameters: { name: string; description: string; type: 'string' | 'number' | 'boolean'; required: boolean; enums?: string[] | undefined; }[]; }[]; }"
+            "type": "{ name: string; }"
           }
         ],
-        "returns": "Promise<{ aiToolsSet: boolean; }>",
+        "returns": "Promise<void>",
         "tags": [
           {
             "name": "since",
-            "text": "13.5.0"
+            "text": "15.0.0"
           }
         ],
-        "docs": "Sets the AI tools to use",
+        "docs": "Registers a Frontend tool defined on your AI agent in the Gleap dashboard.\nPrefer the `registerAgentTool(name, handler)` helper exported by this\npackage — it wires the agentToolExecution event and result round-trip for\nyou.",
         "complexTypes": [],
-        "slug": "setaitools"
+        "slug": "registeragenttool"
+      },
+      {
+        "name": "sendAgentToolResult",
+        "signature": "(options: { executionId: string; result: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ executionId: string; result: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "15.0.0"
+          }
+        ],
+        "docs": "Resolves a pending agent tool execution with the handler's result.\nUsed by the `registerAgentTool(name, handler)` helper.",
+        "complexTypes": [],
+        "slug": "sendagenttoolresult"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'agentToolExecution', listenerFunc: (data: { executionId: string; name: string; params: any; }) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'agentToolExecution'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(data: { executionId: string; name: string; params: any; }) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "15.0.0"
+          }
+        ],
+        "docs": "Called when a registered agent tool should execute.",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlisteneragenttoolexecution-"
       },
       {
         "name": "setTicketAttribute",
@@ -4345,6 +4394,22 @@
           "docs": "",
           "complexTypes": [],
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
         }
       ]
     },

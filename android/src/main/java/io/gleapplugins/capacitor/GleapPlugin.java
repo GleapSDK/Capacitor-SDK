@@ -12,13 +12,13 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import io.gleap.APPLICATIONTYPE;
 import io.gleap.Gleap;
-import io.gleap.GleapAiTool;
-import io.gleap.GleapAiToolParameter;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapSessionProperties;
 import io.gleap.SurveyType;
 import io.gleap.callbacks.AiToolExecutedCallback;
+import io.gleap.callbacks.GleapAgentToolHandler;
+import io.gleap.callbacks.GleapAgentToolResultCallback;
 import io.gleap.callbacks.InitializedCallback;
 import io.gleap.callbacks.ConfigLoadedCallback;
 import io.gleap.callbacks.CustomActionCallback;
@@ -37,6 +37,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +57,7 @@ import org.json.JSONObject;
 public class GleapPlugin extends Plugin {
 
     private Gleap implementation;
+    private final Map<String, GleapAgentToolResultCallback> pendingAgentToolExecutions = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -315,87 +319,53 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Registers the handler for a dashboard-defined Frontend tool. Executions
+     * round-trip to JS via the agentToolExecution event and sendAgentToolResult.
+     */
     @PluginMethod
-    public void setAiTools(PluginCall call) {
-        JSONArray toolsArray = call.getArray("tools");
-        if (toolsArray == null) {
-            call.reject("Must provide tools");
+    public void registerAgentTool(PluginCall call) {
+        final String name = call.getString("name");
+        if (name == null || name.isEmpty()) {
+            call.reject("Must provide a name");
             return;
         }
 
-        List<GleapAiTool> aiTools = new ArrayList<>();
+        implementation.registerAgentTool(name, new GleapAgentToolHandler() {
+            @Override
+            public void execute(JSONObject params, GleapAgentToolResultCallback callback) {
+                String executionId = UUID.randomUUID().toString();
+                pendingAgentToolExecutions.put(executionId, callback);
 
-        for (int i = 0; i < toolsArray.length(); i++) {
-            JSONObject toolDict = toolsArray.optJSONObject(i);
-            if (toolDict == null) {
-                continue; // Skip if it's not a JSONObject
+                JSObject eventData = new JSObject();
+                eventData.put("executionId", executionId);
+                eventData.put("name", name);
+                eventData.put("params", params != null ? params : new JSONObject());
+
+                notifyListeners("agentToolExecution", eventData);
             }
+        });
 
-            String name = toolDict.optString("name", null);
-            String toolDescription = toolDict.optString("description", null);
-            String response = toolDict.optString("response", null);
-            String executionType = toolDict.optString("executionType", null);
-            JSONArray parametersArray = toolDict.optJSONArray("parameters");
+        call.resolve();
+    }
 
-            if (name == null || toolDescription == null || response == null || parametersArray == null) {
-                continue; // Skip if any required fields are missing
-            }
-
-            List<GleapAiToolParameter> parameters = new ArrayList<>();
-
-            for (int j = 0; j < parametersArray.length(); j++) {
-                JSONObject paramDict = parametersArray.optJSONObject(j);
-                if (paramDict == null) {
-                    continue; // Skip if it's not a JSONObject
-                }
-
-                String paramName = paramDict.optString("name", null);
-                String paramDescription = paramDict.optString("description", null);
-                String type = paramDict.optString("type", null);
-                boolean required = paramDict.optBoolean("required", false);
-                JSONArray enumArray = paramDict.optJSONArray
-                        ("enum");
-                String[] enums = null;
-                if (enumArray != null) {
-                    enums = new String[enumArray.length()];
-                    for (int k = 0; k < enumArray.length(); k++) {
-                        enums[k] = enumArray.optString(k);
-                    }
-                }
-
-                if (paramName == null || paramDescription == null || type == null) {
-                    continue; // Skip if any required parameter fields are missing
-                }
-
-                GleapAiToolParameter parameter = new GleapAiToolParameter(
-                        paramName,
-                        paramDescription,
-                        type,
-                        required,
-                        enums
-                );
-
-                parameters.add(parameter);
-            }
-
-            GleapAiTool aiTool = new GleapAiTool(
-                    name,
-                    toolDescription,
-                    response,
-                    executionType,
-                    parameters.toArray(new GleapAiToolParameter[0]) // Convert List to Array
-            );
-
-            aiTools.add(aiTool);
+    /**
+     * Resolves a pending agent tool execution with the handler's result.
+     */
+    @PluginMethod
+    public void sendAgentToolResult(PluginCall call) {
+        String executionId = call.getString("executionId");
+        if (executionId == null || executionId.isEmpty()) {
+            call.reject("Must provide an executionId");
+            return;
         }
 
-        // Set the AI tools using the static method from Gleap SDK
-        Gleap.getInstance().setAiTools(aiTools.toArray(new GleapAiTool[0])); // Convert List to Array
+        GleapAgentToolResultCallback callback = pendingAgentToolExecutions.remove(executionId);
+        if (callback != null) {
+            callback.onResult(call.getString("result"));
+        }
 
-        // Build Json object and resolve success
-        JSObject ret = new JSObject();
-        ret.put("aiToolsSet", true);
-        call.resolve(ret);
+        call.resolve();
     }
 
     /**

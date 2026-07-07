@@ -1,6 +1,10 @@
 import { WebPlugin } from '@capacitor/core';
 import Gleap from 'gleap';
 export class GleapWeb extends WebPlugin {
+    constructor() {
+        super(...arguments);
+        this.pendingAgentToolExecutions = {};
+    }
     async initialize(options) {
         if (GleapWeb.initialized) {
             return { initialized: true };
@@ -48,9 +52,28 @@ export class GleapWeb extends WebPlugin {
             this.notifyCallbacks('custom-action-called', customAction);
         });
     }
-    async setAiTools(options) {
-        Gleap.setAiTools(options.tools);
-        return { aiToolsSet: true };
+    async registerAgentTool(options) {
+        const gleapSdk = Gleap;
+        if (typeof gleapSdk.registerAgentTool !== 'function') {
+            console.warn('Gleap: registerAgentTool requires a newer version of the Gleap JS SDK.');
+            return;
+        }
+        gleapSdk.registerAgentTool(options.name, (params) => new Promise(resolve => {
+            const executionId = `web-${++GleapWeb.agentToolExecutionCounter}`;
+            this.pendingAgentToolExecutions[executionId] = resolve;
+            this.notifyListeners('agentToolExecution', {
+                executionId,
+                name: options.name,
+                params: params !== null && params !== void 0 ? params : {},
+            });
+        }));
+    }
+    async sendAgentToolResult(options) {
+        const resolve = this.pendingAgentToolExecutions[options.executionId];
+        if (resolve) {
+            delete this.pendingAgentToolExecutions[options.executionId];
+            resolve(options.result);
+        }
     }
     async setTicketAttribute(options) {
         Gleap.setTicketAttribute(options.key, options.value);
@@ -280,4 +303,5 @@ export class GleapWeb extends WebPlugin {
 }
 GleapWeb.callbacks = {};
 GleapWeb.initialized = false;
+GleapWeb.agentToolExecutionCounter = 0;
 //# sourceMappingURL=web.js.map

@@ -4,8 +4,63 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
     const Gleap = core.registerPlugin('Gleap', {
         web: () => Promise.resolve().then(function () { return web; }).then(m => new m.GleapWeb()),
     });
+    const registeredAgentTools = {};
+    let agentToolListenerAttached = false;
+    /**
+     * Registers the handler for a Frontend tool defined on your AI agent in the
+     * Gleap dashboard. The agent calls the handler with the configured parameters
+     * and waits for the returned result (string or object, which gets
+     * stringified).
+     */
+    const registerAgentTool = async (name, handler) => {
+        if (!name || typeof handler !== 'function') {
+            return;
+        }
+        registeredAgentTools[name] = handler;
+        if (!agentToolListenerAttached) {
+            agentToolListenerAttached = true;
+            await Gleap.addListener('agentToolExecution', async (data) => {
+                var _a;
+                try {
+                    const { executionId, name: toolName, params } = data !== null && data !== void 0 ? data : {};
+                    if (!executionId || !toolName) {
+                        return;
+                    }
+                    let result;
+                    const toolHandler = registeredAgentTools[toolName];
+                    if (!toolHandler) {
+                        result = `No handler registered for tool '${toolName}' in the app. Register one via Gleap.registerAgentTool('${toolName}', handler).`;
+                    }
+                    else {
+                        try {
+                            const handlerResult = await toolHandler(params !== null && params !== void 0 ? params : {});
+                            result =
+                                typeof handlerResult === 'string'
+                                    ? handlerResult
+                                    : JSON.stringify(handlerResult !== null && handlerResult !== void 0 ? handlerResult : '');
+                            if (!result) {
+                                result = 'The action completed without returning a result.';
+                            }
+                        }
+                        catch (error) {
+                            result = `Tool execution failed: ${(_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : 'unknown error'}`;
+                        }
+                    }
+                    await Gleap.sendAgentToolResult({ executionId, result });
+                }
+                catch (exp) {
+                    // Ignore.
+                }
+            });
+        }
+        await Gleap.registerAgentTool({ name });
+    };
 
     class GleapWeb extends core.WebPlugin {
+        constructor() {
+            super(...arguments);
+            this.pendingAgentToolExecutions = {};
+        }
         async initialize(options) {
             if (GleapWeb.initialized) {
                 return { initialized: true };
@@ -53,9 +108,28 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
                 this.notifyCallbacks('custom-action-called', customAction);
             });
         }
-        async setAiTools(options) {
-            Gleap$1.setAiTools(options.tools);
-            return { aiToolsSet: true };
+        async registerAgentTool(options) {
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.registerAgentTool !== 'function') {
+                console.warn('Gleap: registerAgentTool requires a newer version of the Gleap JS SDK.');
+                return;
+            }
+            gleapSdk.registerAgentTool(options.name, (params) => new Promise(resolve => {
+                const executionId = `web-${++GleapWeb.agentToolExecutionCounter}`;
+                this.pendingAgentToolExecutions[executionId] = resolve;
+                this.notifyListeners('agentToolExecution', {
+                    executionId,
+                    name: options.name,
+                    params: params !== null && params !== void 0 ? params : {},
+                });
+            }));
+        }
+        async sendAgentToolResult(options) {
+            const resolve = this.pendingAgentToolExecutions[options.executionId];
+            if (resolve) {
+                delete this.pendingAgentToolExecutions[options.executionId];
+                resolve(options.result);
+            }
         }
         async setTicketAttribute(options) {
             Gleap$1.setTicketAttribute(options.key, options.value);
@@ -283,6 +357,7 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
     }
     GleapWeb.callbacks = {};
     GleapWeb.initialized = false;
+    GleapWeb.agentToolExecutionCounter = 0;
 
     var web = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -290,6 +365,7 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
     });
 
     exports.Gleap = Gleap;
+    exports.registerAgentTool = registerAgentTool;
 
     return exports;
 

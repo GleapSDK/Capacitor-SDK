@@ -1,3 +1,5 @@
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export declare type CallbackID = string;
 export interface GleapEventMessage {
     name: string;
@@ -148,27 +150,36 @@ export interface GleapPlugin {
         propsToIgnoreSet: boolean;
     }>;
     /**
-    * Sets the AI tools to use
+    * Registers a Frontend tool defined on your AI agent in the Gleap dashboard.
+    * Prefer the `registerAgentTool(name, handler)` helper exported by this
+    * package — it wires the agentToolExecution event and result round-trip for
+    * you.
     *
-    * @since 13.5.0
+    * @since 15.0.0
     */
-    setAiTools(options: {
-        tools: {
-            name: string;
-            description: string;
-            response: string;
-            executionType: "auto" | "button";
-            parameters: {
-                name: string;
-                description: string;
-                type: "string" | "number" | "boolean";
-                required: boolean;
-                enums?: string[];
-            }[];
-        }[];
-    }): Promise<{
-        aiToolsSet: boolean;
-    }>;
+    registerAgentTool(options: {
+        name: string;
+    }): Promise<void>;
+    /**
+    * Resolves a pending agent tool execution with the handler's result.
+    * Used by the `registerAgentTool(name, handler)` helper.
+    *
+    * @since 15.0.0
+    */
+    sendAgentToolResult(options: {
+        executionId: string;
+        result: string;
+    }): Promise<void>;
+    /**
+    * Called when a registered agent tool should execute.
+    *
+    * @since 15.0.0
+    */
+    addListener(eventName: 'agentToolExecution', listenerFunc: (data: {
+        executionId: string;
+        name: string;
+        params: any;
+    }) => void): Promise<PluginListenerHandle>;
     /**
     * Sets the value of a ticket attribute
     *
@@ -263,14 +274,14 @@ export interface GleapPlugin {
         description: string;
         severity?: "LOW" | "MEDIUM" | "HIGH";
         dataExclusion?: {
-            customData: Boolean;
-            metaData: Boolean;
-            attachments: Boolean;
-            consoleLog: Boolean;
-            networkLogs: Boolean;
-            customEventLog: Boolean;
-            screenshot: Boolean;
-            replays: Boolean;
+            customData: boolean;
+            metaData: boolean;
+            attachments: boolean;
+            consoleLog: boolean;
+            networkLogs: boolean;
+            customEventLog: boolean;
+            screenshot: boolean;
+            replays: boolean;
         };
     }): Promise<{
         sentSilentBugReport: boolean;

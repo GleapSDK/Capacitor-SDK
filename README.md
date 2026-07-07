@@ -39,7 +39,9 @@ Please install the plugin version from our capacitor-v4 brunch with `npm install
 * [`setTags(...)`](#settags)
 * [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
-* [`setAiTools(...)`](#setaitools)
+* [`registerAgentTool(...)`](#registeragenttool)
+* [`sendAgentToolResult(...)`](#sendagenttoolresult)
+* [`addListener('agentToolExecution', ...)`](#addlisteneragenttoolexecution-)
 * [`setTicketAttribute(...)`](#setticketattribute)
 * [`unsetTicketAttribute(...)`](#unsetticketattribute)
 * [`clearTicketAttributes()`](#clearticketattributes)
@@ -299,21 +301,60 @@ Set network logs props to ignore
 --------------------
 
 
-### setAiTools(...)
+### registerAgentTool(...)
 
 ```typescript
-setAiTools(options: { tools: { name: string; description: string; response: string; executionType: "auto" | "button"; parameters: { name: string; description: string; type: "string" | "number" | "boolean"; required: boolean; enums?: string[]; }[]; }[]; }) => Promise<{ aiToolsSet: boolean; }>
+registerAgentTool(options: { name: string; }) => Promise<void>
 ```
 
-Sets the AI tools to use
+Registers a Frontend tool defined on your AI agent in the Gleap dashboard.
+Prefer the `registerAgentTool(name, handler)` helper exported by this
+package — it wires the agentToolExecution event and result round-trip for
+you.
 
-| Param         | Type                                                                                                                                                                                                                                                       |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ tools: { name: string; description: string; response: string; executionType: 'auto' \| 'button'; parameters: { name: string; description: string; type: 'string' \| 'number' \| 'boolean'; required: boolean; enums?: string[]; }[]; }[]; }</code> |
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ name: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ aiToolsSet: boolean; }&gt;</code>
+**Since:** 15.0.0
 
-**Since:** 13.5.0
+--------------------
+
+
+### sendAgentToolResult(...)
+
+```typescript
+sendAgentToolResult(options: { executionId: string; result: string; }) => Promise<void>
+```
+
+Resolves a pending agent tool execution with the handler's result.
+Used by the `registerAgentTool(name, handler)` helper.
+
+| Param         | Type                                                  |
+| ------------- | ----------------------------------------------------- |
+| **`options`** | <code>{ executionId: string; result: string; }</code> |
+
+**Since:** 15.0.0
+
+--------------------
+
+
+### addListener('agentToolExecution', ...)
+
+```typescript
+addListener(eventName: 'agentToolExecution', listenerFunc: (data: { executionId: string; name: string; params: any; }) => void) => Promise<PluginListenerHandle>
+```
+
+Called when a registered agent tool should execute.
+
+| Param              | Type                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'agentToolExecution'</code>                                                   |
+| **`listenerFunc`** | <code>(data: { executionId: string; name: string; params: any; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 15.0.0
 
 --------------------
 
@@ -1641,6 +1682,13 @@ Creates a new function.
 | ----------- | ------------------------------ |
 | **`type`**  | <code>'Line' \| 'Block'</code> |
 | **`value`** | <code>string</code>            |
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
 #### GleapEventMessage

@@ -1,33 +1,27 @@
 import { WebPlugin } from '@capacitor/core';
+
 import type { GleapEventCallback, GleapPlugin } from './definitions';
+
 export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     static callbacks: {
         [key: string]: GleapEventCallback;
     };
     static initialized: boolean;
+    static agentToolExecutionCounter: number;
+    private pendingAgentToolExecutions;
     initialize(options: {
         API_KEY: string;
     }): Promise<{
         initialized: boolean;
     }>;
     registerCallbackListeners(): void;
-    setAiTools(options: {
-        tools: {
-            name: string;
-            description: string;
-            response: string;
-            executionType: 'auto' | 'button';
-            parameters: {
-                name: string;
-                description: string;
-                type: 'string' | 'number' | 'boolean';
-                required: boolean;
-                enums?: string[] | undefined;
-            }[];
-        }[];
-    }): Promise<{
-        aiToolsSet: boolean;
-    }>;
+    registerAgentTool(options: {
+        name: string;
+    }): Promise<void>;
+    sendAgentToolResult(options: {
+        executionId: string;
+        result: string;
+    }): Promise<void>;
     setTicketAttribute(options: {
         key: string;
         value: string;
@@ -198,14 +192,14 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         description: string;
         severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
         dataExclusion?: {
-            customData: Boolean;
-            metaData: Boolean;
-            attachments: Boolean;
-            consoleLog: Boolean;
-            networkLogs: Boolean;
-            customEventLog: Boolean;
-            screenshot: Boolean;
-            replays: Boolean;
+            customData: boolean;
+            metaData: boolean;
+            attachments: boolean;
+            consoleLog: boolean;
+            networkLogs: boolean;
+            customEventLog: boolean;
+            screenshot: boolean;
+            replays: boolean;
         } | undefined;
     }): Promise<{
         sentSilentBugReport: boolean;

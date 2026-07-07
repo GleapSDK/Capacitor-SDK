@@ -13,6 +13,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     private var callQueue: [String: CallType] = [:]
+    private var pendingAgentToolExecutions: [String: GleapAgentToolCompletion] = [:]
 
     @objc func initialize(_ call: CAPPluginCall) {
         // Check if key is present
@@ -266,65 +267,44 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
 
-    @objc func setAiTools(_ call: CAPPluginCall) {
-        guard let toolsArray = call.options["tools"] as? [[String: Any]] else {
-            call.reject("Must provide a toolsArray")
+    @objc func registerAgentTool(_ call: CAPPluginCall) {
+        guard let name = call.options["name"] as? String else {
+            call.reject("Must provide a name")
             return
         }
-        
-        var aiTools = [GleapAiTool]()
-        
-        for toolDict in toolsArray {
-            guard let name = toolDict["name"] as? String,
-                  let toolDescription = toolDict["description"] as? String,
-                  let response = toolDict["response"] as? String,
-                  let executionType = toolDict["executionType"] as? String,
-                  let parametersArray = toolDict["parameters"] as? [[String: Any]] else {
-                // If any of the required properties are missing, skip this tool
-                continue
-            }
-            
-            var parameters = [GleapAiToolParameter]()
-            
-            for paramDict in parametersArray {
-                guard let paramName = paramDict["name"] as? String,
-                      let paramDescription = paramDict["description"] as? String,
-                      let type = paramDict["type"] as? String,
-                      let required = paramDict["required"] as? Bool else {
-                    // If any of the required properties are missing, skip this parameter
-                    continue
-                }
-                
-                let enums = paramDict["enum"] as? [String] ?? []
-                let parameter = GleapAiToolParameter(
-                    name: paramName,
-                    parameterDescription: paramDescription,
-                    type: type,
-                    required: required,
-                    enums: enums
-                )
-                
-                parameters.append(parameter)
-            }
-            
-            let aiTool = GleapAiTool(
-                name: name,
-                toolDescription: toolDescription,
-                response: response,
-                executionType: executionType,
-                parameters: parameters
-            )
-            
-            aiTools.append(aiTool)
+
+        DispatchQueue.main.async {
+            // Executions round-trip to JS via the agentToolExecution event and sendAgentToolResult.
+            Gleap.registerAgentTool(name, handler: { (params, completion) in
+                let executionId = UUID().uuidString
+                self.pendingAgentToolExecutions[executionId] = completion
+
+                self.notifyListeners("agentToolExecution", data: [
+                    "executionId": executionId,
+                    "name": name,
+                    "params": params
+                ])
+            })
         }
-        
-        // Set AI tools using your specific method to interact with the Gleap SDK
-        Gleap.setAiTools(aiTools)
-        
-        // Provide feedback that the AI tools have been successfully set
-        call.resolve([
-            "aiToolsSet": true
-        ])
+
+        call.resolve()
+    }
+
+    @objc func sendAgentToolResult(_ call: CAPPluginCall) {
+        guard let executionId = call.options["executionId"] as? String else {
+            call.reject("Must provide an executionId")
+            return
+        }
+        let result = call.options["result"] as? String ?? ""
+
+        DispatchQueue.main.async {
+            if let completion = self.pendingAgentToolExecutions[executionId] {
+                self.pendingAgentToolExecutions.removeValue(forKey: executionId)
+                completion(result)
+            }
+        }
+
+        call.resolve()
     }
     
     @objc func setTicketAttribute(_ call: CAPPluginCall) {

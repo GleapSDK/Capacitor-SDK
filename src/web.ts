@@ -6,6 +6,11 @@ import type { GleapEventCallback, GleapPlugin } from './definitions';
 export class GleapWeb extends WebPlugin implements GleapPlugin {
   static callbacks: { [key: string]: GleapEventCallback } = {};
   static initialized = false;
+  static agentToolExecutionCounter = 0;
+
+  private pendingAgentToolExecutions: {
+    [executionId: string]: (result: string) => void;
+  } = {};
 
   async initialize(options: {
     API_KEY: string;
@@ -72,24 +77,40 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     });
   }
 
-  async setAiTools(options: {
-    tools: {
-      name: string;
-      description: string;
-      response: string;
-      executionType: 'auto' | 'button';
-      parameters: {
-        name: string;
-        description: string;
-        type: 'string' | 'number' | 'boolean';
-        required: boolean;
-        enums?: string[] | undefined;
-      }[];
-    }[];
-  }): Promise<{ aiToolsSet: boolean }> {
-    Gleap.setAiTools(options.tools);
+  async registerAgentTool(options: { name: string }): Promise<void> {
+    const gleapSdk = Gleap as any;
+    if (typeof gleapSdk.registerAgentTool !== 'function') {
+      console.warn(
+        'Gleap: registerAgentTool requires a newer version of the Gleap JS SDK.',
+      );
+      return;
+    }
 
-    return { aiToolsSet: true };
+    gleapSdk.registerAgentTool(
+      options.name,
+      (params: any) =>
+        new Promise<string>(resolve => {
+          const executionId = `web-${++GleapWeb.agentToolExecutionCounter}`;
+          this.pendingAgentToolExecutions[executionId] = resolve;
+
+          this.notifyListeners('agentToolExecution', {
+            executionId,
+            name: options.name,
+            params: params ?? {},
+          });
+        }),
+    );
+  }
+
+  async sendAgentToolResult(options: {
+    executionId: string;
+    result: string;
+  }): Promise<void> {
+    const resolve = this.pendingAgentToolExecutions[options.executionId];
+    if (resolve) {
+      delete this.pendingAgentToolExecutions[options.executionId];
+      resolve(options.result);
+    }
   }
 
   async setTicketAttribute(options: {
