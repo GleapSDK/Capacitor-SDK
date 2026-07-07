@@ -1,5 +1,4 @@
 import type { PluginListenerHandle } from '@capacitor/core';
-
 export declare type CallbackID = string;
 export interface GleapEventMessage {
     name: string;
@@ -274,14 +273,14 @@ export interface GleapPlugin {
         description: string;
         severity?: "LOW" | "MEDIUM" | "HIGH";
         dataExclusion?: {
-            customData: boolean;
-            metaData: boolean;
-            attachments: boolean;
-            consoleLog: boolean;
-            networkLogs: boolean;
-            customEventLog: boolean;
-            screenshot: boolean;
-            replays: boolean;
+            customData: Boolean;
+            metaData: Boolean;
+            attachments: Boolean;
+            consoleLog: Boolean;
+            networkLogs: Boolean;
+            customEventLog: Boolean;
+            screenshot: Boolean;
+            replays: Boolean;
         };
     }): Promise<{
         sentSilentBugReport: boolean;

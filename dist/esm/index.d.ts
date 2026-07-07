@@ -1,5 +1,4 @@
 import type { GleapPlugin } from './definitions';
-
 declare const Gleap: GleapPlugin;
 /**
  * Registers the handler for a Frontend tool defined on your AI agent in the

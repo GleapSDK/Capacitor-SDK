@@ -1,7 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
-
 import type { GleapEventCallback, GleapPlugin } from './definitions';
-
 export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     static callbacks: {
         [key: string]: GleapEventCallback;
@@ -192,14 +190,14 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         description: string;
         severity?: 'LOW' | 'MEDIUM' | 'HIGH' | undefined;
         dataExclusion?: {
-            customData: boolean;
-            metaData: boolean;
-            attachments: boolean;
-            consoleLog: boolean;
-            networkLogs: boolean;
-            customEventLog: boolean;
-            screenshot: boolean;
-            replays: boolean;
+            customData: Boolean;
+            metaData: Boolean;
+            attachments: Boolean;
+            consoleLog: Boolean;
+            networkLogs: Boolean;
+            customEventLog: Boolean;
+            screenshot: Boolean;
+            replays: Boolean;
         } | undefined;
     }): Promise<{
         sentSilentBugReport: boolean;
