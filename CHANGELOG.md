@@ -1,5 +1,11 @@
 # Changelog
 
+## 16.4.2
+Updated native iOS dependency to 16.4.2
+Updated native Android dependency to 16.4.2
+(shows the app background while the widget is loading and raises the attachment file size limit)
+Updated the web (JavaScript) dependency to 16.3.6
+
 ## 16.4.0
 Updated native iOS dependency to 16.4.0
 Updated native Android dependency to 16.4.0
