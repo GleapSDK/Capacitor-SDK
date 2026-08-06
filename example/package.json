@@ -21,7 +21,7 @@
     "capacitor-gleap-plugin": "file:.."
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.0.0",
+    "@capacitor/cli": "^8.0.2",
     "vite": "^2.9.13"
   },
   "author": "",
