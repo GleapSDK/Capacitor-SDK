@@ -72,6 +72,55 @@ class GleapWeb extends core.WebPlugin {
         this.registerCallbackListeners();
         return { initialized: true };
     }
+    async setRegion(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.region)) {
+            throw new Error('No region provided');
+        }
+        Gleap$1.setRegion(options.region);
+        return { region: options.region };
+    }
+    async setApiUrl(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.url)) {
+            throw new Error('No url provided');
+        }
+        Gleap$1.setApiUrl(options.url);
+        return { url: options.url };
+    }
+    async setWSApiUrl(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.url)) {
+            throw new Error('No url provided');
+        }
+        Gleap$1.setWSApiUrl(options.url);
+        return { url: options.url };
+    }
+    async setRealtimeHost(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.host)) {
+            throw new Error('No host provided');
+        }
+        Gleap$1.setRealtimeHost(options.host);
+        return { host: options.host };
+    }
+    async setFrameUrl(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.url)) {
+            throw new Error('No url provided');
+        }
+        Gleap$1.setFrameUrl(options.url);
+        return { url: options.url };
+    }
+    async setBannerUrl(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.url)) {
+            throw new Error('No url provided');
+        }
+        Gleap$1.setBannerUrl(options.url);
+        return { url: options.url };
+    }
+    async setModalUrl(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.url)) {
+            throw new Error('No url provided');
+        }
+        Gleap$1.setModalUrl(options.url);
+        return { url: options.url };
+    }
     registerCallbackListeners() {
         Gleap$1.on('open', () => {
             this.notifyCallbacks('open', {});

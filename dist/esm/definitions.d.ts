@@ -17,6 +17,78 @@ export interface GleapPlugin {
         initialized: boolean;
     }>;
     /**
+    * Set the data region of your Gleap project ("eu" is the default).
+    * Sets the API, websocket and realtime hosts at once. Must be called before initialize.
+    * A manual setter (setApiUrl, setWSApiUrl, setRealtimeHost) called afterwards overrides that single host.
+    *
+    * @since 18.0.0
+    */
+    setRegion(options: {
+        region: 'eu' | 'us';
+    }): Promise<{
+        region: string;
+    }>;
+    /**
+    * Set a custom API url. Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setApiUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    /**
+    * Set a custom websocket API url. Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setWSApiUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    /**
+    * Set a custom realtime host (hostname only, without protocol or path). Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setRealtimeHost(options: {
+        host: string;
+    }): Promise<{
+        host: string;
+    }>;
+    /**
+    * Set a custom widget frame url. Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setFrameUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    /**
+    * Set a custom banner url. Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setBannerUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    /**
+    * Set a custom modal url. Must be called before initialize.
+    *
+    * @since 18.0.0
+    */
+    setModalUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    /**
     * Set user identity
     *
     * @since 7.0.0

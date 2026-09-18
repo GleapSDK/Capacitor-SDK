@@ -32,6 +32,105 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    // Data region & host overrides. All of them must be called before initialize.
+    @objc func setRegion(_ call: CAPPluginCall) {
+        guard let region = call.options["region"] as? String else {
+            call.reject("No region provided")
+            return;
+        }
+        
+        Gleap.setRegion(region)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "region": region
+        ])
+    }
+    
+    @objc func setApiUrl(_ call: CAPPluginCall) {
+        guard let url = call.options["url"] as? String else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        Gleap.setApiUrl(url)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "url": url
+        ])
+    }
+    
+    @objc func setWSApiUrl(_ call: CAPPluginCall) {
+        guard let url = call.options["url"] as? String else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        Gleap.setWSApiUrl(url)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "url": url
+        ])
+    }
+    
+    @objc func setRealtimeHost(_ call: CAPPluginCall) {
+        guard let host = call.options["host"] as? String else {
+            call.reject("No host provided")
+            return;
+        }
+        
+        Gleap.setRealtimeHost(host)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "host": host
+        ])
+    }
+    
+    @objc func setFrameUrl(_ call: CAPPluginCall) {
+        guard let url = call.options["url"] as? String else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        Gleap.setFrameUrl(url)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "url": url
+        ])
+    }
+    
+    @objc func setBannerUrl(_ call: CAPPluginCall) {
+        guard let url = call.options["url"] as? String else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        Gleap.setBannerUrl(url)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "url": url
+        ])
+    }
+    
+    @objc func setModalUrl(_ call: CAPPluginCall) {
+        guard let url = call.options["url"] as? String else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        Gleap.setModalUrl(url)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "url": url
+        ])
+    }
+    
     @objc func identify(_ call: CAPPluginCall) {
         // If userId is empty, then pass back error
         guard let userId = call.options["userId"] as? String else {

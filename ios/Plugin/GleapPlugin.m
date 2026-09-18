@@ -5,6 +5,13 @@
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
 CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(initialize, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setRegion, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setApiUrl, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setWSApiUrl, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setRealtimeHost, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setFrameUrl, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setBannerUrl, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setModalUrl, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(identify, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(updateContact, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(clearIdentity, CAPPluginReturnPromise);

@@ -86,6 +86,119 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    // Data region & host overrides. All of them must be called before initialize.
+    @PluginMethod
+    public void setRegion(PluginCall call) {
+        if (!call.getData().has("region")) {
+            call.reject("No region provided");
+            return;
+        }
+
+        String region = call.getString("region");
+        implementation.setRegion(region);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("region", region);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setApiUrl(PluginCall call) {
+        if (!call.getData().has("url")) {
+            call.reject("No url provided");
+            return;
+        }
+
+        String url = call.getString("url");
+        implementation.setApiUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("url", url);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setWSApiUrl(PluginCall call) {
+        if (!call.getData().has("url")) {
+            call.reject("No url provided");
+            return;
+        }
+
+        String url = call.getString("url");
+        implementation.setWSApiUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("url", url);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setRealtimeHost(PluginCall call) {
+        if (!call.getData().has("host")) {
+            call.reject("No host provided");
+            return;
+        }
+
+        String host = call.getString("host");
+        implementation.setRealtimeHost(host);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("host", host);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setFrameUrl(PluginCall call) {
+        if (!call.getData().has("url")) {
+            call.reject("No url provided");
+            return;
+        }
+
+        String url = call.getString("url");
+        implementation.setFrameUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("url", url);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setBannerUrl(PluginCall call) {
+        if (!call.getData().has("url")) {
+            call.reject("No url provided");
+            return;
+        }
+
+        String url = call.getString("url");
+        implementation.setBannerUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("url", url);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setModalUrl(PluginCall call) {
+        if (!call.getData().has("url")) {
+            call.reject("No url provided");
+            return;
+        }
+
+        String url = call.getString("url");
+        implementation.setModalUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("url", url);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void identify(PluginCall call) {
         // If userId is empty, then pass back error

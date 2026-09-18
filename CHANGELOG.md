@@ -1,5 +1,11 @@
 # Changelog
 
+## 18.0.0
+Updated native iOS dependency to 18.0.0
+Updated native Android dependency to 18.0.0
+Updated the web (JavaScript) dependency to 18.0.0
+(data regions: new `Gleap.setRegion({ region: "us" })` points the SDK at the region your Gleap project lives in — it sets the API, websocket and realtime hosts at once, "eu" stays the default. New host overrides `setApiUrl`, `setWSApiUrl`, `setRealtimeHost`, `setFrameUrl`, `setBannerUrl` and `setModalUrl` on all three platforms; a manual setter called after `setRegion` overrides that single host. All of them must be called before `initialize`)
+
 ## 17.0.0
 Updated native iOS dependency to 17.0.0
 Updated native Android dependency to 17.0.0

@@ -12,6 +12,41 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         initialized: boolean;
     }>;
+    setRegion(options: {
+        region: 'eu' | 'us';
+    }): Promise<{
+        region: string;
+    }>;
+    setApiUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    setWSApiUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    setRealtimeHost(options: {
+        host: string;
+    }): Promise<{
+        host: string;
+    }>;
+    setFrameUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    setBannerUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
+    setModalUrl(options: {
+        url: string;
+    }): Promise<{
+        url: string;
+    }>;
     registerCallbackListeners(): void;
     registerAgentTool(options: {
         name: string;
