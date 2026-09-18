@@ -27,6 +27,78 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { initialized: true };
   }
 
+  async setRegion(options: {
+    region: 'eu' | 'us';
+  }): Promise<{ region: string }> {
+    if (!options?.region) {
+      throw new Error('No region provided');
+    }
+
+    Gleap.setRegion(options.region);
+
+    return { region: options.region };
+  }
+
+  async setApiUrl(options: { url: string }): Promise<{ url: string }> {
+    if (!options?.url) {
+      throw new Error('No url provided');
+    }
+
+    Gleap.setApiUrl(options.url);
+
+    return { url: options.url };
+  }
+
+  async setWSApiUrl(options: { url: string }): Promise<{ url: string }> {
+    if (!options?.url) {
+      throw new Error('No url provided');
+    }
+
+    Gleap.setWSApiUrl(options.url);
+
+    return { url: options.url };
+  }
+
+  async setRealtimeHost(options: { host: string }): Promise<{ host: string }> {
+    if (!options?.host) {
+      throw new Error('No host provided');
+    }
+
+    Gleap.setRealtimeHost(options.host);
+
+    return { host: options.host };
+  }
+
+  async setFrameUrl(options: { url: string }): Promise<{ url: string }> {
+    if (!options?.url) {
+      throw new Error('No url provided');
+    }
+
+    Gleap.setFrameUrl(options.url);
+
+    return { url: options.url };
+  }
+
+  async setBannerUrl(options: { url: string }): Promise<{ url: string }> {
+    if (!options?.url) {
+      throw new Error('No url provided');
+    }
+
+    Gleap.setBannerUrl(options.url);
+
+    return { url: options.url };
+  }
+
+  async setModalUrl(options: { url: string }): Promise<{ url: string }> {
+    if (!options?.url) {
+      throw new Error('No url provided');
+    }
+
+    Gleap.setModalUrl(options.url);
+
+    return { url: options.url };
+  }
+
   registerCallbackListeners(): void {
     Gleap.on('open', () => {
       this.notifyCallbacks('open', {});

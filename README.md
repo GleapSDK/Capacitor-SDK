@@ -23,11 +23,33 @@ Please install the plugin version from our capacitor-v5 brunch with `npm install
 
 Please install the plugin version from our capacitor-v4 brunch with `npm install GleapSDK/Capacitor-SDK#capacitor-v4 --save` if you are using capacitor 4 or earlier.
 
+## Data regions
+
+Gleap projects live in a data region. The SDK talks to the EU region by default. If your project is hosted in the US region, set the region **before** calling `initialize`:
+
+```typescript
+import { Gleap } from "capacitor-gleap-plugin";
+
+await Gleap.setRegion({ region: "us" });
+await Gleap.initialize({ API_KEY: "YOUR_API_KEY" });
+```
+
+`setRegion` sets the API, websocket and realtime hosts at once (supported regions: `"eu"` and `"us"`). The static widget hosts (frame, banner, modal) are global and are not changed by the region.
+
+For self-hosted or custom setups you can override single hosts with `setApiUrl({ url })`, `setWSApiUrl({ url })`, `setRealtimeHost({ host })`, `setFrameUrl({ url })`, `setBannerUrl({ url })` and `setModalUrl({ url })`. All of them must be called before `initialize`; a manual setter called after `setRegion` overrides that single host.
+
 ## API
 
 <docgen-index>
 
 * [`initialize(...)`](#initialize)
+* [`setRegion(...)`](#setregion)
+* [`setApiUrl(...)`](#setapiurl)
+* [`setWSApiUrl(...)`](#setwsapiurl)
+* [`setRealtimeHost(...)`](#setrealtimehost)
+* [`setFrameUrl(...)`](#setframeurl)
+* [`setBannerUrl(...)`](#setbannerurl)
+* [`setModalUrl(...)`](#setmodalurl)
 * [`identify(...)`](#identify)
 * [`updateContact(...)`](#updatecontact)
 * [`clearIdentity()`](#clearidentity)
@@ -100,6 +122,141 @@ Initialize Gleap with an API key
 **Returns:** <code>Promise&lt;{ initialized: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### setRegion(...)
+
+```typescript
+setRegion(options: { region: 'eu' | 'us'; }) => Promise<{ region: string; }>
+```
+
+Set the data region of your Gleap project ("eu" is the default).
+Sets the API, websocket and realtime hosts at once. Must be called before initialize.
+A manual setter (setApiUrl, setWSApiUrl, setRealtimeHost) called afterwards overrides that single host.
+
+| Param         | Type                                   |
+| ------------- | -------------------------------------- |
+| **`options`** | <code>{ region: 'eu' \| 'us'; }</code> |
+
+**Returns:** <code>Promise&lt;{ region: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setApiUrl(...)
+
+```typescript
+setApiUrl(options: { url: string; }) => Promise<{ url: string; }>
+```
+
+Set a custom API url. Must be called before initialize.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ url: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setWSApiUrl(...)
+
+```typescript
+setWSApiUrl(options: { url: string; }) => Promise<{ url: string; }>
+```
+
+Set a custom websocket API url. Must be called before initialize.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ url: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setRealtimeHost(...)
+
+```typescript
+setRealtimeHost(options: { host: string; }) => Promise<{ host: string; }>
+```
+
+Set a custom realtime host (hostname only, without protocol or path). Must be called before initialize.
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ host: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ host: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setFrameUrl(...)
+
+```typescript
+setFrameUrl(options: { url: string; }) => Promise<{ url: string; }>
+```
+
+Set a custom widget frame url. Must be called before initialize.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ url: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setBannerUrl(...)
+
+```typescript
+setBannerUrl(options: { url: string; }) => Promise<{ url: string; }>
+```
+
+Set a custom banner url. Must be called before initialize.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ url: string; }&gt;</code>
+
+**Since:** 18.0.0
+
+--------------------
+
+
+### setModalUrl(...)
+
+```typescript
+setModalUrl(options: { url: string; }) => Promise<{ url: string; }>
+```
+
+Set a custom modal url. Must be called before initialize.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ url: string; }&gt;</code>
+
+**Since:** 18.0.0
 
 --------------------
 
