@@ -1,8 +1,12 @@
-# Capacitor Gleap Plugin
+# Gleap Capacitor and Ionic SDK
 
-Gleap SDK for Capacitor is the easiest way to integrate Gleap into your Ionic apps! Achieve better app quality with comprehensive in-app bug reporting & customer feedback for your web-apps and websites. Many thanks to Stephan Nagel (congrapp) for his work on the Gleap capacitor plugin.
+Add AI-native customer support, live chat, in-app bug reporting, a help center and surveys to your Capacitor and Ionic apps with [Gleap](https://www.gleap.ai). Gleap is an Intercom alternative for software teams that connects customer conversations and feedback with product development.
 
-This plugin supports capacitor 7. See the instructions below for earlier capacitor versions.
+This plugin supports Capacitor 7. See the instructions below for earlier Capacitor versions.
+
+Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
+
+[SDK documentation](https://docs.gleap.ai/documentation/ioniccapacitor/README) · [Website](https://www.gleap.ai) · [Plans and pricing](https://www.gleap.ai/pricing)
 
 ## Install
 
