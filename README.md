@@ -42,6 +42,17 @@ await Gleap.initialize({ API_KEY: "YOUR_API_KEY" });
 
 For self-hosted or custom setups you can override single hosts with `setApiUrl({ url })`, `setWSApiUrl({ url })`, `setRealtimeHost({ host })`, `setFrameUrl({ url })`, `setBannerUrl({ url })` and `setModalUrl({ url })`. All of them must be called before `initialize`; a manual setter called after `setRegion` overrides that single host.
 
+## Env data
+
+With every ticket the SDK sends env data (device, OS, screen size, locale, URL, …), shown under the **Env data** tab in Gleap. Leave out individual keys or stop collecting env data entirely:
+
+```typescript
+await Gleap.setEnvDataPropsToIgnore({ propsToIgnore: ["deviceName", "batteryLevel"] });
+await Gleap.setDisableEnvData({ disableEnvData: true });
+```
+
+Both can be called at any time and apply to the next ticket. Each `setEnvDataPropsToIgnore` call replaces the previous list, an empty array resets it. `setDisableEnvData({ disableEnvData: false })` turns the collection back on.
+
 ## API
 
 <docgen-index>
@@ -65,6 +76,7 @@ For self-hosted or custom setups you can override single hosts with `setApiUrl({
 * [`setTags(...)`](#settags)
 * [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
+* [`setEnvDataPropsToIgnore(...)`](#setenvdatapropstoignore)
 * [`registerAgentTool(...)`](#registeragenttool)
 * [`sendAgentToolResult(...)`](#sendagenttoolresult)
 * [`addListener('agentToolExecution', ...)`](#addlisteneragenttoolexecution-)
@@ -99,6 +111,7 @@ For self-hosted or custom setups you can override single hosts with `setApiUrl({
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
+* [`setDisableEnvData(...)`](#setdisableenvdata)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -458,6 +471,27 @@ Set network logs props to ignore
 **Returns:** <code>Promise&lt;{ propsToIgnoreSet: boolean; }&gt;</code>
 
 **Since:** 13.2.1
+
+--------------------
+
+
+### setEnvDataPropsToIgnore(...)
+
+```typescript
+setEnvDataPropsToIgnore(options: { propsToIgnore: string[]; }) => Promise<{ envDataPropsToIgnoreSet: boolean; }>
+```
+
+Set env data props to ignore. The given env data keys (exact and case-sensitive, e.g. "deviceName" or "currentUrl")
+are removed before a ticket or conversation is sent. Each call replaces the previous list, an empty list resets it.
+Can be called before or after initialize.
+
+| Param         | Type                                      |
+| ------------- | ----------------------------------------- |
+| **`options`** | <code>{ propsToIgnore: string[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ envDataPropsToIgnoreSet: boolean; }&gt;</code>
+
+**Since:** 18.1.0
 
 --------------------
 
@@ -1079,6 +1113,26 @@ Disable in app notifications.
 **Returns:** <code>Promise&lt;{ inAppNotificationsDisabled: boolean; }&gt;</code>
 
 **Since:** 8.6.1
+
+--------------------
+
+
+### setDisableEnvData(...)
+
+```typescript
+setDisableEnvData(options: { disableEnvData: boolean; }) => Promise<{ envDataDisabled: boolean; }>
+```
+
+Disable env data. While disabled (true), no env data (device, OS, screen size, locale, URL, ...) is collected
+and tickets are sent without it. Pass false to collect env data again. Can be called before or after initialize.
+
+| Param         | Type                                      |
+| ------------- | ----------------------------------------- |
+| **`options`** | <code>{ disableEnvData: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ envDataDisabled: boolean; }&gt;</code>
+
+**Since:** 18.1.0
 
 --------------------
 

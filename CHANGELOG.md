@@ -1,5 +1,11 @@
 # Changelog
 
+## 18.1.0
+Updated native iOS dependency to 18.1.0
+Updated native Android dependency to 18.1.0
+Updated the web (JavaScript) dependency to 18.1.0
+(env data controls: new `Gleap.setEnvDataPropsToIgnore({ propsToIgnore: ["deviceName", "currentUrl"] })` drops individual env data fields before a ticket or conversation is sent, and `Gleap.setDisableEnvData({ disableEnvData: true })` stops collecting env data entirely. Both work on iOS, Android and web and can be called before or after `initialize`)
+
 ## 18.0.0
 Updated native iOS dependency to 18.0.0
 Updated native Android dependency to 18.0.0

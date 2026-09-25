@@ -221,6 +221,18 @@ export interface GleapPlugin {
         propsToIgnoreSet: boolean;
     }>;
     /**
+    * Set env data props to ignore. The given env data keys (exact and case-sensitive, e.g. "deviceName" or "currentUrl")
+    * are removed before a ticket or conversation is sent. Each call replaces the previous list, an empty list resets it.
+    * Can be called before or after initialize.
+    *
+    * @since 18.1.0
+    */
+    setEnvDataPropsToIgnore(options: {
+        propsToIgnore: string[];
+    }): Promise<{
+        envDataPropsToIgnoreSet: boolean;
+    }>;
+    /**
     * Registers a Frontend tool defined on your AI agent in the Gleap dashboard.
     * Prefer the `registerAgentTool(name, handler)` helper exported by this
     * package — it wires the agentToolExecution event and result round-trip for
@@ -567,6 +579,17 @@ export interface GleapPlugin {
         disableInAppNotifications?: boolean;
     }): Promise<{
         inAppNotificationsDisabled: boolean;
+    }>;
+    /**
+    * Disable env data. While disabled (true), no env data (device, OS, screen size, locale, URL, ...) is collected
+    * and tickets are sent without it. Pass false to collect env data again. Can be called before or after initialize.
+    *
+    * @since 18.1.0
+    */
+    setDisableEnvData(options: {
+        disableEnvData: boolean;
+    }): Promise<{
+        envDataDisabled: boolean;
     }>;
     /**
    * Set Language

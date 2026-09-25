@@ -391,6 +391,27 @@
         "slug": "setnetworklogpropstoignore"
       },
       {
+        "name": "setEnvDataPropsToIgnore",
+        "signature": "(options: { propsToIgnore: string[]; }) => Promise<{ envDataPropsToIgnoreSet: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ propsToIgnore: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ envDataPropsToIgnoreSet: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "18.1.0"
+          }
+        ],
+        "docs": "Set env data props to ignore. The given env data keys (exact and case-sensitive, e.g. \"deviceName\" or \"currentUrl\")\nare removed before a ticket or conversation is sent. Each call replaces the previous list, an empty list resets it.\nCan be called before or after initialize.",
+        "complexTypes": [],
+        "slug": "setenvdatapropstoignore"
+      },
+      {
         "name": "registerAgentTool",
         "signature": "(options: { name: string; }) => Promise<void>",
         "parameters": [
@@ -1079,6 +1100,27 @@
         "docs": "Disable in app notifications.",
         "complexTypes": [],
         "slug": "setdisableinappnotifications"
+      },
+      {
+        "name": "setDisableEnvData",
+        "signature": "(options: { disableEnvData: boolean; }) => Promise<{ envDataDisabled: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ disableEnvData: boolean; }"
+          }
+        ],
+        "returns": "Promise<{ envDataDisabled: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "18.1.0"
+          }
+        ],
+        "docs": "Disable env data. While disabled (true), no env data (device, OS, screen size, locale, URL, ...) is collected\nand tickets are sent without it. Pass false to collect env data again. Can be called before or after initialize.",
+        "complexTypes": [],
+        "slug": "setdisableenvdata"
       },
       {
         "name": "setLanguage",
