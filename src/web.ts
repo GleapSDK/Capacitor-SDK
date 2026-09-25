@@ -273,6 +273,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { inAppNotificationsDisabled: true };
   }
 
+  async setDisableEnvData(options: {
+    disableEnvData: boolean;
+  }): Promise<{ envDataDisabled: boolean }> {
+    Gleap.setDisableEnvData(options.disableEnvData ?? false);
+
+    return { envDataDisabled: true };
+  }
+
   async identify(options: {
     userId: string;
     userHash?: string | undefined;
@@ -339,6 +347,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
 
     return { propsToIgnoreSet: true };
+  }
+
+  async setEnvDataPropsToIgnore(options: {
+    propsToIgnore: string[];
+  }): Promise<{ envDataPropsToIgnoreSet: boolean }> {
+    Gleap.setEnvDataPropsToIgnore(options.propsToIgnore);
+
+    return { envDataPropsToIgnoreSet: true };
   }
 
   async setTags(options: { tags: string[] }): Promise<{ tagsSet: boolean }> {

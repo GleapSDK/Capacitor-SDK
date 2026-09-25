@@ -513,6 +513,38 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Sets env data properties to be removed before a ticket is sent.
+     *
+     * @since 18.1.0
+     */
+    @PluginMethod
+    public void setEnvDataPropsToIgnore(PluginCall call) {
+        // Check if 'propsToIgnore' key is provided, return error if not
+        if (!call.getData().has("propsToIgnore")) {
+            call.reject("Must provide a propsToIgnore array");
+            return;
+        }
+
+        try {
+            // Retrieve and set the env data properties to be ignored
+            JSArray jsonPropsToIgnore = call.getArray("propsToIgnore");
+            String[] propsToIgnore = new String[jsonPropsToIgnore.length()];
+            for (int i = 0; i < jsonPropsToIgnore.length(); i++) {
+                propsToIgnore[i] = jsonPropsToIgnore.getString(i);
+            }
+
+            implementation.setEnvDataPropsToIgnore(propsToIgnore);
+        } catch (Exception ex) {
+            // Handle exceptions if necessary
+        }
+
+        // Confirm successful setting of env data properties to ignore
+        JSObject ret = new JSObject();
+        ret.put("envDataPropsToIgnoreSet", true);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void attachCustomData(PluginCall call) {
         // If key is empty, then pass back error
@@ -749,6 +781,18 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("inAppNotificationsDisabled", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void setDisableEnvData(PluginCall call) {
+        boolean disableEnvData = call.getBoolean("disableEnvData", false);
+
+        implementation.setDisableEnvData(disableEnvData);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("envDataDisabled", true);
         call.resolve(ret);
     }
 

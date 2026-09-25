@@ -17,6 +17,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(clearIdentity, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setNetworkLogsBlacklist, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setNetworkLogPropsToIgnore, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setEnvDataPropsToIgnore, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(attachCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(removeCustomData, CAPPluginReturnPromise);
@@ -59,6 +60,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(isUserIdentified, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setTags, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setDisableInAppNotifications, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setDisableEnvData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(startClassicForm, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(startConversation, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openConversations, CAPPluginReturnPromise);

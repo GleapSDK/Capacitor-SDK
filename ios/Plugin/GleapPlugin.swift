@@ -327,6 +327,22 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func setEnvDataPropsToIgnore(_ call: CAPPluginCall) {
+        // If value is empty, then pass back error
+        guard let propsToIgnore = call.options["propsToIgnore"] as? [String] else {
+            call.reject("Must provide a propsToIgnore array")
+            return;
+        }
+        
+        // Remove these env data keys before a ticket is sent
+        Gleap.setEnvDataPropsToIgnore(propsToIgnore)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "envDataPropsToIgnoreSet": true
+        ])
+    }
+    
     @objc func setTags(_ call: CAPPluginCall) {
         // If value is empty, then pass back error
         guard let tags = call.options["tags"] as? [String] else {
@@ -564,6 +580,17 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "inAppNotificationsDisabled": true
+        ])
+    }
+    
+    @objc func setDisableEnvData(_ call: CAPPluginCall) {
+        let disableEnvData = call.getBool("disableEnvData") ?? false
+
+        Gleap.setDisableEnvData(disableEnvData)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "envDataDisabled": true
         ])
     }
     
