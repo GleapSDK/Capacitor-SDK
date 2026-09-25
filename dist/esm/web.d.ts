@@ -102,6 +102,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         inAppNotificationsDisabled: boolean;
     }>;
+    setDisableEnvData(options: {
+        disableEnvData: boolean;
+    }): Promise<{
+        envDataDisabled: boolean;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;
@@ -141,6 +146,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         propsToIgnore: string[];
     }): Promise<{
         propsToIgnoreSet: boolean;
+    }>;
+    setEnvDataPropsToIgnore(options: {
+        propsToIgnore: string[];
+    }): Promise<{
+        envDataPropsToIgnoreSet: boolean;
     }>;
     setTags(options: {
         tags: string[];

@@ -173,6 +173,11 @@ export class GleapWeb extends WebPlugin {
         Gleap.setDisableInAppNotifications((_a = options.disableInAppNotifications) !== null && _a !== void 0 ? _a : false);
         return { inAppNotificationsDisabled: true };
     }
+    async setDisableEnvData(options) {
+        var _a;
+        Gleap.setDisableEnvData((_a = options.disableEnvData) !== null && _a !== void 0 ? _a : false);
+        return { envDataDisabled: true };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -205,6 +210,10 @@ export class GleapWeb extends WebPlugin {
     async setNetworkLogPropsToIgnore(options) {
         Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
         return { propsToIgnoreSet: true };
+    }
+    async setEnvDataPropsToIgnore(options) {
+        Gleap.setEnvDataPropsToIgnore(options.propsToIgnore);
+        return { envDataPropsToIgnoreSet: true };
     }
     async setTags(options) {
         Gleap.setTags(options.tags);
