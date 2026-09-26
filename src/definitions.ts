@@ -656,6 +656,25 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.
+  * "auto" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.
+  * Apps with their own in-app theme toggle should pass "light" / "dark" explicitly and call it again whenever
+  * the theme changes. "default" removes the override and uses the dashboard setting.
+  * Only the widget background is swapped: the dashboard background is kept when it already matches the active
+  * scheme, otherwise lightBackgroundColor (default #ffffff) or darkBackgroundColor (default #18181b) is used.
+  * Can be called before or after initialize and applies live.
+  *
+  * @since 18.2.0
+  */
+  setColorScheme(options: {
+    colorScheme: 'default' | 'auto' | 'light' | 'dark';
+    lightBackgroundColor?: string;
+    darkBackgroundColor?: string;
+  }): Promise<{
+    colorScheme: string;
+  }>;
+
+  /**
  * Set Language
  *
  * @since 7.0.0

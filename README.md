@@ -53,6 +53,17 @@ await Gleap.setDisableEnvData({ disableEnvData: true });
 
 Both can be called at any time and apply to the next ticket. Each `setEnvDataPropsToIgnore` call replaces the previous list, an empty array resets it. `setDisableEnvData({ disableEnvData: false })` turns the collection back on.
 
+## Dark mode
+
+Switch the widget between dark and light mode. `auto` follows the device appearance (on web: the page theme); if your app has its own theme toggle, pass `light` or `dark` explicitly and call it again whenever the theme changes:
+
+```typescript
+await Gleap.setColorScheme({ colorScheme: "auto" });
+await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBackgroundColor: "#121212" });
+```
+
+`setColorScheme` overrides the color scheme set in the Gleap dashboard, `"default"` removes the override. Only the widget background changes: the dashboard background is kept when it already fits the active scheme, otherwise `lightBackgroundColor` (default `#ffffff`) or `darkBackgroundColor` (default `#18181b`) is used. Can be called before or after `initialize`.
+
 ## API
 
 <docgen-index>
@@ -112,6 +123,7 @@ Both can be called at any time and apply to the next ticket. Each `setEnvDataPro
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
 * [`setDisableEnvData(...)`](#setdisableenvdata)
+* [`setColorScheme(...)`](#setcolorscheme)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -1133,6 +1145,31 @@ and tickets are sent without it. Pass false to collect env data again. Can be ca
 **Returns:** <code>Promise&lt;{ envDataDisabled: boolean; }&gt;</code>
 
 **Since:** 18.1.0
+
+--------------------
+
+
+### setColorScheme(...)
+
+```typescript
+setColorScheme(options: { colorScheme: 'default' | 'auto' | 'light' | 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }) => Promise<{ colorScheme: string; }>
+```
+
+Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.
+"auto" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.
+Apps with their own in-app theme toggle should pass "light" / "dark" explicitly and call it again whenever
+the theme changes. "default" removes the override and uses the dashboard setting.
+Only the widget background is swapped: the dashboard background is kept when it already matches the active
+scheme, otherwise lightBackgroundColor (default #ffffff) or darkBackgroundColor (default #18181b) is used.
+Can be called before or after initialize and applies live.
+
+| Param         | Type                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ colorScheme: 'default' \| 'auto' \| 'light' \| 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ colorScheme: string; }&gt;</code>
+
+**Since:** 18.2.0
 
 --------------------
 

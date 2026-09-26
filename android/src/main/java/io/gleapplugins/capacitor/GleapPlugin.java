@@ -796,6 +796,29 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Sets the color scheme of the widget ("default", "auto", "light" or "dark").
+     *
+     * @since 18.2.0
+     */
+    @PluginMethod
+    public void setColorScheme(PluginCall call) {
+        if (!call.getData().has("colorScheme")) {
+            call.reject("No colorScheme provided");
+            return;
+        }
+
+        String colorScheme = call.getString("colorScheme");
+
+        // Missing colors fall back to the dashboard setting / the SDK defaults
+        implementation.setColorScheme(colorScheme, call.getString("lightBackgroundColor"), call.getString("darkBackgroundColor"));
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("colorScheme", colorScheme);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void showFeedbackButton(PluginCall call) {
         boolean show = call.getBoolean("show");

@@ -281,6 +281,23 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { envDataDisabled: true };
   }
 
+  async setColorScheme(options: {
+    colorScheme: 'default' | 'auto' | 'light' | 'dark';
+    lightBackgroundColor?: string;
+    darkBackgroundColor?: string;
+  }): Promise<{ colorScheme: string }> {
+    if (!options?.colorScheme) {
+      throw new Error('No colorScheme provided');
+    }
+
+    Gleap.setColorScheme(options.colorScheme, {
+      lightBackgroundColor: options.lightBackgroundColor,
+      darkBackgroundColor: options.darkBackgroundColor,
+    });
+
+    return { colorScheme: options.colorScheme };
+  }
+
   async identify(options: {
     userId: string;
     userHash?: string | undefined;

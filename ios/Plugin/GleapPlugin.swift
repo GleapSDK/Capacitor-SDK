@@ -594,6 +594,21 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func setColorScheme(_ call: CAPPluginCall) {
+        guard let colorScheme = call.options["colorScheme"] as? String else {
+            call.reject("No colorScheme provided")
+            return;
+        }
+        
+        // Missing colors fall back to the dashboard setting / the SDK defaults
+        Gleap.setColorScheme(colorScheme, lightBackgroundColor: call.getString("lightBackgroundColor"), darkBackgroundColor: call.getString("darkBackgroundColor"))
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "colorScheme": colorScheme
+        ])
+    }
+    
     @objc func showFeedbackButton(_ call: CAPPluginCall) {
         let showFeedbackButton = call.getBool("show") ?? false
 

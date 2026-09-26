@@ -61,6 +61,7 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(setTags, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setDisableInAppNotifications, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setDisableEnvData, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(setColorScheme, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(startClassicForm, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(startConversation, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(openConversations, CAPPluginReturnPromise);
