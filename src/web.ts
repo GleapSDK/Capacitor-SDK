@@ -284,7 +284,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
   async identify(options: {
     userId: string;
     userHash?: string | undefined;
-    customData?: Object | undefined;
+    customData?: Record<string, any> | undefined;
     name?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
@@ -326,7 +326,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     sla?: number | undefined;
     plan?: string | undefined;
     value?: number | undefined;
-    customData?: Object | undefined;
+    customData?: Record<string, any> | undefined;
   }): Promise<{ identify: boolean }> {
     Gleap.updateContact(options);
 
@@ -347,6 +347,16 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
 
     return { propsToIgnoreSet: true };
+  }
+
+  async attachNetworkLogs(): Promise<{ networkLogsAttached: boolean }> {
+    // The JavaScript SDK records the page's requests itself on web.
+    return { networkLogsAttached: false };
+  }
+
+  async attachConsoleLogs(): Promise<{ consoleLogsAttached: boolean }> {
+    // The JavaScript SDK records the page's console itself on web.
+    return { consoleLogsAttached: false };
   }
 
   async setEnvDataPropsToIgnore(options: {

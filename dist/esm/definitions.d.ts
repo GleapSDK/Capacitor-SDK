@@ -5,6 +5,53 @@ export interface GleapEventMessage {
     data?: any;
 }
 export declare type GleapEventCallback = (message: GleapEventMessage | null, err?: any) => void;
+/**
+ * A console log entry as the plugin hands it to the native SDK.
+ */
+export interface GleapConsoleLogEntry {
+    /** ISO-8601 UTC timestamp with milliseconds. */
+    date: string;
+    priority: 'ERROR' | 'WARNING' | 'INFO';
+    log: string;
+}
+/**
+ * A network log entry (fetch / XMLHttpRequest) as the plugin hands it to the native SDK.
+ */
+export interface GleapNetworkLogEntry {
+    /** ISO-8601 UTC timestamp of the request start. */
+    date: string;
+    /** HTTP method, uppercase. */
+    type: string;
+    url: string;
+    /** Milliseconds from the request start to the response headers (or the failure). */
+    duration?: number;
+    /** true when an HTTP response arrived (any status), false on a transport error, abort or timeout. */
+    success?: boolean;
+    request?: {
+        headers?: {
+            [name: string]: string;
+        };
+        payload?: string;
+    };
+    response?: {
+        status?: number;
+        statusText?: string;
+        headers?: {
+            [name: string]: string;
+        };
+        responseText?: string;
+        /** Set instead of status and body when the request failed. */
+        errorText?: string;
+    };
+}
+/**
+ * The network log settings of your Gleap project, sent by the native SDK once its config is loaded.
+ */
+export interface GleapLogConfig {
+    enableNetworkLogs: boolean;
+    networkLogPropsToIgnore: string[];
+    networkLogBlacklist: string[];
+}
 export interface GleapPlugin {
     /**
     * Initialize Gleap with an API key
@@ -105,7 +152,7 @@ export interface GleapPlugin {
         sla?: number;
         plan?: string;
         value?: number;
-        customData?: Object;
+        customData?: Record<string, any>;
     }): Promise<{
         identify: boolean;
     }>;
@@ -124,7 +171,7 @@ export interface GleapPlugin {
         sla?: number;
         plan?: string;
         value?: number;
-        customData?: Object;
+        customData?: Record<string, any>;
     }): Promise<{
         identify: boolean;
     }>;
@@ -221,6 +268,31 @@ export interface GleapPlugin {
         propsToIgnoreSet: boolean;
     }>;
     /**
+    * Hands the network requests made inside the app's WebView (fetch and XMLHttpRequest) to the native SDK, so they
+    * show up in the network logs of tickets. The plugin calls this for you on iOS and Android; each call replaces
+    * the previously attached WebView network logs. No-op on web, where the JavaScript SDK records requests itself.
+    *
+    * @since 18.2.0
+    */
+    attachNetworkLogs(options: {
+        logs: GleapNetworkLogEntry[];
+    }): Promise<{
+        networkLogsAttached: boolean;
+    }>;
+    /**
+    * Hands the console output of the app's WebView (console.log/info/warn/error/debug, uncaught errors and
+    * unhandled promise rejections) to the native SDK, so it shows up in the console logs of tickets. The plugin
+    * calls this for you on iOS and Android; each call replaces the previously attached WebView console logs.
+    * No-op on web, where the JavaScript SDK records the console itself.
+    *
+    * @since 18.2.0
+    */
+    attachConsoleLogs(options: {
+        logs: GleapConsoleLogEntry[];
+    }): Promise<{
+        consoleLogsAttached: boolean;
+    }>;
+    /**
     * Set env data props to ignore. The given env data keys (exact and case-sensitive, e.g. "deviceName" or "currentUrl")
     * are removed before a ticket or conversation is sent. Each call replaces the previous list, an empty list resets it.
     * Can be called before or after initialize.
@@ -263,6 +335,13 @@ export interface GleapPlugin {
         name: string;
         params: any;
     }) => void): Promise<PluginListenerHandle>;
+    /**
+    * Called on iOS and Android when the project config is loaded, with the network log settings the plugin's
+    * WebView log capture needs (network logs are only recorded when they are enabled for your project).
+    *
+    * @since 18.2.0
+    */
+    addListener(eventName: 'logConfigLoaded', listenerFunc: (config: GleapLogConfig) => void): Promise<PluginListenerHandle>;
     /**
     * Sets the value of a ticket attribute
     *
@@ -602,7 +681,8 @@ export interface GleapPlugin {
         setLanguage: string;
     }>;
     /**
-   * Disable console log overwrite
+   * Disable console log overwrite: stops recording the console output of the app's WebView
+   * (console methods are restored) and drops the WebView console logs recorded so far.
    *
    * @since 7.0.0
    */

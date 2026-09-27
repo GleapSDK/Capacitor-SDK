@@ -211,6 +211,14 @@ export class GleapWeb extends WebPlugin {
         Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
         return { propsToIgnoreSet: true };
     }
+    async attachNetworkLogs() {
+        // The JavaScript SDK records the page's requests itself on web.
+        return { networkLogsAttached: false };
+    }
+    async attachConsoleLogs() {
+        // The JavaScript SDK records the page's console itself on web.
+        return { consoleLogsAttached: false };
+    }
     async setEnvDataPropsToIgnore(options) {
         Gleap.setEnvDataPropsToIgnore(options.propsToIgnore);
         return { envDataPropsToIgnoreSet: true };

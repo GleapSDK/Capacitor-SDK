@@ -14,6 +14,10 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     private var callQueue: [String: CallType] = [:]
     private var pendingAgentToolExecutions: [String: GleapAgentToolCompletion] = [:]
+    // Network log settings from the last loaded config, for the WebView log capture (main queue only).
+    private var lastLogConfig: [String: Any]?
+    // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
+    private var webViewConsoleLogsDisabled = false
 
     @objc func initialize(_ call: CAPPluginCall) {
         // Check if key is present
@@ -22,9 +26,22 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
             return;
         }
         
+        // Receive configLoaded, which carries the network log settings for the WebView log capture.
+        // A delegate the app set natively is kept.
+        if Gleap.sharedInstance().delegate == nil {
+            Gleap.sharedInstance().delegate = self
+        }
+        
         // Initialize Gleap with API key
         Gleap.initialize(withToken: api_key)
         Gleap.setApplicationType(CAPACITOR)
+        
+        // A reloaded WebView calls initialize again: hand it the config that was already loaded.
+        DispatchQueue.main.async {
+            if let logConfig = self.lastLogConfig {
+                self.notifyListeners("logConfigLoaded", data: logConfig, retainUntilConsumed: true)
+            }
+        }
         
         // Provide feedback that it has been success
         call.resolve([
@@ -248,8 +265,40 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     @objc func disableConsoleLogOverwrite(_ call: CAPPluginCall) {
+        // The plugin's JavaScript restores the WebView console; drop what it attached so far.
+        webViewConsoleLogsDisabled = true
+        Gleap.attachExternalData(["consoleLog": [Any]()])
+        
         call.resolve([
             "consoleLogDisabled": true
+        ])
+    }
+    
+    // Network requests made inside the WebView (fetch / XMLHttpRequest), recorded by the plugin's
+    // JavaScript. Each call replaces the previous list; the SDK merges and sanitizes them.
+    @objc func attachNetworkLogs(_ call: CAPPluginCall) {
+        let logs = call.options["logs"] as? [Any] ?? []
+        Gleap.attachExternalData(["networkLogs": logs])
+        
+        call.resolve([
+            "networkLogsAttached": true
+        ])
+    }
+    
+    // Console output of the WebView, recorded by the plugin's JavaScript. Each call replaces the previous list.
+    @objc func attachConsoleLogs(_ call: CAPPluginCall) {
+        if webViewConsoleLogsDisabled {
+            call.resolve([
+                "consoleLogsAttached": false
+            ])
+            return
+        }
+        
+        let logs = call.options["logs"] as? [Any] ?? []
+        Gleap.attachExternalData(["consoleLog": logs])
+        
+        call.resolve([
+            "consoleLogsAttached": true
         ])
     }
     
@@ -930,6 +979,19 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     
     public func initialized() {
         notifyEventUpdate(name: "initialized", data: nil)
+    }
+    
+    public func configLoaded(_ config: [AnyHashable : Any]) {
+        // Only what the WebView log capture needs: whether network logs are on, and the redaction rules.
+        let logConfig: [String: Any] = [
+            "enableNetworkLogs": (config["enableNetworkLogs"] as? Bool) ?? false,
+            "networkLogPropsToIgnore": (config["networkLogPropsToIgnore"] as? [String]) ?? [],
+            "networkLogBlacklist": (config["networkLogBlacklist"] as? [String]) ?? []
+        ]
+        DispatchQueue.main.async {
+            self.lastLogConfig = logConfig
+            self.notifyListeners("logConfigLoaded", data: logConfig, retainUntilConsumed: true)
+        }
     }
     
     public func widgetOpened() {
