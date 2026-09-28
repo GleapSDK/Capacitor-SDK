@@ -1012,7 +1012,7 @@ public class GleapPlugin extends Plugin {
         String outboundId = call.getString("outboundId");
         boolean showBackButton = call.getBoolean("showBackButton");
 
-        implementation.openChecklist(outboundId, showBackButton);
+        implementation.startChecklist(outboundId, showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
