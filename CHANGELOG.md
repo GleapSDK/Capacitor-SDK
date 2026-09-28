@@ -1,5 +1,10 @@
 # Changelog
 
+## 18.2.0
+Updated native iOS dependency to 18.2.0
+Updated native Android dependency to 18.2.0
+(console and network logs from your app's WebView: on iOS and Android, tickets now include the WebView's console output — `console.log`, `info`, `warn`, `error` and `debug`, uncaught errors and unhandled promise rejections — and, when network logs are enabled for your project, its `fetch` and `XMLHttpRequest` calls with status, timing, headers and text bodies. Until now the native SDKs could not see either, so tickets from release builds had no WebView console or network logs at all. Recording starts as soon as the plugin is imported; bodies are kept up to 150 KB, streaming and binary bodies are skipped, credential headers are masked, and `setNetworkLogPropsToIgnore` / `setNetworkLogsBlacklist` apply together with your project's settings. `disableConsoleLogOverwrite()` stops the console recording. Android debug builds already forward the console to logcat, so there only network requests are added. On web nothing changes: the JavaScript SDK records both itself)
+
 ## 18.1.0
 Updated native iOS dependency to 18.1.0
 Updated native Android dependency to 18.1.0
