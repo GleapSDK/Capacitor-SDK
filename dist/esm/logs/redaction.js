@@ -72,8 +72,9 @@ export function redactHeaders(headers, rules) {
 }
 /**
  * Removes matching keys from a JSON body: every key equal to a prop at any depth (objects inside
- * arrays too), and dotted props additionally as a path from the root. Returns the body untouched
- * when it is not JSON (e.g. truncated) or when nothing matched; otherwise re-serialises compactly.
+ * arrays too), and dotted props additionally as a path from the root, then re-serialises compactly.
+ * A body that looks like JSON but does not parse (e.g. cut at the size limit) gets the values of
+ * matching keys masked in the text instead. Returns the body untouched when nothing matched.
  */
 export function redactJsonBody(body, rules) {
     if (!body || rules.props.size === 0) {
@@ -88,7 +89,7 @@ export function redactJsonBody(body, rules) {
         parsed = JSON.parse(body);
     }
     catch (e) {
-        return body;
+        return maskJsonKeysInText(body, rules);
     }
     let changed = removeKeysAtAnyDepth(parsed, rules.props);
     for (const path of rules.paths) {
@@ -231,6 +232,28 @@ function getHeader(headers, name) {
 function firstNonWhitespaceChar(text) {
     const match = /\S/.exec(text);
     return match ? match[0] : '';
+}
+/**
+ * Masks the values of matching keys in JSON text that does not parse: every prop as a whole plus the
+ * last segment of each dotted prop, case-insensitive. A string cut off at the end is masked too;
+ * object and array values are left alone (their inner keys are matched on their own).
+ */
+function maskJsonKeysInText(body, rules) {
+    const keys = new Set(rules.props);
+    for (const path of rules.paths) {
+        keys.add(path[path.length - 1]);
+    }
+    let result = body;
+    keys.forEach((key) => {
+        // A JSON string never contains a raw line break, so a string cut at the end stops before the
+        // "\n… [truncated" marker instead of swallowing it.
+        const pattern = new RegExp(`"(${escapeRegExp(key)})"(\\s*:\\s*)("(?:[^"\\\\\\r\\n]|\\\\.)*"?|-?\\d[0-9.eE+-]*|true|false|null)`, 'gi');
+        result = result.replace(pattern, `"$1"$2"${REDACTED_VALUE}"`);
+    });
+    return result === body ? body : result;
+}
+function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 /** Removes every key equal to a prop at any depth. Iterative, so deep JSON cannot overflow the stack. */
 function removeKeysAtAnyDepth(root, props) {

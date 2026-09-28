@@ -29,8 +29,9 @@ export declare function redactHeaders(headers: {
 } | undefined;
 /**
  * Removes matching keys from a JSON body: every key equal to a prop at any depth (objects inside
- * arrays too), and dotted props additionally as a path from the root. Returns the body untouched
- * when it is not JSON (e.g. truncated) or when nothing matched; otherwise re-serialises compactly.
+ * arrays too), and dotted props additionally as a path from the root, then re-serialises compactly.
+ * A body that looks like JSON but does not parse (e.g. cut at the size limit) gets the values of
+ * matching keys masked in the text instead. Returns the body untouched when nothing matched.
  */
 export declare function redactJsonBody(body: string, rules: RedactionRules): string;
 /**

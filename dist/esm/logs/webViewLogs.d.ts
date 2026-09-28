@@ -36,8 +36,9 @@ export declare class WebViewLogCapture {
     start(): void;
     /**
      * Android debug builds (Capacitor's loggingBehavior) write the WebView console to logcat, which the
-     * Android SDK already reads: capturing it here too would log every line twice. iOS prints it to
-     * stdout, which the iOS SDK does not read, so iOS always captures here.
+     * Android SDK already reads: capturing it here too would log every line twice. On iOS, Capacitor
+     * prints it to stdout as "⚡️  [level] - message"; the iOS SDK drops those lines for Capacitor apps
+     * (application type CAPACITOR, set in initialize), so iOS always captures here.
      */
     private nativeLogsConsole;
     private listenForConfig;

@@ -154,12 +154,25 @@ describe('JSON bodies', () => {
     expect(redactJsonBody(body, rules)).toBe(body);
   });
 
-  it('leaves bodies that do not parse as they are (no double encoding)', () => {
+  it('leaves bodies without matching keys as they are (no double encoding)', () => {
     const rules = createRedactionRules(['password'], []);
-    const truncated = '{"password":"x","other":"y"\n… [truncated, 200000 bytes]';
+    const truncated = '{"other":"y","list":[1,2\n… [truncated, 200000 bytes]';
     expect(redactJsonBody(truncated, rules)).toBe(truncated);
     expect(redactJsonBody('"password"', rules)).toBe('"password"');
     expect(redactJsonBody('password=1', rules)).toBe('password=1');
+  });
+
+  it('masks ignored keys in JSON that does not parse (cut at the size limit)', () => {
+    const marker = '\n… [truncated, 200000 bytes]';
+    const rules = createRedactionRules(['password', 'token'], []);
+    expect(
+      redactJsonBody('{"user":{"password":"pw-0","name":"n"},"token":"abc","items":[{"Token":"x"' + marker, rules),
+    ).toBe('{"user":{"password":"[REDACTED]","name":"n"},"token":"[REDACTED]","items":[{"Token":"[REDACTED]"' + marker);
+    // Dotted props also mask their last segment; numbers and a string cut at the end are masked too.
+    const dotted = createRedactionRules(['user.pin'], []);
+    expect(redactJsonBody('{"user":{"PIN" : 1234,"id":7},"pin":"12' + marker, dotted)).toBe(
+      '{"user":{"PIN" : "[REDACTED]","id":7},"pin":"[REDACTED]"' + marker,
+    );
   });
 
   it('does nothing without props', () => {
