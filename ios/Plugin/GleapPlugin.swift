@@ -727,8 +727,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         let checklistId = call.getString("checklistId") ?? ""
         let showBackButton = call.getBool("showBackButton") ?? true
         
-        // Open news
-        Gleap.openNewsArticle(checklistId, andShowBackButton: showBackButton)
+        Gleap.openChecklist(checklistId, andShowBackButton: showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([
@@ -740,8 +739,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         let outboundId = call.getString("outboundId") ?? ""
         let showBackButton = call.getBool("showBackButton") ?? true
         
-        // Open news
-        Gleap.openNewsArticle(outboundId, andShowBackButton: showBackButton)
+        Gleap.startChecklist(outboundId, andShowBackButton: showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([
@@ -1021,7 +1019,9 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         notifyEventUpdate(name: "outbound-sent", data: data)
     }
     
-    public func feedbackSendingFailed() {
+    // GleapDelegate declares feedbackSendingFailed: with the error data; the SDK never calls a
+    // variant without it.
+    public func feedbackSendingFailed(_ data: [AnyHashable : Any]) {
         notifyEventUpdate(name: "error-while-sending", data: nil)
     }
     
