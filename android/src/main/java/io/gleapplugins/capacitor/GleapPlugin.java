@@ -58,10 +58,59 @@ public class GleapPlugin extends Plugin {
 
     private Gleap implementation;
     private final Map<String, GleapAgentToolResultCallback> pendingAgentToolExecutions = new ConcurrentHashMap<>();
+    // The kept-alive setEventCallback call.
+    private volatile PluginCall eventCallbackCall;
+    // Network log settings from the last loaded config, for the WebView log capture.
+    private volatile JSObject lastLogConfig;
+    // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
+    private volatile boolean webViewConsoleLogsDisabled = false;
+
+    // One callback for both users of the loaded config: the WebView log capture and setEventCallback.
+    private final ConfigLoadedCallback configLoadedCallback = new ConfigLoadedCallback() {
+        @Override
+        public void configLoaded(JSONObject jsonObject) {
+            notifyLogConfig(jsonObject);
+
+            PluginCall call = eventCallbackCall;
+            if (call != null) {
+                JSObject data = new JSObject();
+                data.put("name", "widget-opened");
+                data.put("data", jsonObject);
+                call.resolve(data);
+            }
+        }
+    };
 
     @Override
     public void load() {
         implementation = Gleap.getInstance();
+        implementation.setConfigLoadedCallback(configLoadedCallback);
+    }
+
+    /**
+     * Sends the network log settings of the loaded config to the WebView log capture.
+     */
+    private void notifyLogConfig(JSONObject config) {
+        JSObject logConfig = new JSObject();
+        logConfig.put("enableNetworkLogs", config != null && config.optBoolean("enableNetworkLogs", false));
+        logConfig.put("networkLogPropsToIgnore", stringArray(config, "networkLogPropsToIgnore"));
+        logConfig.put("networkLogBlacklist", stringArray(config, "networkLogBlacklist"));
+        lastLogConfig = logConfig;
+        notifyListeners("logConfigLoaded", logConfig, true);
+    }
+
+    private static JSONArray stringArray(JSONObject config, String key) {
+        JSONArray result = new JSONArray();
+        JSONArray values = config != null ? config.optJSONArray(key) : null;
+        if (values != null) {
+            for (int i = 0; i < values.length(); i++) {
+                Object value = values.opt(i);
+                if (value instanceof String) {
+                    result.put(value);
+                }
+            }
+        }
+        return result;
     }
 
     @PluginMethod
@@ -79,6 +128,12 @@ public class GleapPlugin extends Plugin {
 
         // Set the application type
         Gleap.getInstance().setApplicationType(APPLICATIONTYPE.CAPACITOR);
+
+        // A reloaded WebView calls initialize again: hand it the config that was already loaded.
+        JSObject logConfig = lastLogConfig;
+        if (logConfig != null) {
+            notifyListeners("logConfigLoaded", logConfig, true);
+        }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -843,9 +898,51 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void disableConsoleLogOverwrite(PluginCall call) {
+        // The plugin's JavaScript restores the WebView console; drop what it attached so far.
+        webViewConsoleLogsDisabled = true;
+        implementation.attachConsoleLogs(new JSONArray());
+
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("consoleLogDisabled", true);
+        call.resolve(ret);
+    }
+
+    /**
+     * Network requests made inside the WebView (fetch / XMLHttpRequest), recorded by the plugin's
+     * JavaScript. Each call replaces the previous list; the SDK merges and sanitizes them.
+     *
+     * @since 18.2.0
+     */
+    @PluginMethod
+    public void attachNetworkLogs(PluginCall call) {
+        JSONArray logs = call.getArray("logs", new JSArray());
+        implementation.attachNetworkLogs(logs);
+
+        JSObject ret = new JSObject();
+        ret.put("networkLogsAttached", true);
+        call.resolve(ret);
+    }
+
+    /**
+     * Console output of the WebView, recorded by the plugin's JavaScript. Each call replaces the
+     * previous list.
+     *
+     * @since 18.2.0
+     */
+    @PluginMethod
+    public void attachConsoleLogs(PluginCall call) {
+        JSObject ret = new JSObject();
+        if (webViewConsoleLogsDisabled) {
+            ret.put("consoleLogsAttached", false);
+            call.resolve(ret);
+            return;
+        }
+
+        JSONArray logs = call.getArray("logs", new JSArray());
+        implementation.attachConsoleLogs(logs);
+
+        ret.put("consoleLogsAttached", true);
         call.resolve(ret);
     }
 
@@ -938,7 +1035,7 @@ public class GleapPlugin extends Plugin {
         String outboundId = call.getString("outboundId");
         boolean showBackButton = call.getBoolean("showBackButton");
 
-        implementation.openChecklist(outboundId, showBackButton);
+        implementation.startChecklist(outboundId, showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -1209,17 +1306,9 @@ public class GleapPlugin extends Plugin {
             }
         );
 
-        implementation.setConfigLoadedCallback(
-            new ConfigLoadedCallback() {
-                @Override
-                public void configLoaded(JSONObject jsonObject) {
-                    JSObject data = new JSObject();
-                    data.put("name", "widget-opened");
-                    data.put("data", jsonObject);
-                    call.resolve(data);
-                }
-            }
-        );
+        // The loaded config is reported through the shared callback, which also feeds the WebView log capture.
+        eventCallbackCall = call;
+        implementation.setConfigLoadedCallback(configLoadedCallback);
 
         implementation.setFeedbackSentCallback(
             new FeedbackSentCallback() {

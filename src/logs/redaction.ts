@@ -1,0 +1,434 @@
+import type { GleapNetworkLogEntry } from '../definitions';
+
+/** URLs containing one of these are never logged, in addition to the configured blacklist. */
+export const DEFAULT_NETWORK_LOG_BLACKLIST: readonly string[] = ['gleap.io', 'gleap.ai'];
+
+export const REDACTED_VALUE = '[REDACTED]';
+export const BODY_NOT_CAPTURED = '[body not captured]';
+
+/** Credential headers whose value is always masked (the header itself is kept). */
+const ALWAYS_MASKED_HEADERS = ['authorization', 'proxy-authorization', 'cookie', 'set-cookie'];
+
+export interface RedactionRules {
+  /** Lowercased props, matched as whole header names, JSON keys, form fields and query params. */
+  props: Set<string>;
+  /** Lowercased props containing a dot, split into a path that is applied from the JSON root. */
+  paths: string[][];
+  /** Lowercased blacklist entries, including the default Gleap hosts. */
+  blacklist: string[];
+}
+
+/**
+ * Builds the redaction rules from the props to ignore and the blacklist (remote config and local
+ * setter calls combined by the caller). Entries are trimmed, lowercased and deduplicated.
+ */
+export function createRedactionRules(
+  propsToIgnore?: readonly unknown[] | null,
+  blacklist?: readonly unknown[] | null,
+): RedactionRules {
+  const props = new Set<string>();
+  const paths: string[][] = [];
+  for (const raw of propsToIgnore || []) {
+    if (typeof raw !== 'string') {
+      continue;
+    }
+    const prop = raw.trim().toLowerCase();
+    if (!prop || props.has(prop)) {
+      continue;
+    }
+    props.add(prop);
+    if (prop.indexOf('.') > -1) {
+      const segments = prop.split('.').filter((segment) => segment.length > 0);
+      if (segments.length > 1) {
+        paths.push(segments);
+      }
+    }
+  }
+
+  const blacklistEntries: string[] = [];
+  for (const raw of [...DEFAULT_NETWORK_LOG_BLACKLIST, ...(blacklist || [])]) {
+    if (typeof raw !== 'string') {
+      continue;
+    }
+    const entry = raw.trim().toLowerCase();
+    if (entry && blacklistEntries.indexOf(entry) < 0) {
+      blacklistEntries.push(entry);
+    }
+  }
+
+  return { props, paths, blacklist: blacklistEntries };
+}
+
+/** Substring match (case-insensitive) against the blacklist, incl. the default Gleap hosts. */
+export function isBlacklistedUrl(url: unknown, rules: RedactionRules): boolean {
+  if (typeof url !== 'string') {
+    return false;
+  }
+  const lowerUrl = url.toLowerCase();
+  for (const entry of rules.blacklist) {
+    if (lowerUrl.indexOf(entry) > -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Removes headers named like a prop (case-insensitive) and masks the credential headers.
+ * Returns a new object; the input is not modified.
+ */
+export function redactHeaders(
+  headers: { [name: string]: string } | undefined,
+  rules: RedactionRules,
+): { [name: string]: string } | undefined {
+  if (!headers || typeof headers !== 'object') {
+    return headers;
+  }
+  const result: { [name: string]: string } = {};
+  for (const name of Object.keys(headers)) {
+    const lowerName = name.toLowerCase();
+    if (rules.props.has(lowerName)) {
+      continue;
+    }
+    result[name] = ALWAYS_MASKED_HEADERS.indexOf(lowerName) > -1 ? REDACTED_VALUE : headers[name];
+  }
+  return result;
+}
+
+/**
+ * Removes matching keys from a JSON body: every key equal to a prop at any depth (objects inside
+ * arrays too), and dotted props additionally as a path from the root, then re-serialises compactly.
+ * A body that looks like JSON but does not parse (e.g. cut at the size limit) gets the values of
+ * matching keys masked in the text instead. Returns the body untouched when nothing matched.
+ */
+export function redactJsonBody(body: string, rules: RedactionRules): string {
+  if (!body || rules.props.size === 0) {
+    return body;
+  }
+  const firstChar = firstNonWhitespaceChar(body);
+  if (firstChar !== '{' && firstChar !== '[') {
+    return body;
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch (e) {
+    return maskJsonKeysInText(body, rules);
+  }
+
+  let changed = removeKeysAtAnyDepth(parsed, rules.props);
+  for (const path of rules.paths) {
+    if (removePath(parsed, path, 0)) {
+      changed = true;
+    }
+  }
+  return changed ? JSON.stringify(parsed) : body;
+}
+
+/**
+ * Removes form fields (application/x-www-form-urlencoded) named like a prop. Kept fields keep their
+ * original encoding; the body is returned untouched when nothing matched.
+ */
+export function redactFormBody(body: string, rules: RedactionRules): string {
+  if (!body || rules.props.size === 0) {
+    return body;
+  }
+  const filtered = filterParams(body, rules);
+  return filtered === null ? body : filtered;
+}
+
+/** Removes query parameters named like a prop. The URL is returned untouched when nothing matched. */
+export function redactUrl(url: string, rules: RedactionRules): string {
+  if (typeof url !== 'string' || rules.props.size === 0) {
+    return url;
+  }
+  const hashIndex = url.indexOf('#');
+  const main = hashIndex > -1 ? url.slice(0, hashIndex) : url;
+  const hash = hashIndex > -1 ? url.slice(hashIndex) : '';
+  const queryIndex = main.indexOf('?');
+  if (queryIndex < 0) {
+    return url;
+  }
+  const filtered = filterParams(main.slice(queryIndex + 1), rules);
+  if (filtered === null) {
+    return url;
+  }
+  return main.slice(0, queryIndex) + (filtered ? `?${filtered}` : '') + hash;
+}
+
+/** Redacts one entry. Returns a new entry; the input is not modified. */
+export function redactNetworkLogEntry(entry: GleapNetworkLogEntry, rules: RedactionRules): GleapNetworkLogEntry {
+  const result: GleapNetworkLogEntry = { ...entry };
+  result.url = redactUrl(entry.url, rules);
+
+  if (entry.request) {
+    const request = { ...entry.request };
+    const contentType = getHeader(entry.request.headers, 'content-type');
+    request.headers = redactHeaders(entry.request.headers, rules);
+    if (typeof request.payload === 'string') {
+      request.payload = redactBody(request.payload, contentType, rules);
+    }
+    result.request = request;
+  }
+
+  if (entry.response) {
+    const response = { ...entry.response };
+    const contentType = getHeader(entry.response.headers, 'content-type');
+    if (response.headers) {
+      response.headers = redactHeaders(response.headers, rules);
+    }
+    if (typeof response.responseText === 'string') {
+      response.responseText = redactBody(response.responseText, contentType, rules);
+    }
+    result.response = response;
+  }
+
+  return result;
+}
+
+/**
+ * Drops blacklisted entries and redacts the rest. An entry that cannot be redacted (e.g. JSON nested
+ * too deeply) is sent without bodies, headers and query instead of unredacted.
+ */
+export function redactNetworkLogs(
+  entries: readonly GleapNetworkLogEntry[],
+  rules: RedactionRules,
+): GleapNetworkLogEntry[] {
+  const result: GleapNetworkLogEntry[] = [];
+  for (const entry of entries) {
+    if (!entry || isBlacklistedUrl(entry.url, rules)) {
+      continue;
+    }
+    result.push(redactNetworkLogEntryOrStrip(entry, rules));
+  }
+  return result;
+}
+
+/** Like redactNetworkLogEntry, but never throws: falls back to an entry without any content. */
+export function redactNetworkLogEntryOrStrip(entry: GleapNetworkLogEntry, rules: RedactionRules): GleapNetworkLogEntry {
+  try {
+    return redactNetworkLogEntry(entry, rules);
+  } catch (e) {
+    return stripNetworkLogEntry(entry);
+  }
+}
+
+/** Keeps method, URL (without query), timing and status; drops headers and bodies. */
+export function stripNetworkLogEntry(entry: GleapNetworkLogEntry): GleapNetworkLogEntry {
+  const url = typeof entry.url === 'string' ? entry.url.split(/[?#]/)[0] : '';
+  const stripped: GleapNetworkLogEntry = {
+    date: entry.date,
+    type: entry.type,
+    url,
+    duration: entry.duration,
+    success: entry.success,
+    request: { headers: {}, payload: BODY_NOT_CAPTURED },
+  };
+  if (entry.response) {
+    stripped.response =
+      typeof entry.response.errorText === 'string'
+        ? { errorText: entry.response.errorText }
+        : {
+            status: entry.response.status,
+            statusText: entry.response.statusText,
+            headers: {},
+            responseText: BODY_NOT_CAPTURED,
+          };
+  }
+  return stripped;
+}
+
+function redactBody(body: string, contentType: string | undefined, rules: RedactionRules): string {
+  if (!body || rules.props.size === 0) {
+    return body;
+  }
+  const json = redactJsonBody(body, rules);
+  if (json !== body) {
+    return json;
+  }
+  const lowerContentType = (contentType || '').toLowerCase();
+  if (lowerContentType.indexOf('x-www-form-urlencoded') > -1 || (!lowerContentType && looksLikeFormBody(body))) {
+    return redactFormBody(body, rules);
+  }
+  return body;
+}
+
+function looksLikeFormBody(body: string): boolean {
+  return /^[^\s=&]+=[^\s&]*(?:&[^\s=&]*(?:=[^\s&]*)?)*$/.test(body);
+}
+
+function getHeader(headers: { [name: string]: string } | undefined, name: string): string | undefined {
+  if (!headers || typeof headers !== 'object') {
+    return undefined;
+  }
+  for (const key of Object.keys(headers)) {
+    if (key.toLowerCase() === name) {
+      return headers[key];
+    }
+  }
+  return undefined;
+}
+
+function firstNonWhitespaceChar(text: string): string {
+  const match = /\S/.exec(text);
+  return match ? match[0] : '';
+}
+
+/**
+ * Masks the values of matching keys in JSON text that does not parse: every prop as a whole plus the
+ * last segment of each dotted prop, case-insensitive. A string cut off at the end is masked too;
+ * object and array values are left alone (their inner keys are matched on their own).
+ */
+function maskJsonKeysInText(body: string, rules: RedactionRules): string {
+  const keys = new Set<string>(rules.props);
+  for (const path of rules.paths) {
+    keys.add(path[path.length - 1]);
+  }
+  let result = body;
+  keys.forEach((key) => {
+    // A JSON string never contains a raw line break, so a string cut at the end stops before the
+    // "\n… [truncated" marker instead of swallowing it.
+    const pattern = new RegExp(
+      `"(${escapeRegExp(key)})"(\\s*:\\s*)("(?:[^"\\\\\\r\\n]|\\\\.)*"?|-?\\d[0-9.eE+-]*|true|false|null)`,
+      'gi',
+    );
+    result = result.replace(pattern, `"$1"$2"${REDACTED_VALUE}"`);
+  });
+  return result === body ? body : result;
+}
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** Removes every key equal to a prop at any depth. Iterative, so deep JSON cannot overflow the stack. */
+function removeKeysAtAnyDepth(root: unknown, props: Set<string>): boolean {
+  let changed = false;
+  const stack: unknown[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        if (item && typeof item === 'object') {
+          stack.push(item);
+        }
+      }
+    } else if (node && typeof node === 'object') {
+      const record = node as { [key: string]: unknown };
+      for (const key of Object.keys(record)) {
+        if (props.has(key.toLowerCase())) {
+          delete record[key];
+          changed = true;
+        } else {
+          const child = record[key];
+          if (child && typeof child === 'object') {
+            stack.push(child);
+          }
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/** Removes a dotted path from the root; arrays on the way are applied to each element. */
+function removePath(node: unknown, segments: string[], index: number): boolean {
+  if (Array.isArray(node)) {
+    let changed = false;
+    for (const item of node) {
+      if (removePath(item, segments, index)) {
+        changed = true;
+      }
+    }
+    return changed;
+  }
+  if (!node || typeof node !== 'object') {
+    return false;
+  }
+  const record = node as { [key: string]: unknown };
+  const segment = segments[index];
+  const isLast = index === segments.length - 1;
+  let changed = false;
+  for (const key of Object.keys(record)) {
+    if (key.toLowerCase() !== segment) {
+      continue;
+    }
+    if (isLast) {
+      delete record[key];
+      changed = true;
+    } else if (removePath(record[key], segments, index + 1)) {
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
+ * Filters an urlencoded parameter list (query string or form body). Returns null when nothing was
+ * removed, so callers can keep the original string.
+ */
+function filterParams(params: string, rules: RedactionRules): string | null {
+  const parts = params.split('&');
+  const kept: string[] = [];
+  let changed = false;
+  for (const part of parts) {
+    const equalsIndex = part.indexOf('=');
+    const rawName = equalsIndex > -1 ? part.slice(0, equalsIndex) : part;
+    if (rawName && paramNameMatches(decodeParamName(rawName), rules)) {
+      changed = true;
+      continue;
+    }
+    kept.push(part);
+  }
+  return changed ? kept.join('&') : null;
+}
+
+function decodeParamName(rawName: string): string {
+  try {
+    return decodeURIComponent(rawName.replace(/\+/g, ' '));
+  } catch (e) {
+    return rawName;
+  }
+}
+
+/**
+ * A param matches when its whole name equals a prop. Bracket names (user[password]) are treated like
+ * nested JSON keys: any segment equal to a prop, or a dotted prop matching the leading segments.
+ */
+function paramNameMatches(name: string, rules: RedactionRules): boolean {
+  const lowerName = name.toLowerCase();
+  if (rules.props.has(lowerName)) {
+    return true;
+  }
+  if (lowerName.indexOf('[') < 0) {
+    return false;
+  }
+  const segments = lowerName
+    .replace(/\]/g, '')
+    .split('[')
+    .filter((segment) => segment.length > 0);
+  if (segments.length < 2) {
+    return false;
+  }
+  for (const segment of segments) {
+    if (rules.props.has(segment)) {
+      return true;
+    }
+  }
+  for (const path of rules.paths) {
+    if (path.length <= segments.length) {
+      let matches = true;
+      for (let i = 0; i < path.length; i++) {
+        if (path[i] !== segments[i]) {
+          matches = false;
+          break;
+        }
+      }
+      if (matches) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

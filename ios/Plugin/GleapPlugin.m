@@ -18,6 +18,8 @@ CAP_PLUGIN(GleapPlugin, "Gleap",
            CAP_PLUGIN_METHOD(setNetworkLogsBlacklist, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setNetworkLogPropsToIgnore, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setEnvDataPropsToIgnore, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(attachNetworkLogs, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(attachConsoleLogs, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(attachCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setCustomData, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(removeCustomData, CAPPluginReturnPromise);

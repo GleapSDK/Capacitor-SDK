@@ -110,7 +110,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     identify(options: {
         userId: string;
         userHash?: string | undefined;
-        customData?: Object | undefined;
+        customData?: Record<string, any> | undefined;
         name?: string | undefined;
         email?: string | undefined;
         phone?: string | undefined;
@@ -133,7 +133,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         sla?: number | undefined;
         plan?: string | undefined;
         value?: number | undefined;
-        customData?: Object | undefined;
+        customData?: Record<string, any> | undefined;
     }): Promise<{
         identify: boolean;
     }>;
@@ -146,6 +146,12 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         propsToIgnore: string[];
     }): Promise<{
         propsToIgnoreSet: boolean;
+    }>;
+    attachNetworkLogs(): Promise<{
+        networkLogsAttached: boolean;
+    }>;
+    attachConsoleLogs(): Promise<{
+        consoleLogsAttached: boolean;
     }>;
     setEnvDataPropsToIgnore(options: {
         propsToIgnore: string[];
