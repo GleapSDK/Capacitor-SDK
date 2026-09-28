@@ -32,9 +32,12 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
             Gleap.sharedInstance().delegate = self
         }
         
+        // Before initialize: the SDK starts reading stdout there and skips Capacitor's own
+        // console copies only once it knows it runs inside Capacitor.
+        Gleap.setApplicationType(CAPACITOR)
+
         // Initialize Gleap with API key
         Gleap.initialize(withToken: api_key)
-        Gleap.setApplicationType(CAPACITOR)
         
         // A reloaded WebView calls initialize again: hand it the config that was already loaded.
         DispatchQueue.main.async {
