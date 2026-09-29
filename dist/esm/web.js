@@ -178,6 +178,16 @@ export class GleapWeb extends WebPlugin {
         Gleap.setDisableEnvData((_a = options.disableEnvData) !== null && _a !== void 0 ? _a : false);
         return { envDataDisabled: true };
     }
+    async setColorScheme(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.colorScheme)) {
+            throw new Error('No colorScheme provided');
+        }
+        Gleap.setColorScheme(options.colorScheme, {
+            lightBackgroundColor: options.lightBackgroundColor,
+            darkBackgroundColor: options.darkBackgroundColor,
+        });
+        return { colorScheme: options.colorScheme };
+    }
     async identify(options) {
         var userData = {
             name: options.name,

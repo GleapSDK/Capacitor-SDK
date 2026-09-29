@@ -282,7 +282,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
   }
 
   async setColorScheme(options: {
-    colorScheme: 'default' | 'auto' | 'light' | 'dark';
+    colorScheme: 'auto' | 'light' | 'dark';
     lightBackgroundColor?: string;
     darkBackgroundColor?: string;
   }): Promise<{ colorScheme: string }> {

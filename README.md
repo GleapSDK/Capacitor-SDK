@@ -62,7 +62,7 @@ await Gleap.setColorScheme({ colorScheme: "auto" });
 await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBackgroundColor: "#121212" });
 ```
 
-`setColorScheme` only takes effect when "Adapt to dark / light mode" is enabled in the Gleap dashboard; it then overrides the dashboard's color scheme, and `"default"` removes the override. In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard; without dark colors it keeps its normal colors. `lightBackgroundColor` / `darkBackgroundColor` override the background in light / dark mode. Can be called before or after `initialize`.
+`setColorScheme` only takes effect when "Adapt to dark / light mode" is enabled in the Gleap dashboard; it then overrides the dashboard's color scheme. Before the first call the dashboard setting applies. In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard; without dark colors it keeps its normal colors. `lightBackgroundColor` / `darkBackgroundColor` override the background in light / dark mode. Can be called before or after `initialize`.
 
 ## API
 
@@ -1219,22 +1219,22 @@ and tickets are sent without it. Pass false to collect env data again. Can be ca
 ### setColorScheme(...)
 
 ```typescript
-setColorScheme(options: { colorScheme: 'default' | 'auto' | 'light' | 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }) => Promise<{ colorScheme: string; }>
+setColorScheme(options: { colorScheme: 'auto' | 'light' | 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }) => Promise<{ colorScheme: string; }>
 ```
 
 Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.
 Only takes effect when "Adapt to dark / light mode" is enabled in the dashboard; otherwise the widget
-always keeps its normal colors.
+always keeps its normal colors. Before the first call the dashboard setting applies.
 "auto" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.
 Apps with their own in-app theme toggle should pass "light" / "dark" explicitly and call it again whenever
-the theme changes. "default" removes the override and uses the dashboard setting.
+the theme changes.
 In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard;
 without dark colors it keeps its normal colors. lightBackgroundColor / darkBackgroundColor override the background.
 Can be called before or after initialize and applies live.
 
-| Param         | Type                                                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ colorScheme: 'default' \| 'auto' \| 'light' \| 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }</code> |
+| Param         | Type                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ colorScheme: 'auto' \| 'light' \| 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ colorScheme: string; }&gt;</code>
 

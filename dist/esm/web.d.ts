@@ -107,6 +107,13 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         envDataDisabled: boolean;
     }>;
+    setColorScheme(options: {
+        colorScheme: 'auto' | 'light' | 'dark';
+        lightBackgroundColor?: string;
+        darkBackgroundColor?: string;
+    }): Promise<{
+        colorScheme: string;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;

@@ -852,7 +852,7 @@ public class GleapPlugin extends Plugin {
     }
 
     /**
-     * Sets the color scheme of the widget ("default", "auto", "light" or "dark").
+     * Sets the color scheme of the widget ("auto", "light" or "dark").
      *
      * @since 18.2.0
      */
