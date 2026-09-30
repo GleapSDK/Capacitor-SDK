@@ -2,7 +2,7 @@
 
 Add AI-native customer support, live chat, in-app bug reporting, a help center and surveys to your Capacitor and Ionic apps with [Gleap](https://www.gleap.ai). Gleap is an Intercom alternative for software teams that connects customer conversations and feedback with product development.
 
-This plugin supports Capacitor 7. See the instructions below for earlier Capacitor versions.
+This plugin supports Capacitor 7 and later (iOS via Swift Package Manager or CocoaPods). See the instructions below for earlier Capacitor versions.
 
 Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
 
@@ -14,6 +14,24 @@ Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
 npm install capacitor-gleap-plugin
 npx cap sync
 ```
+
+### iOS
+
+The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** or higher. On iOS it is a Swift package (`Package.swift`) and pulls the native [Gleap iOS SDK](https://github.com/GleapSDK/Gleap-iOS-SDK) from GitHub; it still ships a podspec for apps that use CocoaPods.
+
+**Swift Package Manager (recommended).** New apps: `npx cap add ios --packagemanager SPM`. Existing CocoaPods apps can move with `npx cap spm-migration-assistant` once all their plugins support SPM (see [Capacitor: Swift Package Manager](https://capacitorjs.com/docs/ios/spm)). Set the app target's iOS deployment target to 15.0 in Xcode, then run `npx cap sync ios` again so `CapApp-SPM/Package.swift` declares iOS 15 as well (the plugin's package requires it).
+
+**CocoaPods.** Set `platform :ios, '15.0'` in `ios/App/Podfile` and run `npx cap sync ios`. CocoaPods trunk becomes read-only on December 2, 2026, so Gleap iOS SDK versions released after that date are not on trunk. For those, `pod install` fails with `None of your spec sources contain Gleap (= X.Y.Z)`; add the SDK from GitHub to your app target in the Podfile, with the version the plugin requires (`s.dependency 'Gleap', 'X.Y.Z'` in `node_modules/capacitor-gleap-plugin/CapacitorGleapPlugin.podspec`):
+
+```ruby
+target 'App' do
+  capacitor_pods
+  # Add your Pods here
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.0.0'
+end
+```
+
+Swift Package Manager is the recommended setup: after December 2, 2026 new Gleap iOS SDK versions are only released through GitHub and Swift Package Manager.
 
 ## Capacitor 6
 
@@ -53,6 +71,17 @@ await Gleap.setDisableEnvData({ disableEnvData: true });
 
 Both can be called at any time and apply to the next ticket. Each `setEnvDataPropsToIgnore` call replaces the previous list, an empty array resets it. `setDisableEnvData({ disableEnvData: false })` turns the collection back on.
 
+## Dark mode
+
+Switch the widget between dark and light mode. `auto` follows the device appearance (on web: the page theme); if your app has its own theme toggle, pass `light` or `dark` explicitly and call it again whenever the theme changes:
+
+```typescript
+await Gleap.setColorScheme({ colorScheme: "auto" });
+await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBackgroundColor: "#121212" });
+```
+
+`setColorScheme` only takes effect when "Adapt to dark / light mode" is enabled in the Gleap dashboard; it then overrides the dashboard's color scheme. Before the first call the dashboard setting applies. In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard; without dark colors it keeps its normal colors. `lightBackgroundColor` / `darkBackgroundColor` override the background in light / dark mode. Can be called before or after `initialize`.
+
 ## API
 
 <docgen-index>
@@ -76,10 +105,13 @@ Both can be called at any time and apply to the next ticket. Each `setEnvDataPro
 * [`setTags(...)`](#settags)
 * [`setNetworkLogsBlacklist(...)`](#setnetworklogsblacklist)
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
+* [`attachNetworkLogs(...)`](#attachnetworklogs)
+* [`attachConsoleLogs(...)`](#attachconsolelogs)
 * [`setEnvDataPropsToIgnore(...)`](#setenvdatapropstoignore)
 * [`registerAgentTool(...)`](#registeragenttool)
 * [`sendAgentToolResult(...)`](#sendagenttoolresult)
 * [`addListener('agentToolExecution', ...)`](#addlisteneragenttoolexecution-)
+* [`addListener('logConfigLoaded', ...)`](#addlistenerlogconfigloaded-)
 * [`setTicketAttribute(...)`](#setticketattribute)
 * [`unsetTicketAttribute(...)`](#unsetticketattribute)
 * [`clearTicketAttributes()`](#clearticketattributes)
@@ -94,6 +126,9 @@ Both can be called at any time and apply to the next ticket. Each `setEnvDataPro
 * [`addAttachment(...)`](#addattachment)
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
+* [`openChecklists(...)`](#openchecklists)
+* [`openChecklist(...)`](#openchecklist)
+* [`startChecklist(...)`](#startchecklist)
 * [`openNews(...)`](#opennews)
 * [`openNewsArticle(...)`](#opennewsarticle)
 * [`openHelpCenter(...)`](#openhelpcenter)
@@ -108,10 +143,12 @@ Both can be called at any time and apply to the next ticket. Each `setEnvDataPro
 * [`startClassicForm(...)`](#startclassicform)
 * [`startConversation(...)`](#startconversation)
 * [`openConversation(...)`](#openconversation)
+* [`openConversations(...)`](#openconversations)
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
 * [`setDisableEnvData(...)`](#setdisableenvdata)
+* [`setColorScheme(...)`](#setcolorscheme)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -281,14 +318,14 @@ Set a custom modal url. Must be called before initialize.
 ### identify(...)
 
 ```typescript
-identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
+identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: Record<string, any>; }) => Promise<{ identify: boolean; }>
 ```
 
 Set user identity
 
-| Param         | Type                                                                                                                                                                                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: <a href="#record">Record</a>&lt;string, any&gt;; }</code> |
 
 **Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
@@ -300,14 +337,14 @@ Set user identity
 ### updateContact(...)
 
 ```typescript
-updateContact(options: { name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: Object; }) => Promise<{ identify: boolean; }>
+updateContact(options: { name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: Record<string, any>; }) => Promise<{ identify: boolean; }>
 ```
 
 Update user properties
 
-| Param         | Type                                                                                                                                                                                                               |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: <a href="#object">Object</a>; }</code> |
+| Param         | Type                                                                                                                                                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: <a href="#record">Record</a>&lt;string, any&gt;; }</code> |
 
 **Returns:** <code>Promise&lt;{ identify: boolean; }&gt;</code>
 
@@ -475,6 +512,49 @@ Set network logs props to ignore
 --------------------
 
 
+### attachNetworkLogs(...)
+
+```typescript
+attachNetworkLogs(options: { logs: GleapNetworkLogEntry[]; }) => Promise<{ networkLogsAttached: boolean; }>
+```
+
+Hands the network requests made inside the app's WebView (fetch and XMLHttpRequest) to the native SDK, so they
+show up in the network logs of tickets. The plugin calls this for you on iOS and Android; each call replaces
+the previously attached WebView network logs. No-op on web, where the JavaScript SDK records requests itself.
+
+| Param         | Type                                           |
+| ------------- | ---------------------------------------------- |
+| **`options`** | <code>{ logs: GleapNetworkLogEntry[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ networkLogsAttached: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
+### attachConsoleLogs(...)
+
+```typescript
+attachConsoleLogs(options: { logs: GleapConsoleLogEntry[]; }) => Promise<{ consoleLogsAttached: boolean; }>
+```
+
+Hands the console output of the app's WebView (console.log/info/warn/error/debug, uncaught errors and
+unhandled promise rejections) to the native SDK, so it shows up in the console logs of tickets. The plugin
+calls this for you on iOS and Android; each call replaces the previously attached WebView console logs.
+No-op on web, where the JavaScript SDK records the console itself.
+
+| Param         | Type                                           |
+| ------------- | ---------------------------------------------- |
+| **`options`** | <code>{ logs: GleapConsoleLogEntry[]; }</code> |
+
+**Returns:** <code>Promise&lt;{ consoleLogsAttached: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
 ### setEnvDataPropsToIgnore(...)
 
 ```typescript
@@ -550,6 +630,27 @@ Called when a registered agent tool should execute.
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 15.0.0
+
+--------------------
+
+
+### addListener('logConfigLoaded', ...)
+
+```typescript
+addListener(eventName: 'logConfigLoaded', listenerFunc: (config: GleapLogConfig) => void) => Promise<PluginListenerHandle>
+```
+
+Called on iOS and Android when the project config is loaded, with the network log settings the plugin's
+WebView log capture needs (network logs are only recorded when they are enabled for your project).
+
+| Param              | Type                                                                           |
+| ------------------ | ------------------------------------------------------------------------------ |
+| **`eventName`**    | <code>'logConfigLoaded'</code>                                                 |
+| **`listenerFunc`** | <code>(config: <a href="#gleaplogconfig">GleapLogConfig</a>) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 19.0.0
 
 --------------------
 
@@ -798,6 +899,63 @@ Open widget
 **Returns:** <code>Promise&lt;{ openedWidget: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### openChecklists(...)
+
+```typescript
+openChecklists(options: { showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open checklists
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
+### openChecklist(...)
+
+```typescript
+openChecklist(options: { checklistId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open checklist
+
+| Param         | Type                                                            |
+| ------------- | --------------------------------------------------------------- |
+| **`options`** | <code>{ checklistId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
+### startChecklist(...)
+
+```typescript
+startChecklist(options: { outboundId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Start checklist
+
+| Param         | Type                                                           |
+| ------------- | -------------------------------------------------------------- |
+| **`options`** | <code>{ outboundId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
 
 --------------------
 
@@ -1060,6 +1218,25 @@ Opens the conversations tab.
 --------------------
 
 
+### openConversations(...)
+
+```typescript
+openConversations(options: { showBackButton?: boolean; }) => Promise<{ conversationsOpened: boolean; }>
+```
+
+Opens the conversations tab (same as openConversation).
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ conversationsOpened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
 ### startBot(...)
 
 ```typescript
@@ -1137,6 +1314,33 @@ and tickets are sent without it. Pass false to collect env data again. Can be ca
 --------------------
 
 
+### setColorScheme(...)
+
+```typescript
+setColorScheme(options: { colorScheme: 'auto' | 'light' | 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }) => Promise<{ colorScheme: string; }>
+```
+
+Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.
+Only takes effect when "Adapt to dark / light mode" is enabled in the dashboard; otherwise the widget
+always keeps its normal colors. Before the first call the dashboard setting applies.
+"auto" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.
+Apps with their own in-app theme toggle should pass "light" / "dark" explicitly and call it again whenever
+the theme changes.
+In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard;
+without dark colors it keeps its normal colors. lightBackgroundColor / darkBackgroundColor override the background.
+Can be called before or after initialize and applies live.
+
+| Param         | Type                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ colorScheme: 'auto' \| 'light' \| 'dark'; lightBackgroundColor?: string; darkBackgroundColor?: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ colorScheme: string; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
 ### setLanguage(...)
 
 ```typescript
@@ -1162,7 +1366,8 @@ Set Language
 disableConsoleLogOverwrite() => Promise<{ consoleLogDisabled: boolean; }>
 ```
 
-Disable console log overwrite
+Disable console log overwrite: stops recording the console output of the app's WebView
+(console methods are restored) and drops the WebView console logs recorded so far.
 
 **Returns:** <code>Promise&lt;{ consoleLogDisabled: boolean; }&gt;</code>
 
@@ -1208,695 +1413,30 @@ Set the notification container offset
 ### Interfaces
 
 
-#### Object
+#### GleapNetworkLogEntry
 
-Provides functionality common to all JavaScript objects.
+A network log entry (fetch / XMLHttpRequest) as the plugin hands it to the native SDK.
 
-| Prop              | Type                                          | Description                                                                                                                                |
-| ----------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`constructor`** | <code><a href="#function">Function</a></code> | The initial value of <a href="#object">Object</a>.prototype.constructor is the standard built-in <a href="#object">Object</a> constructor. |
+| Prop           | Type                                                                                                                                     | Description                                                                                    |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **`date`**     | <code>string</code>                                                                                                                      | ISO-8601 UTC timestamp of the request start.                                                   |
+| **`type`**     | <code>string</code>                                                                                                                      | HTTP method, uppercase.                                                                        |
+| **`url`**      | <code>string</code>                                                                                                                      |                                                                                                |
+| **`duration`** | <code>number</code>                                                                                                                      | Milliseconds from the request start to the response headers (or the failure).                  |
+| **`success`**  | <code>boolean</code>                                                                                                                     | true when an HTTP response arrived (any status), false on a transport error, abort or timeout. |
+| **`request`**  | <code>{ headers?: { [name: string]: string; }; payload?: string; }</code>                                                                |                                                                                                |
+| **`response`** | <code>{ status?: number; statusText?: string; headers?: { [name: string]: string; }; responseText?: string; errorText?: string; }</code> |                                                                                                |
 
-| Method                   | Signature                                                 | Description                                                              |
-| ------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **toString**             | () =&gt; string                                           | Returns a string representation of an object.                            |
-| **toLocaleString**       | () =&gt; string                                           | Returns a date converted to a string using the current locale.           |
-| **valueOf**              | () =&gt; <a href="#object">Object</a>                     | Returns the primitive value of the specified object.                     |
-| **hasOwnProperty**       | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether an object has a property with the specified name.     |
-| **isPrototypeOf**        | (v: <a href="#object">Object</a>) =&gt; boolean           | Determines whether an object exists in another object's prototype chain. |
-| **propertyIsEnumerable** | (v: <a href="#propertykey">PropertyKey</a>) =&gt; boolean | Determines whether a specified property is enumerable.                   |
 
+#### GleapConsoleLogEntry
 
-#### Function
+A console log entry as the plugin hands it to the native SDK.
 
-Creates a new function.
-
-| Prop            | Type                                          |
-| --------------- | --------------------------------------------- |
-| **`prototype`** | <code>any</code>                              |
-| **`length`**    | <code>number</code>                           |
-| **`arguments`** | <code>any</code>                              |
-| **`caller`**    | <code><a href="#function">Function</a></code> |
-
-| Method       | Signature                                                                            | Description                                                                                                                                                                                                              |
-| ------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **apply**    | (this: <a href="#function">Function</a>, thisArg: any, argArray?: any) =&gt; any     | Calls the function, substituting the specified object for the this value of the function, and the specified array for the arguments of the function.                                                                     |
-| **call**     | (this: <a href="#function">Function</a>, thisArg: any, ...argArray: any[]) =&gt; any | Calls a method of an object, substituting another object for the current object.                                                                                                                                         |
-| **bind**     | (this: <a href="#function">Function</a>, thisArg: any, ...argArray: any[]) =&gt; any | For a given function, creates a bound function that has the same body as the original function. The this object of the bound function is associated with the specified object, and has the specified initial parameters. |
-| **toString** | () =&gt; string                                                                      | Returns a string representation of a function.                                                                                                                                                                           |
-
-
-#### FunctionDeclaration
-
-| Prop     | Type                                              | Description                                                                                 |
-| -------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **`id`** | <code><a href="#identifier">Identifier</a></code> | It is null when a function declaration is a part of the `export default function` statement |
-
-
-#### Identifier
-
-| Prop       | Type                                                |
-| ---------- | --------------------------------------------------- |
-| **`type`** | <code>'<a href="#identifier">Identifier</a>'</code> |
-| **`name`** | <code>string</code>                                 |
-
-
-#### FunctionExpression
-
-| Prop       | Type                                                                |
-| ---------- | ------------------------------------------------------------------- |
-| **`id`**   | <code><a href="#identifier">Identifier</a> \| null</code>           |
-| **`type`** | <code>'<a href="#functionexpression">FunctionExpression</a>'</code> |
-| **`body`** | <code><a href="#blockstatement">BlockStatement</a></code>           |
-
-
-#### BlockStatement
-
-| Prop                | Type                                                        |
-| ------------------- | ----------------------------------------------------------- |
-| **`type`**          | <code>'<a href="#blockstatement">BlockStatement</a>'</code> |
-| **`body`**          | <code>Statement[]</code>                                    |
-| **`innerComments`** | <code>Comment[]</code>                                      |
-
-
-#### ExpressionStatement
-
-| Prop             | Type                                                                  |
-| ---------------- | --------------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#expressionstatement">ExpressionStatement</a>'</code> |
-| **`expression`** | <code><a href="#expression">Expression</a></code>                     |
-
-
-#### ExpressionMap
-
-| Prop                           | Type                                                                          |
-| ------------------------------ | ----------------------------------------------------------------------------- |
-| **`ArrayExpression`**          | <code><a href="#arrayexpression">ArrayExpression</a></code>                   |
-| **`ArrowFunctionExpression`**  | <code><a href="#arrowfunctionexpression">ArrowFunctionExpression</a></code>   |
-| **`AssignmentExpression`**     | <code><a href="#assignmentexpression">AssignmentExpression</a></code>         |
-| **`AwaitExpression`**          | <code><a href="#awaitexpression">AwaitExpression</a></code>                   |
-| **`BinaryExpression`**         | <code><a href="#binaryexpression">BinaryExpression</a></code>                 |
-| **`CallExpression`**           | <code><a href="#callexpression">CallExpression</a></code>                     |
-| **`ChainExpression`**          | <code><a href="#chainexpression">ChainExpression</a></code>                   |
-| **`ClassExpression`**          | <code><a href="#classexpression">ClassExpression</a></code>                   |
-| **`ConditionalExpression`**    | <code><a href="#conditionalexpression">ConditionalExpression</a></code>       |
-| **`FunctionExpression`**       | <code><a href="#functionexpression">FunctionExpression</a></code>             |
-| **`Identifier`**               | <code><a href="#identifier">Identifier</a></code>                             |
-| **`ImportExpression`**         | <code><a href="#importexpression">ImportExpression</a></code>                 |
-| **`Literal`**                  | <code><a href="#literal">Literal</a></code>                                   |
-| **`LogicalExpression`**        | <code><a href="#logicalexpression">LogicalExpression</a></code>               |
-| **`MemberExpression`**         | <code><a href="#memberexpression">MemberExpression</a></code>                 |
-| **`MetaProperty`**             | <code><a href="#metaproperty">MetaProperty</a></code>                         |
-| **`NewExpression`**            | <code><a href="#newexpression">NewExpression</a></code>                       |
-| **`ObjectExpression`**         | <code><a href="#objectexpression">ObjectExpression</a></code>                 |
-| **`SequenceExpression`**       | <code><a href="#sequenceexpression">SequenceExpression</a></code>             |
-| **`TaggedTemplateExpression`** | <code><a href="#taggedtemplateexpression">TaggedTemplateExpression</a></code> |
-| **`TemplateLiteral`**          | <code><a href="#templateliteral">TemplateLiteral</a></code>                   |
-| **`ThisExpression`**           | <code><a href="#thisexpression">ThisExpression</a></code>                     |
-| **`UnaryExpression`**          | <code><a href="#unaryexpression">UnaryExpression</a></code>                   |
-| **`UpdateExpression`**         | <code><a href="#updateexpression">UpdateExpression</a></code>                 |
-| **`YieldExpression`**          | <code><a href="#yieldexpression">YieldExpression</a></code>                   |
-
-
-#### ArrayExpression
-
-| Prop           | Type                                                                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#arrayexpression">ArrayExpression</a>'</code>                                                                             |
-| **`elements`** | <code><a href="#array">Array</a>&lt;<a href="#expression">Expression</a> \| <a href="#spreadelement">SpreadElement</a> \| null&gt;</code> |
-
-
-#### Array
-
-| Prop         | Type                | Description                                                                                            |
-| ------------ | ------------------- | ------------------------------------------------------------------------------------------------------ |
-| **`length`** | <code>number</code> | Gets or sets the length of the array. This is a number one higher than the highest index in the array. |
-
-| Method             | Signature                                                                                                                     | Description                                                                                                                                                                                                                                 |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **toString**       | () =&gt; string                                                                                                               | Returns a string representation of an array.                                                                                                                                                                                                |
-| **toLocaleString** | () =&gt; string                                                                                                               | Returns a string representation of an array. The elements are converted to string using their toLocalString methods.                                                                                                                        |
-| **pop**            | () =&gt; T \| undefined                                                                                                       | Removes the last element from an array and returns it. If the array is empty, undefined is returned and the array is not modified.                                                                                                          |
-| **push**           | (...items: T[]) =&gt; number                                                                                                  | Appends new elements to the end of an array, and returns the new length of the array.                                                                                                                                                       |
-| **concat**         | (...items: <a href="#concatarray">ConcatArray</a>&lt;T&gt;[]) =&gt; T[]                                                       | Combines two or more arrays. This method returns a new array without modifying any existing arrays.                                                                                                                                         |
-| **concat**         | (...items: (T \| <a href="#concatarray">ConcatArray</a>&lt;T&gt;)[]) =&gt; T[]                                                | Combines two or more arrays. This method returns a new array without modifying any existing arrays.                                                                                                                                         |
-| **join**           | (separator?: string \| undefined) =&gt; string                                                                                | Adds all the elements of an array into a string, separated by the specified separator string.                                                                                                                                               |
-| **reverse**        | () =&gt; T[]                                                                                                                  | Reverses the elements in an array in place. This method mutates the array and returns a reference to the same array.                                                                                                                        |
-| **shift**          | () =&gt; T \| undefined                                                                                                       | Removes the first element from an array and returns it. If the array is empty, undefined is returned and the array is not modified.                                                                                                         |
-| **slice**          | (start?: number \| undefined, end?: number \| undefined) =&gt; T[]                                                            | Returns a copy of a section of an array. For both start and end, a negative index can be used to indicate an offset from the end of the array. For example, -2 refers to the second to last element of the array.                           |
-| **sort**           | (compareFn?: ((a: T, b: T) =&gt; number) \| undefined) =&gt; this                                                             | Sorts an array in place. This method mutates the array and returns a reference to the same array.                                                                                                                                           |
-| **splice**         | (start: number, deleteCount?: number \| undefined) =&gt; T[]                                                                  | Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.                                                                                                                      |
-| **splice**         | (start: number, deleteCount: number, ...items: T[]) =&gt; T[]                                                                 | Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.                                                                                                                      |
-| **unshift**        | (...items: T[]) =&gt; number                                                                                                  | Inserts new elements at the start of an array, and returns the new length of the array.                                                                                                                                                     |
-| **indexOf**        | (searchElement: T, fromIndex?: number \| undefined) =&gt; number                                                              | Returns the index of the first occurrence of a value in an array, or -1 if it is not present.                                                                                                                                               |
-| **lastIndexOf**    | (searchElement: T, fromIndex?: number \| undefined) =&gt; number                                                              | Returns the index of the last occurrence of a specified value in an array, or -1 if it is not present.                                                                                                                                      |
-| **every**          | &lt;S extends T&gt;(predicate: (value: T, index: number, array: T[]) =&gt; value is S, thisArg?: any) =&gt; this is S[]       | Determines whether all the members of an array satisfy the specified test.                                                                                                                                                                  |
-| **every**          | (predicate: (value: T, index: number, array: T[]) =&gt; unknown, thisArg?: any) =&gt; boolean                                 | Determines whether all the members of an array satisfy the specified test.                                                                                                                                                                  |
-| **some**           | (predicate: (value: T, index: number, array: T[]) =&gt; unknown, thisArg?: any) =&gt; boolean                                 | Determines whether the specified callback function returns true for any element of an array.                                                                                                                                                |
-| **forEach**        | (callbackfn: (value: T, index: number, array: T[]) =&gt; void, thisArg?: any) =&gt; void                                      | Performs the specified action for each element in an array.                                                                                                                                                                                 |
-| **map**            | &lt;U&gt;(callbackfn: (value: T, index: number, array: T[]) =&gt; U, thisArg?: any) =&gt; U[]                                 | Calls a defined callback function on each element of an array, and returns an array that contains the results.                                                                                                                              |
-| **filter**         | &lt;S extends T&gt;(predicate: (value: T, index: number, array: T[]) =&gt; value is S, thisArg?: any) =&gt; S[]               | Returns the elements of an array that meet the condition specified in a callback function.                                                                                                                                                  |
-| **filter**         | (predicate: (value: T, index: number, array: T[]) =&gt; unknown, thisArg?: any) =&gt; T[]                                     | Returns the elements of an array that meet the condition specified in a callback function.                                                                                                                                                  |
-| **reduce**         | (callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) =&gt; T) =&gt; T                           | Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.                      |
-| **reduce**         | (callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) =&gt; T, initialValue: T) =&gt; T          |                                                                                                                                                                                                                                             |
-| **reduce**         | &lt;U&gt;(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) =&gt; U, initialValue: U) =&gt; U | Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.                      |
-| **reduceRight**    | (callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) =&gt; T) =&gt; T                           | Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function. |
-| **reduceRight**    | (callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) =&gt; T, initialValue: T) =&gt; T          |                                                                                                                                                                                                                                             |
-| **reduceRight**    | &lt;U&gt;(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) =&gt; U, initialValue: U) =&gt; U | Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function. |
-
-
-#### ConcatArray
-
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`length`** | <code>number</code> |
-
-| Method    | Signature                                                          |
-| --------- | ------------------------------------------------------------------ |
-| **join**  | (separator?: string \| undefined) =&gt; string                     |
-| **slice** | (start?: number \| undefined, end?: number \| undefined) =&gt; T[] |
-
-
-#### SpreadElement
-
-| Prop           | Type                                                      |
-| -------------- | --------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#spreadelement">SpreadElement</a>'</code> |
-| **`argument`** | <code><a href="#expression">Expression</a></code>         |
-
-
-#### ArrowFunctionExpression
-
-| Prop             | Type                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#arrowfunctionexpression">ArrowFunctionExpression</a>'</code>                     |
-| **`expression`** | <code>boolean</code>                                                                              |
-| **`body`**       | <code><a href="#expression">Expression</a> \| <a href="#blockstatement">BlockStatement</a></code> |
-
-
-#### AssignmentExpression
-
-| Prop           | Type                                                                    |
-| -------------- | ----------------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#assignmentexpression">AssignmentExpression</a>'</code> |
-| **`operator`** | <code><a href="#assignmentoperator">AssignmentOperator</a></code>       |
-| **`left`**     | <code><a href="#pattern">Pattern</a></code>                             |
-| **`right`**    | <code><a href="#expression">Expression</a></code>                       |
-
-
-#### ObjectPattern
-
-| Prop             | Type                                                                                                                                          |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#objectpattern">ObjectPattern</a>'</code>                                                                                     |
-| **`properties`** | <code><a href="#array">Array</a>&lt;<a href="#assignmentproperty">AssignmentProperty</a> \| <a href="#restelement">RestElement</a>&gt;</code> |
-
-
-#### AssignmentProperty
-
-| Prop         | Type                                        |
-| ------------ | ------------------------------------------- |
-| **`value`**  | <code><a href="#pattern">Pattern</a></code> |
-| **`kind`**   | <code>'init'</code>                         |
-| **`method`** | <code>boolean</code>                        |
-
-
-#### RestElement
-
-| Prop           | Type                                                  |
-| -------------- | ----------------------------------------------------- |
-| **`type`**     | <code>'<a href="#restelement">RestElement</a>'</code> |
-| **`argument`** | <code><a href="#pattern">Pattern</a></code>           |
-
-
-#### ArrayPattern
-
-| Prop           | Type                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#arraypattern">ArrayPattern</a>'</code>                               |
-| **`elements`** | <code><a href="#array">Array</a>&lt;<a href="#pattern">Pattern</a> \| null&gt;</code> |
-
-
-#### AssignmentPattern
-
-| Prop        | Type                                                              |
-| ----------- | ----------------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#assignmentpattern">AssignmentPattern</a>'</code> |
-| **`left`**  | <code><a href="#pattern">Pattern</a></code>                       |
-| **`right`** | <code><a href="#expression">Expression</a></code>                 |
-
-
-#### MemberExpression
-
-| Prop           | Type                                                                                                    |
-| -------------- | ------------------------------------------------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#memberexpression">MemberExpression</a>'</code>                                         |
-| **`object`**   | <code><a href="#expression">Expression</a> \| <a href="#super">Super</a></code>                         |
-| **`property`** | <code><a href="#expression">Expression</a> \| <a href="#privateidentifier">PrivateIdentifier</a></code> |
-| **`computed`** | <code>boolean</code>                                                                                    |
-| **`optional`** | <code>boolean</code>                                                                                    |
-
-
-#### Super
-
-| Prop       | Type                                      |
-| ---------- | ----------------------------------------- |
-| **`type`** | <code>'<a href="#super">Super</a>'</code> |
-
-
-#### PrivateIdentifier
-
-| Prop       | Type                                                              |
-| ---------- | ----------------------------------------------------------------- |
-| **`type`** | <code>'<a href="#privateidentifier">PrivateIdentifier</a>'</code> |
-| **`name`** | <code>string</code>                                               |
-
-
-#### AwaitExpression
-
-| Prop           | Type                                                          |
-| -------------- | ------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#awaitexpression">AwaitExpression</a>'</code> |
-| **`argument`** | <code><a href="#expression">Expression</a></code>             |
-
-
-#### BinaryExpression
-
-| Prop           | Type                                                                                                    |
-| -------------- | ------------------------------------------------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#binaryexpression">BinaryExpression</a>'</code>                                         |
-| **`operator`** | <code><a href="#binaryoperator">BinaryOperator</a></code>                                               |
-| **`left`**     | <code><a href="#expression">Expression</a> \| <a href="#privateidentifier">PrivateIdentifier</a></code> |
-| **`right`**    | <code><a href="#expression">Expression</a></code>                                                       |
-
-
-#### SimpleCallExpression
-
-| Prop           | Type                                                        |
-| -------------- | ----------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#callexpression">CallExpression</a>'</code> |
-| **`optional`** | <code>boolean</code>                                        |
-
-
-#### NewExpression
-
-| Prop       | Type                                                      |
-| ---------- | --------------------------------------------------------- |
-| **`type`** | <code>'<a href="#newexpression">NewExpression</a>'</code> |
-
-
-#### ChainExpression
-
-| Prop             | Type                                                          |
-| ---------------- | ------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#chainexpression">ChainExpression</a>'</code> |
-| **`expression`** | <code><a href="#chainelement">ChainElement</a></code>         |
-
-
-#### ClassExpression
-
-| Prop       | Type                                                          |
-| ---------- | ------------------------------------------------------------- |
-| **`type`** | <code>'<a href="#classexpression">ClassExpression</a>'</code> |
-| **`id`**   | <code><a href="#identifier">Identifier</a> \| null</code>     |
-
-
-#### ConditionalExpression
-
-| Prop             | Type                                                                      |
-| ---------------- | ------------------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#conditionalexpression">ConditionalExpression</a>'</code> |
-| **`test`**       | <code><a href="#expression">Expression</a></code>                         |
-| **`alternate`**  | <code><a href="#expression">Expression</a></code>                         |
-| **`consequent`** | <code><a href="#expression">Expression</a></code>                         |
-
-
-#### ImportExpression
-
-| Prop          | Type                                                            |
-| ------------- | --------------------------------------------------------------- |
-| **`type`**    | <code>'<a href="#importexpression">ImportExpression</a>'</code> |
-| **`source`**  | <code><a href="#expression">Expression</a></code>               |
-| **`options`** | <code><a href="#expression">Expression</a> \| null</code>       |
-
-
-#### SimpleLiteral
-
-| Prop        | Type                                             |
-| ----------- | ------------------------------------------------ |
-| **`type`**  | <code>'<a href="#literal">Literal</a>'</code>    |
-| **`value`** | <code>string \| number \| boolean \| null</code> |
-| **`raw`**   | <code>string</code>                              |
-
-
-#### RegExpLiteral
-
-| Prop        | Type                                              |
-| ----------- | ------------------------------------------------- |
-| **`type`**  | <code>'<a href="#literal">Literal</a>'</code>     |
-| **`value`** | <code><a href="#regexp">RegExp</a> \| null</code> |
-| **`regex`** | <code>{ pattern: string; flags: string; }</code>  |
-| **`raw`**   | <code>string</code>                               |
-
-
-#### RegExp
-
-| Prop             | Type                 | Description                                                                                                                                                          |
-| ---------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`source`**     | <code>string</code>  | Returns a copy of the text of the regular expression pattern. Read-only. The regExp argument is a Regular expression object. It can be a variable name or a literal. |
-| **`global`**     | <code>boolean</code> | Returns a <a href="#boolean">Boolean</a> value indicating the state of the global flag (g) used with a regular expression. Default is false. Read-only.              |
-| **`ignoreCase`** | <code>boolean</code> | Returns a <a href="#boolean">Boolean</a> value indicating the state of the ignoreCase flag (i) used with a regular expression. Default is false. Read-only.          |
-| **`multiline`**  | <code>boolean</code> | Returns a <a href="#boolean">Boolean</a> value indicating the state of the multiline flag (m) used with a regular expression. Default is false. Read-only.           |
-| **`lastIndex`**  | <code>number</code>  |                                                                                                                                                                      |
-
-| Method      | Signature                                                                     | Description                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **exec**    | (string: string) =&gt; <a href="#regexpexecarray">RegExpExecArray</a> \| null | Executes a search on a string using a regular expression pattern, and returns an array containing the results of that search. |
-| **test**    | (string: string) =&gt; boolean                                                | Returns a <a href="#boolean">Boolean</a> value that indicates whether or not a pattern exists in a searched string.           |
-| **compile** | () =&gt; this                                                                 |                                                                                                                               |
-
-
-#### RegExpExecArray
-
-| Prop        | Type                |
-| ----------- | ------------------- |
-| **`index`** | <code>number</code> |
-| **`input`** | <code>string</code> |
-
-
-#### BigIntLiteral
-
-| Prop         | Type                                          |
-| ------------ | --------------------------------------------- |
-| **`type`**   | <code>'<a href="#literal">Literal</a>'</code> |
-| **`value`**  | <code>bigint \| null</code>                   |
-| **`bigint`** | <code>string</code>                           |
-| **`raw`**    | <code>string</code>                           |
-
-
-#### LogicalExpression
-
-| Prop           | Type                                                              |
-| -------------- | ----------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#logicalexpression">LogicalExpression</a>'</code> |
-| **`operator`** | <code><a href="#logicaloperator">LogicalOperator</a></code>       |
-| **`left`**     | <code><a href="#expression">Expression</a></code>                 |
-| **`right`**    | <code><a href="#expression">Expression</a></code>                 |
-
-
-#### MetaProperty
-
-| Prop           | Type                                                    |
-| -------------- | ------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#metaproperty">MetaProperty</a>'</code> |
-| **`meta`**     | <code><a href="#identifier">Identifier</a></code>       |
-| **`property`** | <code><a href="#identifier">Identifier</a></code>       |
-
-
-#### ObjectExpression
-
-| Prop             | Type                                                                                                                          |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#objectexpression">ObjectExpression</a>'</code>                                                               |
-| **`properties`** | <code><a href="#array">Array</a>&lt;<a href="#property">Property</a> \| <a href="#spreadelement">SpreadElement</a>&gt;</code> |
-
-
-#### Property
-
-| Prop            | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`type`**      | <code>'<a href="#property">Property</a>'</code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| **`key`**       | <code><a href="#expression">Expression</a> \| <a href="#privateidentifier">PrivateIdentifier</a></code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| **`value`**     | <code><a href="#classexpression">ClassExpression</a> \| <a href="#arrayexpression">ArrayExpression</a> \| <a href="#arrowfunctionexpression">ArrowFunctionExpression</a> \| <a href="#assignmentexpression">AssignmentExpression</a> \| <a href="#awaitexpression">AwaitExpression</a> \| <a href="#binaryexpression">BinaryExpression</a> \| <a href="#simplecallexpression">SimpleCallExpression</a> \| <a href="#newexpression">NewExpression</a> \| <a href="#chainexpression">ChainExpression</a> \| <a href="#conditionalexpression">ConditionalExpression</a> \| <a href="#functionexpression">FunctionExpression</a> \| <a href="#identifier">Identifier</a> \| <a href="#importexpression">ImportExpression</a> \| <a href="#simpleliteral">SimpleLiteral</a> \| <a href="#regexpliteral">RegExpLiteral</a> \| <a href="#bigintliteral">BigIntLiteral</a> \| <a href="#logicalexpression">LogicalExpression</a> \| <a href="#memberexpression">MemberExpression</a> \| <a href="#metaproperty">MetaProperty</a> \| <a href="#objectexpression">ObjectExpression</a> \| <a href="#sequenceexpression">SequenceExpression</a> \| <a href="#taggedtemplateexpression">TaggedTemplateExpression</a> \| <a href="#templateliteral">TemplateLiteral</a> \| <a href="#thisexpression">ThisExpression</a> \| <a href="#unaryexpression">UnaryExpression</a> \| <a href="#updateexpression">UpdateExpression</a> \| <a href="#yieldexpression">YieldExpression</a> \| <a href="#objectpattern">ObjectPattern</a> \| <a href="#arraypattern">ArrayPattern</a> \| <a href="#restelement">RestElement</a> \| <a href="#assignmentpattern">AssignmentPattern</a></code> |
-| **`kind`**      | <code>'init' \| 'get' \| 'set'</code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| **`method`**    | <code>boolean</code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| **`shorthand`** | <code>boolean</code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| **`computed`**  | <code>boolean</code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-
-
-#### SequenceExpression
-
-| Prop              | Type                                                                |
-| ----------------- | ------------------------------------------------------------------- |
-| **`type`**        | <code>'<a href="#sequenceexpression">SequenceExpression</a>'</code> |
-| **`expressions`** | <code>Expression[]</code>                                           |
-
-
-#### TaggedTemplateExpression
-
-| Prop        | Type                                                                            |
-| ----------- | ------------------------------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#taggedtemplateexpression">TaggedTemplateExpression</a>'</code> |
-| **`tag`**   | <code><a href="#expression">Expression</a></code>                               |
-| **`quasi`** | <code><a href="#templateliteral">TemplateLiteral</a></code>                     |
-
-
-#### TemplateLiteral
-
-| Prop              | Type                                                          |
-| ----------------- | ------------------------------------------------------------- |
-| **`type`**        | <code>'<a href="#templateliteral">TemplateLiteral</a>'</code> |
-| **`quasis`**      | <code>TemplateElement[]</code>                                |
-| **`expressions`** | <code>Expression[]</code>                                     |
-
-
-#### TemplateElement
-
-| Prop        | Type                                                          |
-| ----------- | ------------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#templateelement">TemplateElement</a>'</code> |
-| **`tail`**  | <code>boolean</code>                                          |
-| **`value`** | <code>{ cooked?: string \| null; raw: string; }</code>        |
-
-
-#### ThisExpression
-
-| Prop       | Type                                                        |
-| ---------- | ----------------------------------------------------------- |
-| **`type`** | <code>'<a href="#thisexpression">ThisExpression</a>'</code> |
-
-
-#### UnaryExpression
-
-| Prop           | Type                                                          |
-| -------------- | ------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#unaryexpression">UnaryExpression</a>'</code> |
-| **`operator`** | <code><a href="#unaryoperator">UnaryOperator</a></code>       |
-| **`prefix`**   | <code>true</code>                                             |
-| **`argument`** | <code><a href="#expression">Expression</a></code>             |
-
-
-#### UpdateExpression
-
-| Prop           | Type                                                            |
-| -------------- | --------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#updateexpression">UpdateExpression</a>'</code> |
-| **`operator`** | <code><a href="#updateoperator">UpdateOperator</a></code>       |
-| **`argument`** | <code><a href="#expression">Expression</a></code>               |
-| **`prefix`**   | <code>boolean</code>                                            |
-
-
-#### YieldExpression
-
-| Prop           | Type                                                          |
-| -------------- | ------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#yieldexpression">YieldExpression</a>'</code> |
-| **`argument`** | <code><a href="#expression">Expression</a> \| null</code>     |
-| **`delegate`** | <code>boolean</code>                                          |
-
-
-#### StaticBlock
-
-| Prop       | Type                                                  |
-| ---------- | ----------------------------------------------------- |
-| **`type`** | <code>'<a href="#staticblock">StaticBlock</a>'</code> |
-
-
-#### EmptyStatement
-
-| Prop       | Type                                                        |
-| ---------- | ----------------------------------------------------------- |
-| **`type`** | <code>'<a href="#emptystatement">EmptyStatement</a>'</code> |
-
-
-#### DebuggerStatement
-
-| Prop       | Type                                                              |
-| ---------- | ----------------------------------------------------------------- |
-| **`type`** | <code>'<a href="#debuggerstatement">DebuggerStatement</a>'</code> |
-
-
-#### WithStatement
-
-| Prop         | Type                                                      |
-| ------------ | --------------------------------------------------------- |
-| **`type`**   | <code>'<a href="#withstatement">WithStatement</a>'</code> |
-| **`object`** | <code><a href="#expression">Expression</a></code>         |
-| **`body`**   | <code><a href="#statement">Statement</a></code>           |
-
-
-#### ReturnStatement
-
-| Prop           | Type                                                          |
-| -------------- | ------------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#returnstatement">ReturnStatement</a>'</code> |
-| **`argument`** | <code><a href="#expression">Expression</a> \| null</code>     |
-
-
-#### LabeledStatement
-
-| Prop        | Type                                                            |
-| ----------- | --------------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#labeledstatement">LabeledStatement</a>'</code> |
-| **`label`** | <code><a href="#identifier">Identifier</a></code>               |
-| **`body`**  | <code><a href="#statement">Statement</a></code>                 |
-
-
-#### BreakStatement
-
-| Prop        | Type                                                        |
-| ----------- | ----------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#breakstatement">BreakStatement</a>'</code> |
-| **`label`** | <code><a href="#identifier">Identifier</a> \| null</code>   |
-
-
-#### ContinueStatement
-
-| Prop        | Type                                                              |
-| ----------- | ----------------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#continuestatement">ContinueStatement</a>'</code> |
-| **`label`** | <code><a href="#identifier">Identifier</a> \| null</code>         |
-
-
-#### IfStatement
-
-| Prop             | Type                                                    |
-| ---------------- | ------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#ifstatement">IfStatement</a>'</code>   |
-| **`test`**       | <code><a href="#expression">Expression</a></code>       |
-| **`consequent`** | <code><a href="#statement">Statement</a></code>         |
-| **`alternate`**  | <code><a href="#statement">Statement</a> \| null</code> |
-
-
-#### SwitchStatement
-
-| Prop               | Type                                                          |
-| ------------------ | ------------------------------------------------------------- |
-| **`type`**         | <code>'<a href="#switchstatement">SwitchStatement</a>'</code> |
-| **`discriminant`** | <code><a href="#expression">Expression</a></code>             |
-| **`cases`**        | <code>SwitchCase[]</code>                                     |
-
-
-#### SwitchCase
-
-| Prop             | Type                                                      |
-| ---------------- | --------------------------------------------------------- |
-| **`type`**       | <code>'<a href="#switchcase">SwitchCase</a>'</code>       |
-| **`test`**       | <code><a href="#expression">Expression</a> \| null</code> |
-| **`consequent`** | <code>Statement[]</code>                                  |
-
-
-#### ThrowStatement
-
-| Prop           | Type                                                        |
-| -------------- | ----------------------------------------------------------- |
-| **`type`**     | <code>'<a href="#throwstatement">ThrowStatement</a>'</code> |
-| **`argument`** | <code><a href="#expression">Expression</a></code>           |
-
-
-#### TryStatement
-
-| Prop            | Type                                                              |
-| --------------- | ----------------------------------------------------------------- |
-| **`type`**      | <code>'<a href="#trystatement">TryStatement</a>'</code>           |
-| **`block`**     | <code><a href="#blockstatement">BlockStatement</a></code>         |
-| **`handler`**   | <code><a href="#catchclause">CatchClause</a> \| null</code>       |
-| **`finalizer`** | <code><a href="#blockstatement">BlockStatement</a> \| null</code> |
-
-
-#### CatchClause
-
-| Prop        | Type                                                      |
-| ----------- | --------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#catchclause">CatchClause</a>'</code>     |
-| **`param`** | <code><a href="#pattern">Pattern</a> \| null</code>       |
-| **`body`**  | <code><a href="#blockstatement">BlockStatement</a></code> |
-
-
-#### WhileStatement
-
-| Prop       | Type                                                        |
-| ---------- | ----------------------------------------------------------- |
-| **`type`** | <code>'<a href="#whilestatement">WhileStatement</a>'</code> |
-| **`test`** | <code><a href="#expression">Expression</a></code>           |
-| **`body`** | <code><a href="#statement">Statement</a></code>             |
-
-
-#### DoWhileStatement
-
-| Prop       | Type                                                            |
-| ---------- | --------------------------------------------------------------- |
-| **`type`** | <code>'<a href="#dowhilestatement">DoWhileStatement</a>'</code> |
-| **`body`** | <code><a href="#statement">Statement</a></code>                 |
-| **`test`** | <code><a href="#expression">Expression</a></code>               |
-
-
-#### ForStatement
-
-| Prop         | Type                                                                                                                |
-| ------------ | ------------------------------------------------------------------------------------------------------------------- |
-| **`type`**   | <code>'<a href="#forstatement">ForStatement</a>'</code>                                                             |
-| **`init`**   | <code><a href="#expression">Expression</a> \| <a href="#variabledeclaration">VariableDeclaration</a> \| null</code> |
-| **`test`**   | <code><a href="#expression">Expression</a> \| null</code>                                                           |
-| **`update`** | <code><a href="#expression">Expression</a> \| null</code>                                                           |
-| **`body`**   | <code><a href="#statement">Statement</a></code>                                                                     |
-
-
-#### VariableDeclaration
-
-| Prop               | Type                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| **`type`**         | <code>'<a href="#variabledeclaration">VariableDeclaration</a>'</code> |
-| **`declarations`** | <code>VariableDeclarator[]</code>                                     |
-| **`kind`**         | <code>'var' \| 'let' \| 'const' \| 'using' \| 'await using'</code>    |
-
-
-#### VariableDeclarator
-
-| Prop       | Type                                                                |
-| ---------- | ------------------------------------------------------------------- |
-| **`type`** | <code>'<a href="#variabledeclarator">VariableDeclarator</a>'</code> |
-| **`id`**   | <code><a href="#pattern">Pattern</a></code>                         |
-| **`init`** | <code><a href="#expression">Expression</a> \| null</code>           |
-
-
-#### ForInStatement
-
-| Prop       | Type                                                        |
-| ---------- | ----------------------------------------------------------- |
-| **`type`** | <code>'<a href="#forinstatement">ForInStatement</a>'</code> |
-
-
-#### ForOfStatement
-
-| Prop        | Type                                                        |
-| ----------- | ----------------------------------------------------------- |
-| **`type`**  | <code>'<a href="#forofstatement">ForOfStatement</a>'</code> |
-| **`await`** | <code>boolean</code>                                        |
-
-
-#### ClassDeclaration
-
-| Prop     | Type                                              | Description                                                                           |
-| -------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **`id`** | <code><a href="#identifier">Identifier</a></code> | It is null when a class declaration is a part of the `export default class` statement |
-
-
-#### Comment
-
-| Prop        | Type                           |
-| ----------- | ------------------------------ |
-| **`type`**  | <code>'Line' \| 'Block'</code> |
-| **`value`** | <code>string</code>            |
+| Prop           | Type                                        | Description                               |
+| -------------- | ------------------------------------------- | ----------------------------------------- |
+| **`date`**     | <code>string</code>                         | ISO-8601 UTC timestamp with milliseconds. |
+| **`priority`** | <code>'ERROR' \| 'WARNING' \| 'INFO'</code> |                                           |
+| **`log`**      | <code>string</code>                         |                                           |
 
 
 #### PluginListenerHandle
@@ -1904,6 +1444,17 @@ Creates a new function.
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
+#### GleapLogConfig
+
+The network log settings of your Gleap project, sent by the native SDK once its config is loaded.
+
+| Prop                          | Type                  |
+| ----------------------------- | --------------------- |
+| **`enableNetworkLogs`**       | <code>boolean</code>  |
+| **`networkLogPropsToIgnore`** | <code>string[]</code> |
+| **`networkLogBlacklist`**     | <code>string[]</code> |
 
 
 #### GleapEventMessage
@@ -1924,74 +1475,13 @@ Creates a new function.
 ### Type Aliases
 
 
-#### PropertyKey
+#### Record
 
-<code>string | number | symbol</code>
+Construct a type with a set of properties K of type T
 
-
-#### Function
-
-<code><a href="#functiondeclaration">FunctionDeclaration</a> | <a href="#functionexpression">FunctionExpression</a> | <a href="#arrowfunctionexpression">ArrowFunctionExpression</a></code>
-
-
-#### Statement
-
-<code><a href="#expressionstatement">ExpressionStatement</a> | <a href="#blockstatement">BlockStatement</a> | <a href="#staticblock">StaticBlock</a> | <a href="#emptystatement">EmptyStatement</a> | <a href="#debuggerstatement">DebuggerStatement</a> | <a href="#withstatement">WithStatement</a> | <a href="#returnstatement">ReturnStatement</a> | <a href="#labeledstatement">LabeledStatement</a> | <a href="#breakstatement">BreakStatement</a> | <a href="#continuestatement">ContinueStatement</a> | <a href="#ifstatement">IfStatement</a> | <a href="#switchstatement">SwitchStatement</a> | <a href="#throwstatement">ThrowStatement</a> | <a href="#trystatement">TryStatement</a> | <a href="#whilestatement">WhileStatement</a> | <a href="#dowhilestatement">DoWhileStatement</a> | <a href="#forstatement">ForStatement</a> | <a href="#forinstatement">ForInStatement</a> | <a href="#forofstatement">ForOfStatement</a> | <a href="#declaration">Declaration</a></code>
-
-
-#### Expression
-
-<code>ExpressionMap[keyof ExpressionMap]</code>
-
-
-#### AssignmentOperator
-
-<code>"=" | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "&lt;&lt;=" | "&gt;&gt;=" | "&gt;&gt;&gt;=" | "|=" | "^=" | "&=" | "||=" | "&&=" | "??="</code>
-
-
-#### Pattern
-
-<code><a href="#identifier">Identifier</a> | <a href="#objectpattern">ObjectPattern</a> | <a href="#arraypattern">ArrayPattern</a> | <a href="#restelement">RestElement</a> | <a href="#assignmentpattern">AssignmentPattern</a> | <a href="#memberexpression">MemberExpression</a></code>
-
-
-#### BinaryOperator
-
-<code>"==" | "!=" | "===" | "!==" | "&lt;" | "&lt;=" | "&gt;" | "&gt;=" | "&lt;&lt;" | "&gt;&gt;" | "&gt;&gt;&gt;" | "+" | "-" | "*" | "/" | "%" | "**" | "|" | "^" | "&" | "in" | "instanceof"</code>
-
-
-#### CallExpression
-
-<code><a href="#simplecallexpression">SimpleCallExpression</a> | <a href="#newexpression">NewExpression</a></code>
-
-
-#### ChainElement
-
-<code><a href="#simplecallexpression">SimpleCallExpression</a> | <a href="#memberexpression">MemberExpression</a></code>
-
-
-#### Literal
-
-<code><a href="#simpleliteral">SimpleLiteral</a> | <a href="#regexpliteral">RegExpLiteral</a> | <a href="#bigintliteral">BigIntLiteral</a></code>
-
-
-#### LogicalOperator
-
-<code>"||" | "&&" | "??"</code>
-
-
-#### UnaryOperator
-
-<code>"-" | "+" | "!" | "~" | "typeof" | "void" | "delete"</code>
-
-
-#### UpdateOperator
-
-<code>"++" | "--"</code>
-
-
-#### Declaration
-
-<code><a href="#functiondeclaration">FunctionDeclaration</a> | <a href="#variabledeclaration">VariableDeclaration</a> | <a href="#classdeclaration">ClassDeclaration</a></code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### GleapEventCallback

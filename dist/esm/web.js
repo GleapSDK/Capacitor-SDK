@@ -160,6 +160,10 @@ export class GleapWeb extends WebPlugin {
         Gleap.openConversations(options.showBackButton);
         return { conversationsOpened: true };
     }
+    async openConversations(options) {
+        Gleap.openConversations(options.showBackButton);
+        return { conversationsOpened: true };
+    }
     async showSurvey(options) {
         Gleap.showSurvey(options.surveyId, options.format);
         return { opened: true };
@@ -177,6 +181,16 @@ export class GleapWeb extends WebPlugin {
         var _a;
         Gleap.setDisableEnvData((_a = options.disableEnvData) !== null && _a !== void 0 ? _a : false);
         return { envDataDisabled: true };
+    }
+    async setColorScheme(options) {
+        if (!(options === null || options === void 0 ? void 0 : options.colorScheme)) {
+            throw new Error('No colorScheme provided');
+        }
+        Gleap.setColorScheme(options.colorScheme, {
+            lightBackgroundColor: options.lightBackgroundColor,
+            darkBackgroundColor: options.darkBackgroundColor,
+        });
+        return { colorScheme: options.colorScheme };
     }
     async identify(options) {
         var userData = {
@@ -210,6 +224,14 @@ export class GleapWeb extends WebPlugin {
     async setNetworkLogPropsToIgnore(options) {
         Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
         return { propsToIgnoreSet: true };
+    }
+    async attachNetworkLogs() {
+        // The JavaScript SDK records the page's requests itself on web.
+        return { networkLogsAttached: false };
+    }
+    async attachConsoleLogs() {
+        // The JavaScript SDK records the page's console itself on web.
+        return { consoleLogsAttached: false };
     }
     async setEnvDataPropsToIgnore(options) {
         Gleap.setEnvDataPropsToIgnore(options.propsToIgnore);
@@ -289,6 +311,18 @@ export class GleapWeb extends WebPlugin {
     async open() {
         Gleap.open();
         return { openedWidget: true };
+    }
+    async openChecklists(options) {
+        Gleap.openChecklists(options.showBackButton);
+        return { opened: true };
+    }
+    async openChecklist(options) {
+        Gleap.openChecklist(options.checklistId, options.showBackButton);
+        return { opened: true };
+    }
+    async startChecklist(options) {
+        Gleap.startChecklist(options.outboundId, options.showBackButton);
+        return { opened: true };
     }
     async openFeatureRequests(options) {
         Gleap.openFeatureRequests(options.showBackButton);

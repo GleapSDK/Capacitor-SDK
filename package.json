@@ -1,7 +1,7 @@
 {
   "homepage": "https://www.gleap.ai",
   "name": "capacitor-gleap-plugin",
-  "version": "18.1.0",
+  "version": "19.0.0",
   "description": "Gleap SDK for Capacitor and Ionic: AI customer support, live chat, in-app bug reporting and customer feedback.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -11,7 +11,8 @@
     "android/src/main/",
     "android/build.gradle",
     "dist/",
-    "ios/Plugin/",
+    "ios/Sources",
+    "Package.swift",
     "CapacitorGleapPlugin.podspec"
   ],
   "author": "Gleap GmbH",
@@ -36,9 +37,10 @@
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
-    "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ..",
+    "verify:ios": "xcodebuild build -scheme CapacitorGleapPlugin -destination generic/platform=iOS",
     "verify:android": "cd android && ./gradlew clean build test && cd ..",
     "verify:web": "npm run build",
+    "test": "jest",
     "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
     "eslint": "eslint . --ext ts",
@@ -58,7 +60,10 @@
     "@ionic/eslint-config": "^0.4.0",
     "@ionic/prettier-config": "^4.0.0",
     "@ionic/swiftlint-config": "^2.0.0",
+    "@swc/core": "^1.16.2",
+    "@swc/jest": "^0.2.39",
     "eslint": "^8.57.0",
+    "jest": "^30.5.2",
     "prettier": "^3.4.2",
     "prettier-plugin-java": "^2.6.6",
     "rimraf": "^6.0.1",
@@ -74,6 +79,15 @@
   "eslintConfig": {
     "extends": "@ionic/eslint-config/recommended"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.ts$": "@swc/jest"
+    }
+  },
   "capacitor": {
     "ios": {
       "src": "ios"
@@ -83,6 +97,6 @@
     }
   },
   "dependencies": {
-    "gleap": "^18.1.0"
+    "gleap": "^19.0.0"
   }
 }

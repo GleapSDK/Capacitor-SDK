@@ -246,6 +246,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { conversationsOpened: true };
   }
 
+  async openConversations(options: {
+    showBackButton?: boolean | undefined;
+  }): Promise<{ conversationsOpened: boolean }> {
+    Gleap.openConversations(options.showBackButton);
+
+    return { conversationsOpened: true };
+  }
+
   async showSurvey(options: {
     surveyId: string;
     format?: 'survey' | 'survey_full' | undefined;
@@ -281,10 +289,27 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { envDataDisabled: true };
   }
 
+  async setColorScheme(options: {
+    colorScheme: 'auto' | 'light' | 'dark';
+    lightBackgroundColor?: string;
+    darkBackgroundColor?: string;
+  }): Promise<{ colorScheme: string }> {
+    if (!options?.colorScheme) {
+      throw new Error('No colorScheme provided');
+    }
+
+    Gleap.setColorScheme(options.colorScheme, {
+      lightBackgroundColor: options.lightBackgroundColor,
+      darkBackgroundColor: options.darkBackgroundColor,
+    });
+
+    return { colorScheme: options.colorScheme };
+  }
+
   async identify(options: {
     userId: string;
     userHash?: string | undefined;
-    customData?: Object | undefined;
+    customData?: Record<string, any> | undefined;
     name?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
@@ -326,7 +351,7 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     sla?: number | undefined;
     plan?: string | undefined;
     value?: number | undefined;
-    customData?: Object | undefined;
+    customData?: Record<string, any> | undefined;
   }): Promise<{ identify: boolean }> {
     Gleap.updateContact(options);
 
@@ -347,6 +372,16 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.setNetworkLogPropsToIgnore(options.propsToIgnore);
 
     return { propsToIgnoreSet: true };
+  }
+
+  async attachNetworkLogs(): Promise<{ networkLogsAttached: boolean }> {
+    // The JavaScript SDK records the page's requests itself on web.
+    return { networkLogsAttached: false };
+  }
+
+  async attachConsoleLogs(): Promise<{ consoleLogsAttached: boolean }> {
+    // The JavaScript SDK records the page's console itself on web.
+    return { consoleLogsAttached: false };
   }
 
   async setEnvDataPropsToIgnore(options: {
@@ -519,6 +554,32 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.open();
 
     return { openedWidget: true };
+  }
+
+  async openChecklists(options: {
+    showBackButton?: boolean | undefined;
+  }): Promise<{ opened: boolean }> {
+    Gleap.openChecklists(options.showBackButton);
+
+    return { opened: true };
+  }
+
+  async openChecklist(options: {
+    checklistId: string;
+    showBackButton?: boolean | undefined;
+  }): Promise<{ opened: boolean }> {
+    Gleap.openChecklist(options.checklistId, options.showBackButton);
+
+    return { opened: true };
+  }
+
+  async startChecklist(options: {
+    outboundId: string;
+    showBackButton?: boolean | undefined;
+  }): Promise<{ opened: boolean }> {
+    Gleap.startChecklist(options.outboundId, options.showBackButton);
+
+    return { opened: true };
   }
 
   async openFeatureRequests(options: {

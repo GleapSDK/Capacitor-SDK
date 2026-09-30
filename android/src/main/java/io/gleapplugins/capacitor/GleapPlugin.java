@@ -58,10 +58,49 @@ public class GleapPlugin extends Plugin {
 
     private Gleap implementation;
     private final Map<String, GleapAgentToolResultCallback> pendingAgentToolExecutions = new ConcurrentHashMap<>();
+    // Network log settings from the last loaded config, for the WebView log capture.
+    private volatile JSObject lastLogConfig;
+    // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
+    private volatile boolean webViewConsoleLogsDisabled = false;
 
     @Override
     public void load() {
         implementation = Gleap.getInstance();
+        // The loaded config only feeds the WebView log capture; like on iOS, setEventCallback gets no event for it.
+        implementation.setConfigLoadedCallback(
+            new ConfigLoadedCallback() {
+                @Override
+                public void configLoaded(JSONObject jsonObject) {
+                    notifyLogConfig(jsonObject);
+                }
+            }
+        );
+    }
+
+    /**
+     * Sends the network log settings of the loaded config to the WebView log capture.
+     */
+    private void notifyLogConfig(JSONObject config) {
+        JSObject logConfig = new JSObject();
+        logConfig.put("enableNetworkLogs", config != null && config.optBoolean("enableNetworkLogs", false));
+        logConfig.put("networkLogPropsToIgnore", stringArray(config, "networkLogPropsToIgnore"));
+        logConfig.put("networkLogBlacklist", stringArray(config, "networkLogBlacklist"));
+        lastLogConfig = logConfig;
+        notifyListeners("logConfigLoaded", logConfig, true);
+    }
+
+    private static JSONArray stringArray(JSONObject config, String key) {
+        JSONArray result = new JSONArray();
+        JSONArray values = config != null ? config.optJSONArray(key) : null;
+        if (values != null) {
+            for (int i = 0; i < values.length(); i++) {
+                Object value = values.opt(i);
+                if (value instanceof String) {
+                    result.put(value);
+                }
+            }
+        }
+        return result;
     }
 
     @PluginMethod
@@ -79,6 +118,12 @@ public class GleapPlugin extends Plugin {
 
         // Set the application type
         Gleap.getInstance().setApplicationType(APPLICATIONTYPE.CAPACITOR);
+
+        // A reloaded WebView calls initialize again: hand it the config that was already loaded.
+        JSObject logConfig = lastLogConfig;
+        if (logConfig != null) {
+            notifyListeners("logConfigLoaded", logConfig, true);
+        }
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -244,6 +289,48 @@ public class GleapPlugin extends Plugin {
 
         String userId = call.getString("userId");
         implementation.identifyContact(userId, sessionProperties);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("identify", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void updateContact(PluginCall call) {
+        GleapSessionProperties sessionProperties = new GleapSessionProperties();
+        if (call.getData().has("email")) {
+            sessionProperties.setEmail(call.getString("email"));
+        }
+        if (call.getData().has("name")) {
+            sessionProperties.setName(call.getString("name"));
+        }
+        if (call.getData().has("phone")) {
+            sessionProperties.setPhone(call.getString("phone"));
+        }
+        if (call.getData().has("plan")) {
+            sessionProperties.setPlan(call.getString("plan"));
+        }
+        if (call.getData().has("companyName")) {
+            sessionProperties.setCompanyName(call.getString("companyName"));
+        }
+        if (call.getData().has("avatar")) {
+            sessionProperties.setAvatar(call.getString("avatar"));
+        }
+        if (call.getData().has("sla")) {
+            sessionProperties.setSla(call.getDouble("sla"));
+        }
+        if (call.getData().has("companyId")) {
+            sessionProperties.setCompanyId(call.getString("companyId"));
+        }
+        if (call.getData().has("value")) {
+            sessionProperties.setValue(call.getDouble("value"));
+        }
+        if (call.getData().has("customData")) {
+            sessionProperties.setCustomData(call.getObject("customData"));
+        }
+
+        implementation.updateContact(sessionProperties);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -616,9 +703,9 @@ public class GleapPlugin extends Plugin {
         String message = call.getString("message");
         String logLevel = call.getString("logLevel", "INFO");
         GleapLogLevel logLevelObj = GleapLogLevel.INFO;
-        if (logLevel == "ERROR") {
+        if ("ERROR".equals(logLevel)) {
             logLevelObj = GleapLogLevel.ERROR;
-        } else if (logLevel == "WARNING") {
+        } else if ("WARNING".equals(logLevel)) {
             logLevelObj = GleapLogLevel.WARNING;
         }
 
@@ -674,7 +761,7 @@ public class GleapPlugin extends Plugin {
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("trackedEvent", true);
+        ret.put("loggedEvent", true);
         call.resolve(ret);
     }
 
@@ -774,7 +861,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void setDisableInAppNotifications(PluginCall call) {
-        boolean disableInAppNotifications = call.getBoolean("disableInAppNotifications");
+        boolean disableInAppNotifications = call.getBoolean("disableInAppNotifications", false);
 
         implementation.setDisableInAppNotifications(disableInAppNotifications);
 
@@ -796,9 +883,32 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Sets the color scheme of the widget ("auto", "light" or "dark").
+     *
+     * @since 19.0.0
+     */
+    @PluginMethod
+    public void setColorScheme(PluginCall call) {
+        if (!call.getData().has("colorScheme")) {
+            call.reject("No colorScheme provided");
+            return;
+        }
+
+        String colorScheme = call.getString("colorScheme");
+
+        // Missing colors fall back to the dashboard setting / the SDK defaults
+        implementation.setColorScheme(colorScheme, call.getString("lightBackgroundColor"), call.getString("darkBackgroundColor"));
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("colorScheme", colorScheme);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void showFeedbackButton(PluginCall call) {
-        boolean show = call.getBoolean("show");
+        boolean show = call.getBoolean("show", false);
 
         implementation.showFeedbackButton(show);
 
@@ -820,9 +930,51 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void disableConsoleLogOverwrite(PluginCall call) {
+        // The plugin's JavaScript restores the WebView console; drop what it attached so far.
+        webViewConsoleLogsDisabled = true;
+        implementation.attachConsoleLogs(new JSONArray());
+
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("consoleLogDisabled", true);
+        call.resolve(ret);
+    }
+
+    /**
+     * Network requests made inside the WebView (fetch / XMLHttpRequest), recorded by the plugin's
+     * JavaScript. Each call replaces the previous list; the SDK merges and sanitizes them.
+     *
+     * @since 19.0.0
+     */
+    @PluginMethod
+    public void attachNetworkLogs(PluginCall call) {
+        JSONArray logs = call.getArray("logs", new JSArray());
+        implementation.attachNetworkLogs(logs);
+
+        JSObject ret = new JSObject();
+        ret.put("networkLogsAttached", true);
+        call.resolve(ret);
+    }
+
+    /**
+     * Console output of the WebView, recorded by the plugin's JavaScript. Each call replaces the
+     * previous list.
+     *
+     * @since 19.0.0
+     */
+    @PluginMethod
+    public void attachConsoleLogs(PluginCall call) {
+        JSObject ret = new JSObject();
+        if (webViewConsoleLogsDisabled) {
+            ret.put("consoleLogsAttached", false);
+            call.resolve(ret);
+            return;
+        }
+
+        JSONArray logs = call.getArray("logs", new JSArray());
+        implementation.attachConsoleLogs(logs);
+
+        ret.put("consoleLogsAttached", true);
         call.resolve(ret);
     }
 
@@ -845,9 +997,9 @@ public class GleapPlugin extends Plugin {
         String severity = call.getString("severity");
 
         Gleap.SEVERITY severityObj = Gleap.SEVERITY.HIGH;
-        if (severity == "high") {
+        if ("HIGH".equalsIgnoreCase(severity)) {
             severityObj = Gleap.SEVERITY.HIGH;
-        } else if (severity == "medium") {
+        } else if ("MEDIUM".equalsIgnoreCase(severity)) {
             severityObj = Gleap.SEVERITY.MEDIUM;
         } else {
             severityObj = Gleap.SEVERITY.LOW;
@@ -887,7 +1039,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void openChecklists(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openChecklists(showBackButton);
 
@@ -900,7 +1052,7 @@ public class GleapPlugin extends Plugin {
     @PluginMethod
     public void openChecklist(PluginCall call) throws GleapNotInitialisedException {
         String checklistId = call.getString("checklistId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openChecklist(checklistId, showBackButton);
 
@@ -913,9 +1065,9 @@ public class GleapPlugin extends Plugin {
     @PluginMethod
     public void startChecklist(PluginCall call) throws GleapNotInitialisedException {
         String outboundId = call.getString("outboundId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
-        implementation.openChecklist(outboundId, showBackButton);
+        implementation.startChecklist(outboundId, showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -925,20 +1077,20 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void openNews(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openNews(showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
-        ret.put("opened", true);
+        ret.put("openedNews", true);
         call.resolve(ret);
     }
 
     @PluginMethod
     public void openNewsArticle(PluginCall call) throws GleapNotInitialisedException {
         String articleId = call.getString("articleId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openNewsArticle(articleId, showBackButton);
 
@@ -950,7 +1102,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void openHelpCenter(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openHelpCenter(showBackButton);
 
@@ -964,7 +1116,7 @@ public class GleapPlugin extends Plugin {
     public void askAI(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String question = call.getString("question");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.askAI(question, showBackButton);
 
@@ -978,7 +1130,7 @@ public class GleapPlugin extends Plugin {
     public void openHelpCenterArticle(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String articleId = call.getString("articleId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openHelpCenterArticle(articleId, showBackButton);
 
@@ -992,7 +1144,7 @@ public class GleapPlugin extends Plugin {
     public void openHelpCenterCollection(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String collectionId = call.getString("collectionId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.openHelpCenterCollection(collectionId, showBackButton);
 
@@ -1006,7 +1158,7 @@ public class GleapPlugin extends Plugin {
     public void searchHelpCenter(PluginCall call) throws GleapNotInitialisedException {
         // Open news
         String term = call.getString("term");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         implementation.searchHelpCenter(term, showBackButton);
 
@@ -1018,7 +1170,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void openFeatureRequests(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         // Open feature requests
         implementation.openFeatureRequests(showBackButton);
@@ -1049,7 +1201,7 @@ public class GleapPlugin extends Plugin {
 
         // Start bot
         String botId = call.getString("botId");
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
         implementation.startBot(botId, showBackButton);
 
         // Build Json object and resolve success
@@ -1067,7 +1219,8 @@ public class GleapPlugin extends Plugin {
 
         // Start feedback flow
         String feedbackFlow = call.getString("feedbackFlow");
-        implementation.startFeedbackFlow(feedbackFlow);
+        boolean showBackButton = call.getBoolean("showBackButton", true);
+        implementation.startFeedbackFlow(feedbackFlow, showBackButton);
 
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -1077,7 +1230,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void startConversation(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         // Start conversation
         implementation.startConversation(showBackButton);
@@ -1090,7 +1243,7 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void openConversations(PluginCall call) throws GleapNotInitialisedException {
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
 
         // Start conversation
         implementation.openConversations(showBackButton);
@@ -1101,6 +1254,12 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    // The name the plugin's TypeScript API uses for opening the conversations tab.
+    @PluginMethod
+    public void openConversation(PluginCall call) throws GleapNotInitialisedException {
+        openConversations(call);
+    }
+
     @PluginMethod
     public void startClassicForm(PluginCall call) throws GleapNotInitialisedException {
         if (!call.getData().has("formId")) {
@@ -1109,7 +1268,7 @@ public class GleapPlugin extends Plugin {
         }
 
         // Start feedback flow
-        boolean showBackButton = call.getBoolean("showBackButton");
+        boolean showBackButton = call.getBoolean("showBackButton", true);
         String formId = call.getString("formId");
         implementation.startClassicForm(formId, showBackButton);
 
@@ -1181,18 +1340,6 @@ public class GleapPlugin extends Plugin {
                 public void initialized() {
                     JSObject data = new JSObject();
                     data.put("name", "initialized");
-                    call.resolve(data);
-                }
-            }
-        );
-
-        implementation.setConfigLoadedCallback(
-            new ConfigLoadedCallback() {
-                @Override
-                public void configLoaded(JSONObject jsonObject) {
-                    JSObject data = new JSObject();
-                    data.put("name", "widget-opened");
-                    data.put("data", jsonObject);
                     call.resolve(data);
                 }
             }

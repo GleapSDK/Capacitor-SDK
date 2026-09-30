@@ -1,10 +1,23 @@
 import { registerPlugin } from '@capacitor/core';
 
 import type { GleapPlugin } from './definitions';
+import {
+  installWebViewLogCapture,
+  wrapPluginWithLogCapture,
+} from './logs/webViewLogs';
 
-const Gleap = registerPlugin<GleapPlugin>('Gleap', {
+const GleapNative = registerPlugin<GleapPlugin>('Gleap', {
   web: () => import('./web').then(m => new m.GleapWeb()),
 });
+
+// On iOS and Android, record the WebView's console from the moment the plugin is imported (and its
+// fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
+// which cannot see either on its own.
+const webViewLogCapture = installWebViewLogCapture(GleapNative);
+
+const Gleap: GleapPlugin = webViewLogCapture
+  ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture)
+  : GleapNative;
 
 const registeredAgentTools: {
   [name: string]: (params: any) => any | Promise<any>;

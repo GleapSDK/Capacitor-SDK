@@ -86,6 +86,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         conversationsOpened: boolean;
     }>;
+    openConversations(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        conversationsOpened: boolean;
+    }>;
     showSurvey(options: {
         surveyId: string;
         format?: 'survey' | 'survey_full' | undefined;
@@ -107,10 +112,17 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         envDataDisabled: boolean;
     }>;
+    setColorScheme(options: {
+        colorScheme: 'auto' | 'light' | 'dark';
+        lightBackgroundColor?: string;
+        darkBackgroundColor?: string;
+    }): Promise<{
+        colorScheme: string;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;
-        customData?: Object | undefined;
+        customData?: Record<string, any> | undefined;
         name?: string | undefined;
         email?: string | undefined;
         phone?: string | undefined;
@@ -133,7 +145,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         sla?: number | undefined;
         plan?: string | undefined;
         value?: number | undefined;
-        customData?: Object | undefined;
+        customData?: Record<string, any> | undefined;
     }): Promise<{
         identify: boolean;
     }>;
@@ -146,6 +158,12 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         propsToIgnore: string[];
     }): Promise<{
         propsToIgnoreSet: boolean;
+    }>;
+    attachNetworkLogs(): Promise<{
+        networkLogsAttached: boolean;
+    }>;
+    attachConsoleLogs(): Promise<{
+        consoleLogsAttached: boolean;
     }>;
     setEnvDataPropsToIgnore(options: {
         propsToIgnore: string[];
@@ -249,6 +267,23 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     open(): Promise<{
         openedWidget: boolean;
+    }>;
+    openChecklists(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    openChecklist(options: {
+        checklistId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    startChecklist(options: {
+        outboundId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
     }>;
     openFeatureRequests(options: {
         showBackButton?: boolean | undefined;
