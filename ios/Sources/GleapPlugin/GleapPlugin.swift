@@ -7,7 +7,79 @@ import Gleap
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(GleapPlugin)
-public class GleapPlugin: CAPPlugin, GleapDelegate {
+public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
+    // Registers the plugin with Capacitor (replaces the CAP_PLUGIN macros of the former GleapPlugin.m,
+    // which Swift Package Manager cannot build next to Swift in one target).
+    public let identifier = "GleapPlugin"
+    public let jsName = "Gleap"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "initialize", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setRegion", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setApiUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setWSApiUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setRealtimeHost", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setFrameUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setBannerUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setModalUrl", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "identify", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "updateContact", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "clearIdentity", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setNetworkLogsBlacklist", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setNetworkLogPropsToIgnore", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setEnvDataPropsToIgnore", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "attachNetworkLogs", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "attachConsoleLogs", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "attachCustomData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setCustomData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "removeCustomData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "clearCustomData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setTicketAttribute", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "unsetTicketAttribute", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "clearTicketAttributes", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "registerAgentTool", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "sendAgentToolResult", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "trackEvent", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "trackPage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "sendSilentCrashReport", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openChecklists", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openChecklist", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startChecklist", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "open", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openNews", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "showSurvey", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openNewsArticle", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openHelpCenter", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openHelpCenterArticle", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "askAI", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openHelpCenterCollection", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "searchHelpCenter", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openFeatureRequests", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "close", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "isOpened", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "showFeedbackButton", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "enableDebugConsoleLog", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "log", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "disableConsoleLogOverwrite", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startFeedbackFlow", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startBot", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setLanguage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setEventCallback", returnType: CAPPluginReturnCallback),
+        CAPPluginMethod(name: "preFillForm", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "addAttachment", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "removeAllAttachments", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getIdentity", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "isUserIdentified", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setTags", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setDisableInAppNotifications", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setDisableEnvData", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setColorScheme", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startClassicForm", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startConversation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openConversations", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openConversation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setNotificationContainerOffset", returnType: CAPPluginReturnPromise)
+    ]
+
     enum CallType {
         case event
     }
