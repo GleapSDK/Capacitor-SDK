@@ -254,6 +254,13 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { conversationsOpened: true };
   }
 
+  // The JavaScript SDK opens `?gleapFile=` links itself on page load.
+  async openProtectedFileFromUrl(_options: {
+    url: string;
+  }): Promise<{ opened: boolean }> {
+    return { opened: false };
+  }
+
   async showSurvey(options: {
     surveyId: string;
     format?: 'survey' | 'survey_full' | undefined;

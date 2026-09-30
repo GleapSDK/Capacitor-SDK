@@ -91,6 +91,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         conversationsOpened: boolean;
     }>;
+    openProtectedFileFromUrl(_options: {
+        url: string;
+    }): Promise<{
+        opened: boolean;
+    }>;
     showSurvey(options: {
         surveyId: string;
         format?: 'survey' | 'survey_full' | undefined;

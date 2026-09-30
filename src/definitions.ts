@@ -740,6 +740,24 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Open the conversation of a protected file from an emailed link.
+  * With "Require authenticated file access" enabled, email replies link attachments to your customer
+  * application URL with a `gleapFile` query parameter. If that URL opens your app (for example as a
+  * universal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or
+  * `App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.
+  * The conversation opens once the customer is identified with a user hash (`identify` with `userHash`);
+  * the link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,
+  * so this resolves `{ opened: false }` there.
+  *
+  * @since 19.0.1
+  */
+  openProtectedFileFromUrl(options: {
+    url: string;
+  }): Promise<{
+    opened: boolean;
+  }>;
+
+  /**
  * Start bot
  *
  * @since 10.0.3

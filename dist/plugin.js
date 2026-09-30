@@ -2439,6 +2439,10 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap$1.openConversations(options.showBackButton);
             return { conversationsOpened: true };
         }
+        // The JavaScript SDK opens `?gleapFile=` links itself on page load.
+        async openProtectedFileFromUrl(_options) {
+            return { opened: false };
+        }
         async showSurvey(options) {
             Gleap$1.showSurvey(options.surveyId, options.format);
             return { opened: true };

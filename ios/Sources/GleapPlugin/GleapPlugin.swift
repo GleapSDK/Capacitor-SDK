@@ -77,6 +77,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "startConversation", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "openConversations", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "openConversation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openProtectedFileFromUrl", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setNotificationContainerOffset", returnType: CAPPluginReturnPromise)
     ]
 
@@ -1025,6 +1026,29 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     // The name the plugin's TypeScript API uses for opening the conversations tab.
     @objc func openConversation(_ call: CAPPluginCall) {
         openConversations(call)
+    }
+    
+    // Emailed protected file link (`gleapFile` query parameter). The SDK opens the conversation
+    // once a verified identify (user hash) gave the session file access.
+    @objc func openProtectedFileFromUrl(_ call: CAPPluginCall) {
+        guard let urlString = call.getString("url") else {
+            call.reject("No url provided")
+            return;
+        }
+        
+        // A string that is no URL carries no file reference.
+        guard let url = URL(string: urlString) else {
+            call.resolve([
+                "opened": false
+            ])
+            return;
+        }
+        
+        let opened = Gleap.openProtectedFile(from: url)
+        
+        call.resolve([
+            "opened": opened
+        ])
     }
     
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.0.1
+Native iOS and Android dependencies stay on 19.0.0, the web (JavaScript) dependency on 19.0.0
+(protected conversation files: new `Gleap.openProtectedFileFromUrl({ url })` opens the conversation of a file linked in an email reply. With "Require authenticated file access" enabled, emails link attachments to your customer application URL with a `gleapFile` query parameter; when that URL opens your app (universal link / App Link), pass it on, e.g. from `App.addListener('appUrlOpen')` or `App.getLaunchUrl()` of `@capacitor/app`. Resolves `{ opened: true }` when the URL carries a Gleap file reference; the conversation opens once the customer is identified with a user hash. On web the JavaScript SDK handles `?gleapFile=` links on page load itself, so it resolves `{ opened: false }` there)
+
 ## 19.0.0
 Updated native iOS dependency to 19.0.0
 Updated native Android dependency to 19.0.0

@@ -164,6 +164,10 @@ export class GleapWeb extends WebPlugin {
         Gleap.openConversations(options.showBackButton);
         return { conversationsOpened: true };
     }
+    // The JavaScript SDK opens `?gleapFile=` links itself on page load.
+    async openProtectedFileFromUrl(_options) {
+        return { opened: false };
+    }
     async showSurvey(options) {
         Gleap.showSurvey(options.surveyId, options.format);
         return { opened: true };

@@ -82,6 +82,30 @@ await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBa
 
 `setColorScheme` only takes effect when "Adapt to dark / light mode" is enabled in the Gleap dashboard; it then overrides the dashboard's color scheme. Before the first call the dashboard setting applies. In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard; without dark colors it keeps its normal colors. `lightBackgroundColor` / `darkBackgroundColor` override the background in light / dark mode. Can be called before or after `initialize`.
 
+## Protected conversation files
+
+With "Require authenticated file access" (Project settings → User identity), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Identify the customer with a user hash (created on your server with the project's identity verification secret) on every app start:
+
+```typescript
+await Gleap.identify({ userId: "user-1", userHash: userHash, email: "jane@example.com" });
+```
+
+Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is identified with a user hash:
+
+```typescript
+import { App } from "@capacitor/app";
+
+const launch = await App.getLaunchUrl();
+if (launch?.url) {
+  await Gleap.openProtectedFileFromUrl({ url: launch.url });
+}
+App.addListener("appUrlOpen", ({ url }) => {
+  Gleap.openProtectedFileFromUrl({ url });
+});
+```
+
+`openProtectedFileFromUrl` resolves `{ opened: false }` when the URL has no valid `gleapFile` parameter. On web the JavaScript SDK opens `?gleapFile=` links on page load by itself.
+
 ## API
 
 <docgen-index>
@@ -144,6 +168,7 @@ await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBa
 * [`startConversation(...)`](#startconversation)
 * [`openConversation(...)`](#openconversation)
 * [`openConversations(...)`](#openconversations)
+* [`openProtectedFileFromUrl(...)`](#openprotectedfilefromurl)
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
@@ -1233,6 +1258,32 @@ Opens the conversations tab (same as openConversation).
 **Returns:** <code>Promise&lt;{ conversationsOpened: boolean; }&gt;</code>
 
 **Since:** 19.0.0
+
+--------------------
+
+
+### openProtectedFileFromUrl(...)
+
+```typescript
+openProtectedFileFromUrl(options: { url: string; }) => Promise<{ opened: boolean; }>
+```
+
+Open the conversation of a protected file from an emailed link.
+With "Require authenticated file access" enabled, email replies link attachments to your customer
+application URL with a `gleapFile` query parameter. If that URL opens your app (for example as a
+universal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or
+`App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.
+The conversation opens once the customer is identified with a user hash (`identify` with `userHash`);
+the link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,
+so this resolves `{ opened: false }` there.
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ url: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.1
 
 --------------------
 
