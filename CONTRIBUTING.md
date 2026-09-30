@@ -35,6 +35,8 @@ Build and validate the web and native projects.
 
 This is useful to run in CI to verify that the plugin builds for all platforms.
 
+`npm run verify:ios` builds the Swift package in `Package.swift` (`xcodebuild build -scheme CapacitorGleapPlugin -destination generic/platform=iOS`); it needs Xcode, no CocoaPods. The iOS sources live in `ios/Sources/GleapPlugin/`, and `GleapPlugin.swift` registers every plugin method in `pluginMethods` (`CAPBridgedPlugin`): add a `CAPPluginMethod` entry there for each new `@objc func`. SPM resolves the Gleap iOS SDK from its git tags, so it only passes once the pinned native version is tagged; to build against an unreleased native SDK, point the dependency at `branch: "main"` locally and do not commit that.
+
 #### `npm run lint` / `npm run fmt`
 
 Check formatting and code quality, autoformat/autofix if possible.
@@ -47,7 +49,11 @@ Releases are published by GitHub Actions ([`.github/workflows/release.yml`](.git
 
 1. In a PR, bump the version:
    - `version` in `package.json`, and the `gleap` (JavaScript SDK) dependency if the web SDK moved; then `npm install` so `package-lock.json` and `node_modules/gleap` match
-   - the native pins: `s.dependency 'Gleap', 'X.Y.Z'` in `CapacitorGleapPlugin.podspec` and `gleap-android-sdk` in `android/build.gradle`
+   - the native pins (the Gleap iOS SDK tag `X.Y.Z` must already exist, SPM resolves it from GitHub):
+     - Swift Package Manager: `.package(url: "https://github.com/GleapSDK/Gleap-iOS-SDK.git", from: "X.Y.Z")` in `Package.swift`
+     - CocoaPods fallback: `s.dependency 'Gleap', 'X.Y.Z'` in `CapacitorGleapPlugin.podspec`
+     - Android: `gleap-android-sdk` in `android/build.gradle`
+     - the `:tag => 'X.Y.Z'` of the CocoaPods snippet in `README.md` → iOS
    - a `## X.Y.Z` section at the top of `CHANGELOG.md` (it becomes the GitHub Release notes)
    - `npm run build` and commit `dist/` and the regenerated API part of `README.md`
 2. Merge the PR into `main`.

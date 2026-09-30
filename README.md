@@ -2,7 +2,7 @@
 
 Add AI-native customer support, live chat, in-app bug reporting, a help center and surveys to your Capacitor and Ionic apps with [Gleap](https://www.gleap.ai). Gleap is an Intercom alternative for software teams that connects customer conversations and feedback with product development.
 
-This plugin supports Capacitor 7. See the instructions below for earlier Capacitor versions.
+This plugin supports Capacitor 7 and later (iOS via Swift Package Manager or CocoaPods). See the instructions below for earlier Capacitor versions.
 
 Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
 
@@ -14,6 +14,24 @@ Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
 npm install capacitor-gleap-plugin
 npx cap sync
 ```
+
+### iOS
+
+The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** or higher. On iOS it is a Swift package (`Package.swift`) and pulls the native [Gleap iOS SDK](https://github.com/GleapSDK/Gleap-iOS-SDK) from GitHub; it still ships a podspec for apps that use CocoaPods.
+
+**Swift Package Manager (recommended).** New apps: `npx cap add ios --packagemanager SPM`. Existing CocoaPods apps can move with `npx cap spm-migration-assistant` once all their plugins support SPM (see [Capacitor: Swift Package Manager](https://capacitorjs.com/docs/ios/spm)). Set the app target's iOS deployment target to 15.0 in Xcode, then run `npx cap sync ios` again so `CapApp-SPM/Package.swift` declares iOS 15 as well (the plugin's package requires it).
+
+**CocoaPods.** Set `platform :ios, '15.0'` in `ios/App/Podfile` and run `npx cap sync ios`. CocoaPods trunk becomes read-only on December 2, 2026, so Gleap iOS SDK versions released after that date are not on trunk. For those, `pod install` fails with `None of your spec sources contain Gleap (= X.Y.Z)`; add the SDK from GitHub to your app target in the Podfile, with the version the plugin requires (`s.dependency 'Gleap', 'X.Y.Z'` in `node_modules/capacitor-gleap-plugin/CapacitorGleapPlugin.podspec`):
+
+```ruby
+target 'App' do
+  capacitor_pods
+  # Add your Pods here
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.0.0'
+end
+```
+
+Swift Package Manager is the recommended setup: after December 2, 2026 new Gleap iOS SDK versions are only released through GitHub and Swift Package Manager.
 
 ## Capacitor 6
 
