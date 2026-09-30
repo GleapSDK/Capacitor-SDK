@@ -108,6 +108,9 @@ await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBa
 * [`addAttachment(...)`](#addattachment)
 * [`removeAllAttachments()`](#removeallattachments)
 * [`open()`](#open)
+* [`openChecklists(...)`](#openchecklists)
+* [`openChecklist(...)`](#openchecklist)
+* [`startChecklist(...)`](#startchecklist)
 * [`openNews(...)`](#opennews)
 * [`openNewsArticle(...)`](#opennewsarticle)
 * [`openHelpCenter(...)`](#openhelpcenter)
@@ -122,6 +125,7 @@ await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBa
 * [`startClassicForm(...)`](#startclassicform)
 * [`startConversation(...)`](#startconversation)
 * [`openConversation(...)`](#openconversation)
+* [`openConversations(...)`](#openconversations)
 * [`startBot(...)`](#startbot)
 * [`showFeedbackButton(...)`](#showfeedbackbutton)
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
@@ -506,7 +510,7 @@ the previously attached WebView network logs. No-op on web, where the JavaScript
 
 **Returns:** <code>Promise&lt;{ networkLogsAttached: boolean; }&gt;</code>
 
-**Since:** 18.2.0
+**Since:** 19.0.0
 
 --------------------
 
@@ -528,7 +532,7 @@ No-op on web, where the JavaScript SDK records the console itself.
 
 **Returns:** <code>Promise&lt;{ consoleLogsAttached: boolean; }&gt;</code>
 
-**Since:** 18.2.0
+**Since:** 19.0.0
 
 --------------------
 
@@ -628,7 +632,7 @@ WebView log capture needs (network logs are only recorded when they are enabled 
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
-**Since:** 18.2.0
+**Since:** 19.0.0
 
 --------------------
 
@@ -877,6 +881,63 @@ Open widget
 **Returns:** <code>Promise&lt;{ openedWidget: boolean; }&gt;</code>
 
 **Since:** 7.0.0
+
+--------------------
+
+
+### openChecklists(...)
+
+```typescript
+openChecklists(options: { showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open checklists
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
+### openChecklist(...)
+
+```typescript
+openChecklist(options: { checklistId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Open checklist
+
+| Param         | Type                                                            |
+| ------------- | --------------------------------------------------------------- |
+| **`options`** | <code>{ checklistId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
+### startChecklist(...)
+
+```typescript
+startChecklist(options: { outboundId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>
+```
+
+Start checklist
+
+| Param         | Type                                                           |
+| ------------- | -------------------------------------------------------------- |
+| **`options`** | <code>{ outboundId: string; showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ opened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
 
 --------------------
 
@@ -1139,6 +1200,25 @@ Opens the conversations tab.
 --------------------
 
 
+### openConversations(...)
+
+```typescript
+openConversations(options: { showBackButton?: boolean; }) => Promise<{ conversationsOpened: boolean; }>
+```
+
+Opens the conversations tab (same as openConversation).
+
+| Param         | Type                                       |
+| ------------- | ------------------------------------------ |
+| **`options`** | <code>{ showBackButton?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ conversationsOpened: boolean; }&gt;</code>
+
+**Since:** 19.0.0
+
+--------------------
+
+
 ### startBot(...)
 
 ```typescript
@@ -1238,7 +1318,7 @@ Can be called before or after initialize and applies live.
 
 **Returns:** <code>Promise&lt;{ colorScheme: string; }&gt;</code>
 
-**Since:** 18.2.0
+**Since:** 19.0.0
 
 --------------------
 
