@@ -1936,6 +1936,7 @@ const FLUSH_BEFORE_METHODS = [
     'startClassicForm',
     'startConversation',
     'openConversation',
+    'openConversations',
     'startBot',
 ];
 const createChannel = (name) => ({
@@ -2435,6 +2436,10 @@ class GleapWeb extends core.WebPlugin {
         Gleap$1.openConversations(options.showBackButton);
         return { conversationsOpened: true };
     }
+    async openConversations(options) {
+        Gleap$1.openConversations(options.showBackButton);
+        return { conversationsOpened: true };
+    }
     async showSurvey(options) {
         Gleap$1.showSurvey(options.surveyId, options.format);
         return { opened: true };
@@ -2580,6 +2585,18 @@ class GleapWeb extends core.WebPlugin {
     async open() {
         Gleap$1.open();
         return { openedWidget: true };
+    }
+    async openChecklists(options) {
+        Gleap$1.openChecklists(options.showBackButton);
+        return { opened: true };
+    }
+    async openChecklist(options) {
+        Gleap$1.openChecklist(options.checklistId, options.showBackButton);
+        return { opened: true };
+    }
+    async startChecklist(options) {
+        Gleap$1.startChecklist(options.outboundId, options.showBackButton);
+        return { opened: true };
     }
     async openFeatureRequests(options) {
         Gleap$1.openFeatureRequests(options.showBackButton);

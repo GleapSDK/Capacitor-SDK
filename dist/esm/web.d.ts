@@ -86,6 +86,11 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         conversationsOpened: boolean;
     }>;
+    openConversations(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        conversationsOpened: boolean;
+    }>;
     showSurvey(options: {
         surveyId: string;
         format?: 'survey' | 'survey_full' | undefined;
@@ -262,6 +267,23 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     open(): Promise<{
         openedWidget: boolean;
+    }>;
+    openChecklists(options: {
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    openChecklist(options: {
+        checklistId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    startChecklist(options: {
+        outboundId: string;
+        showBackButton?: boolean | undefined;
+    }): Promise<{
+        opened: boolean;
     }>;
     openFeatureRequests(options: {
         showBackButton?: boolean | undefined;

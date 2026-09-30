@@ -404,7 +404,7 @@
         "tags": [
           {
             "name": "since",
-            "text": "18.2.0"
+            "text": "19.0.0"
           }
         ],
         "docs": "Hands the network requests made inside the app's WebView (fetch and XMLHttpRequest) to the native SDK, so they\nshow up in the network logs of tickets. The plugin calls this for you on iOS and Android; each call replaces\nthe previously attached WebView network logs. No-op on web, where the JavaScript SDK records requests itself.",
@@ -427,7 +427,7 @@
         "tags": [
           {
             "name": "since",
-            "text": "18.2.0"
+            "text": "19.0.0"
           }
         ],
         "docs": "Hands the console output of the app's WebView (console.log/info/warn/error/debug, uncaught errors and\nunhandled promise rejections) to the native SDK, so it shows up in the console logs of tickets. The plugin\ncalls this for you on iOS and Android; each call replaces the previously attached WebView console logs.\nNo-op on web, where the JavaScript SDK records the console itself.",
@@ -546,7 +546,7 @@
         "tags": [
           {
             "name": "since",
-            "text": "18.2.0"
+            "text": "19.0.0"
           }
         ],
         "docs": "Called on iOS and Android when the project config is loaded, with the network log settings the plugin's\nWebView log capture needs (network logs are only recorded when they are enabled for your project).",
@@ -832,6 +832,69 @@
         "slug": "open"
       },
       {
+        "name": "openChecklists",
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.0.0"
+          }
+        ],
+        "docs": "Open checklists",
+        "complexTypes": [],
+        "slug": "openchecklists"
+      },
+      {
+        "name": "openChecklist",
+        "signature": "(options: { checklistId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ checklistId: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.0.0"
+          }
+        ],
+        "docs": "Open checklist",
+        "complexTypes": [],
+        "slug": "openchecklist"
+      },
+      {
+        "name": "startChecklist",
+        "signature": "(options: { outboundId: string; showBackButton?: boolean; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ outboundId: string; showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.0.0"
+          }
+        ],
+        "docs": "Start checklist",
+        "complexTypes": [],
+        "slug": "startchecklist"
+      },
+      {
         "name": "openNews",
         "signature": "(options: { showBackButton?: boolean; }) => Promise<{ openedNews: boolean; }>",
         "parameters": [
@@ -1114,6 +1177,27 @@
         "slug": "openconversation"
       },
       {
+        "name": "openConversations",
+        "signature": "(options: { showBackButton?: boolean; }) => Promise<{ conversationsOpened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ showBackButton?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ conversationsOpened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.0.0"
+          }
+        ],
+        "docs": "Opens the conversations tab (same as openConversation).",
+        "complexTypes": [],
+        "slug": "openconversations"
+      },
+      {
         "name": "startBot",
         "signature": "(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>",
         "parameters": [
@@ -1211,7 +1295,7 @@
         "tags": [
           {
             "name": "since",
-            "text": "18.2.0"
+            "text": "19.0.0"
           }
         ],
         "docs": "Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.\nOnly takes effect when \"Adapt to dark / light mode\" is enabled in the dashboard; otherwise the widget\nalways keeps its normal colors. Before the first call the dashboard setting applies.\n\"auto\" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.\nApps with their own in-app theme toggle should pass \"light\" / \"dark\" explicitly and call it again whenever\nthe theme changes.\nIn dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard;\nwithout dark colors it keeps its normal colors. lightBackgroundColor / darkBackgroundColor override the background.\nCan be called before or after initialize and applies live.",

@@ -16,6 +16,7 @@ const FLUSH_BEFORE_METHODS = [
     'startClassicForm',
     'startConversation',
     'openConversation',
+    'openConversations',
     'startBot',
 ];
 const createChannel = (name) => ({

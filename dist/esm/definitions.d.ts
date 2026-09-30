@@ -272,7 +272,7 @@ export interface GleapPlugin {
     * show up in the network logs of tickets. The plugin calls this for you on iOS and Android; each call replaces
     * the previously attached WebView network logs. No-op on web, where the JavaScript SDK records requests itself.
     *
-    * @since 18.2.0
+    * @since 19.0.0
     */
     attachNetworkLogs(options: {
         logs: GleapNetworkLogEntry[];
@@ -285,7 +285,7 @@ export interface GleapPlugin {
     * calls this for you on iOS and Android; each call replaces the previously attached WebView console logs.
     * No-op on web, where the JavaScript SDK records the console itself.
     *
-    * @since 18.2.0
+    * @since 19.0.0
     */
     attachConsoleLogs(options: {
         logs: GleapConsoleLogEntry[];
@@ -339,7 +339,7 @@ export interface GleapPlugin {
     * Called on iOS and Android when the project config is loaded, with the network log settings the plugin's
     * WebView log capture needs (network logs are only recorded when they are enabled for your project).
     *
-    * @since 18.2.0
+    * @since 19.0.0
     */
     addListener(eventName: 'logConfigLoaded', listenerFunc: (config: GleapLogConfig) => void): Promise<PluginListenerHandle>;
     /**
@@ -486,6 +486,38 @@ export interface GleapPlugin {
         openedWidget: boolean;
     }>;
     /**
+    * Open checklists
+    *
+    * @since 19.0.0
+    */
+    openChecklists(options: {
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Open checklist
+    *
+    * @since 19.0.0
+    */
+    openChecklist(options: {
+        checklistId: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
+    * Start checklist
+    *
+    * @since 19.0.0
+    */
+    startChecklist(options: {
+        outboundId: string;
+        showBackButton?: boolean;
+    }): Promise<{
+        opened: boolean;
+    }>;
+    /**
     * Open news
     *
     * @since 8.4.0
@@ -629,6 +661,16 @@ export interface GleapPlugin {
         conversationsOpened: boolean;
     }>;
     /**
+   * Opens the conversations tab (same as openConversation).
+   *
+   * @since 19.0.0
+   */
+    openConversations(options: {
+        showBackButton?: boolean;
+    }): Promise<{
+        conversationsOpened: boolean;
+    }>;
+    /**
    * Start bot
    *
    * @since 10.0.3
@@ -681,7 +723,7 @@ export interface GleapPlugin {
     * without dark colors it keeps its normal colors. lightBackgroundColor / darkBackgroundColor override the background.
     * Can be called before or after initialize and applies live.
     *
-    * @since 18.2.0
+    * @since 19.0.0
     */
     setColorScheme(options: {
         colorScheme: 'auto' | 'light' | 'dark';

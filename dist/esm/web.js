@@ -160,6 +160,10 @@ export class GleapWeb extends WebPlugin {
         Gleap.openConversations(options.showBackButton);
         return { conversationsOpened: true };
     }
+    async openConversations(options) {
+        Gleap.openConversations(options.showBackButton);
+        return { conversationsOpened: true };
+    }
     async showSurvey(options) {
         Gleap.showSurvey(options.surveyId, options.format);
         return { opened: true };
@@ -307,6 +311,18 @@ export class GleapWeb extends WebPlugin {
     async open() {
         Gleap.open();
         return { openedWidget: true };
+    }
+    async openChecklists(options) {
+        Gleap.openChecklists(options.showBackButton);
+        return { opened: true };
+    }
+    async openChecklist(options) {
+        Gleap.openChecklist(options.checklistId, options.showBackButton);
+        return { opened: true };
+    }
+    async startChecklist(options) {
+        Gleap.startChecklist(options.outboundId, options.showBackButton);
+        return { opened: true };
     }
     async openFeatureRequests(options) {
         Gleap.openFeatureRequests(options.showBackButton);

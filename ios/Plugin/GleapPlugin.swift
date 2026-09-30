@@ -313,6 +313,30 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         ])
     }
     
+    @objc func log(_ call: CAPPluginCall) {
+        guard let message = call.options["message"] as? String else {
+            call.reject("Must provide a log message")
+            return;
+        }
+        
+        var logLevel = INFO
+        switch call.getString("logLevel") ?? "INFO" {
+        case "WARNING":
+            logLevel = WARNING
+        case "ERROR":
+            logLevel = ERROR
+        default:
+            logLevel = INFO
+        }
+        
+        Gleap.log(message, with: logLevel)
+        
+        // Provide feedback that it has been success
+        call.resolve([
+            "logged": true
+        ])
+    }
+    
     @objc func showSurvey(_ call: CAPPluginCall) {
         guard let surveyId = call.options["surveyId"] as? String else {
             call.reject("Must provide a surveyId")
@@ -320,7 +344,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         }
         
         var surveyFormat = SURVEY
-        if (call.getString("format") ?? "survey" == "survey") {
+        if (call.getString("format") == "survey_full") {
             surveyFormat = SURVEY_FULL
         }
         
@@ -343,7 +367,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         
         // Provide feedback that it has been success
         call.resolve([
-            "addedCustomData": true
+            "attachedCustomData": true
         ])
     }
     
@@ -580,7 +604,7 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         
         // Provide feedback that it has been success
         call.resolve([
-            "trackedEvent": true
+            "loggedEvent": true
         ])
     }
     
@@ -763,12 +787,14 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
     }
     
     @objc func openNews(_ call: CAPPluginCall) {
+        let showBackButton = call.getBool("showBackButton") ?? true
+
         // Open news
-        Gleap.openNews()
+        Gleap.openNews(showBackButton)
         
         // Provide feedback that it has been success
         call.resolve([
-            "opened": true
+            "openedNews": true
         ])
     }
     
@@ -922,6 +948,11 @@ public class GleapPlugin: CAPPlugin, GleapDelegate {
         call.resolve([
             "conversationsOpened": true
         ])
+    }
+    
+    // The name the plugin's TypeScript API uses for opening the conversations tab.
+    @objc func openConversation(_ call: CAPPluginCall) {
+        openConversations(call)
     }
     
     @objc func startFeedbackFlow(_ call: CAPPluginCall) {
