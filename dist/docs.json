@@ -1198,6 +1198,27 @@
         "slug": "openconversations"
       },
       {
+        "name": "openProtectedFileFromUrl",
+        "signature": "(options: { url: string; }) => Promise<{ opened: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ url: string; }"
+          }
+        ],
+        "returns": "Promise<{ opened: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.0.1"
+          }
+        ],
+        "docs": "Open the conversation of a protected file from an emailed link.\nWith \"Require authenticated file access\" enabled, email replies link attachments to your customer\napplication URL with a `gleapFile` query parameter. If that URL opens your app (for example as a\nuniversal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or\n`App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.\nThe conversation opens once the customer is identified with a user hash (`identify` with `userHash`);\nthe link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,\nso this resolves `{ opened: false }` there.",
+        "complexTypes": [],
+        "slug": "openprotectedfilefromurl"
+      },
+      {
         "name": "startBot",
         "signature": "(options: { botId?: string; showBackButton?: boolean; }) => Promise<{ startedBot: boolean; }>",
         "parameters": [

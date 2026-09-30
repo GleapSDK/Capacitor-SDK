@@ -1260,6 +1260,24 @@ public class GleapPlugin extends Plugin {
         openConversations(call);
     }
 
+    // Emailed protected file link (gleapFile query parameter). The SDK opens the conversation
+    // once a verified identify (user hash) gave the session file access.
+    @PluginMethod
+    public void openProtectedFileFromUrl(PluginCall call) {
+        String url = call.getString("url");
+        if (url == null) {
+            call.reject("No url provided");
+            return;
+        }
+
+        boolean opened = implementation.openProtectedFileFromUrl(url);
+
+        // Build Json object and resolve success
+        JSObject ret = new JSObject();
+        ret.put("opened", opened);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void startClassicForm(PluginCall call) throws GleapNotInitialisedException {
         if (!call.getData().has("formId")) {
