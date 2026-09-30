@@ -71,8 +71,8 @@ export class NetworkCapture {
     private readonly onChange: () => void,
   ) {}
 
+  /** Installs the hooks inactive: nothing is recorded until setActive(true). */
   install(): void {
-    this.active = true;
     if (this.isInstalled) {
       return;
     }

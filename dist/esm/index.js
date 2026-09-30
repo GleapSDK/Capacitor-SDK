@@ -3,8 +3,9 @@ import { installWebViewLogCapture, wrapPluginWithLogCapture, } from './logs/webV
 const GleapNative = registerPlugin('Gleap', {
     web: () => import('./web').then(m => new m.GleapWeb()),
 });
-// On iOS and Android, record the WebView's console and fetch/XHR traffic from the moment the
-// plugin is imported, and hand it to the native SDK (which cannot see either on its own).
+// On iOS and Android, record the WebView's console from the moment the plugin is imported (and its
+// fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
+// which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
 const Gleap = webViewLogCapture
     ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture)

@@ -57,8 +57,8 @@ export class WebViewLogCapture {
             this.consoleCapture = new ConsoleCapture(this.win, () => this.markDirty(this.consoleChannel));
             this.consoleCapture.install();
         }
-        // Requests are buffered from the start; they are only pushed once the project config says
-        // network logs are enabled.
+        // The hooks go in now, but requests are only recorded once the project config says network
+        // logs are enabled (like the JavaScript SDK), so nothing is held in memory before that.
         this.networkCapture.install();
         this.listenForConfig();
     }

@@ -19,8 +19,8 @@ export class NetworkCapture {
         this.xhrStates = new WeakMap();
         this.xhrsWithListeners = new WeakSet();
     }
+    /** Installs the hooks inactive: nothing is recorded until setActive(true). */
     install() {
-        this.active = true;
         if (this.isInstalled) {
             return;
         }

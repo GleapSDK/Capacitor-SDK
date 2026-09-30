@@ -23,6 +23,7 @@ export declare class NetworkCapture {
     private xhrStates;
     private xhrsWithListeners;
     constructor(win: Window, onChange: () => void);
+    /** Installs the hooks inactive: nothing is recorded until setActive(true). */
     install(): void;
     /** Inactive: the hooks stay in place but only call through, and the buffer is dropped. */
     setActive(active: boolean): void;

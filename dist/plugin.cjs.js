@@ -1290,8 +1290,8 @@ class NetworkCapture {
         this.xhrStates = new WeakMap();
         this.xhrsWithListeners = new WeakSet();
     }
+    /** Installs the hooks inactive: nothing is recorded until setActive(true). */
     install() {
-        this.active = true;
         if (this.isInstalled) {
             return;
         }
@@ -1977,8 +1977,8 @@ class WebViewLogCapture {
             this.consoleCapture = new ConsoleCapture(this.win, () => this.markDirty(this.consoleChannel));
             this.consoleCapture.install();
         }
-        // Requests are buffered from the start; they are only pushed once the project config says
-        // network logs are enabled.
+        // The hooks go in now, but requests are only recorded once the project config says network
+        // logs are enabled (like the JavaScript SDK), so nothing is held in memory before that.
         this.networkCapture.install();
         this.listenForConfig();
     }
@@ -2218,8 +2218,9 @@ function wrapPluginWithLogCapture(plugin, capture) {
 const GleapNative = core.registerPlugin('Gleap', {
     web: () => Promise.resolve().then(function () { return web; }).then(m => new m.GleapWeb()),
 });
-// On iOS and Android, record the WebView's console and fetch/XHR traffic from the moment the
-// plugin is imported, and hand it to the native SDK (which cannot see either on its own).
+// On iOS and Android, record the WebView's console from the moment the plugin is imported (and its
+// fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
+// which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
 const Gleap = webViewLogCapture
     ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture)
