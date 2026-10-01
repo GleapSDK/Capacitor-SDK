@@ -296,6 +296,8 @@ export interface GleapPlugin {
     * Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native
     * SDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.
     * No-op on web.
+    *
+    * @since 19.1.0
     */
     logsFlushed(options: {
         flushId: string;
@@ -354,6 +356,8 @@ export interface GleapPlugin {
     * Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's
     * WebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with
     * `logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.
+    *
+    * @since 19.1.0
     */
     addListener(eventName: 'flushLogs', listenerFunc: (data: {
         flushId: string;
@@ -771,6 +775,8 @@ export interface GleapPlugin {
     * the right screen, and the SDK captures the app once they tap Capture (or records it between Start and Stop).
     * Nothing is captured without that tap. While disabled, the widget only offers to upload a file.
     * Enabled by default. Works on iOS, Android and web and can be called before or after initialize.
+    *
+    * @since 19.1.0
     */
     setCaptureEnabled(options: {
         enabled: boolean;
@@ -784,6 +790,8 @@ export interface GleapPlugin {
     * it is asked for and enabled in the dashboard), and the existing settings still apply (e.g. setDisableEnvData).
     * While disabled, log requests are answered as not supported and captures are sent without logs.
     * Enabled by default. Works on iOS, Android and web and can be called before or after initialize.
+    *
+    * @since 19.1.0
     */
     setRemoteLogCollectionEnabled(options: {
         enabled: boolean;

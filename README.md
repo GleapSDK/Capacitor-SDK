@@ -27,7 +27,7 @@ The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** o
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.0.0'
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.1.0'
 end
 ```
 
@@ -598,6 +598,8 @@ No-op on web.
 | ------------- | --------------------------------- |
 | **`options`** | <code>{ flushId: string; }</code> |
 
+**Since:** 19.1.0
+
 --------------------
 
 
@@ -717,6 +719,8 @@ WebView log capture hands over what it buffers (it pushes at most every 500 ms o
 | **`listenerFunc`** | <code>(data: { flushId: string; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 19.1.0
 
 --------------------
 
@@ -1451,6 +1455,8 @@ Enabled by default. Works on iOS, Android and web and can be called before or af
 
 **Returns:** <code>Promise&lt;{ captureEnabled: boolean; }&gt;</code>
 
+**Since:** 19.1.0
+
 --------------------
 
 
@@ -1472,6 +1478,8 @@ Enabled by default. Works on iOS, Android and web and can be called before or af
 | **`options`** | <code>{ enabled: boolean; }</code> |
 
 **Returns:** <code>Promise&lt;{ remoteLogCollectionEnabled: boolean; }&gt;</code>
+
+**Since:** 19.1.0
 
 --------------------
 
@@ -1614,9 +1622,7 @@ The network log settings of your Gleap project, sent by the native SDK once its 
 
 Construct a type with a set of properties K of type T
 
-<code>{
- [P in K]: T;
- }</code>
+<code>{ [P in K]: T; }</code>
 
 
 #### GleapEventCallback
