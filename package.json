@@ -97,6 +97,6 @@
     }
   },
   "dependencies": {
-    "gleap": "^19.0.0"
+    "gleap": "^19.1.0"
   }
 }
