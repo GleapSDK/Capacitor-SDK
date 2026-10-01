@@ -437,6 +437,27 @@
         "slug": "attachconsolelogs"
       },
       {
+        "name": "logsFlushed",
+        "signature": "(options: { flushId: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ flushId: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.1.0"
+          }
+        ],
+        "docs": "Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native\nSDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.\nNo-op on web.",
+        "complexTypes": [],
+        "slug": "logsflushed"
+      },
+      {
         "name": "setEnvDataPropsToIgnore",
         "signature": "(options: { propsToIgnore: string[]; }) => Promise<{ envDataPropsToIgnoreSet: boolean; }>",
         "parameters": [
@@ -555,6 +576,34 @@
           "GleapLogConfig"
         ],
         "slug": "addlistenerlogconfigloaded-"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'flushLogs', listenerFunc: (data: { flushId: string; }) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'flushLogs'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(data: { flushId: string; }) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.1.0"
+          }
+        ],
+        "docs": "Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's\nWebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with\n`logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistenerflushlogs-"
       },
       {
         "name": "setTicketAttribute",
@@ -1322,6 +1371,48 @@
         "docs": "Set the color scheme of the widget. Overrides the color scheme configured in the Gleap dashboard.\nOnly takes effect when \"Adapt to dark / light mode\" is enabled in the dashboard; otherwise the widget\nalways keeps its normal colors. Before the first call the dashboard setting applies.\n\"auto\" follows the device appearance (dark/light mode) on iOS and Android, and the page theme on web.\nApps with their own in-app theme toggle should pass \"light\" / \"dark\" explicitly and call it again whenever\nthe theme changes.\nIn dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard;\nwithout dark colors it keeps its normal colors. lightBackgroundColor / darkBackgroundColor override the background.\nCan be called before or after initialize and applies live.",
         "complexTypes": [],
         "slug": "setcolorscheme"
+      },
+      {
+        "name": "setCaptureEnabled",
+        "signature": "(options: { enabled: boolean; }) => Promise<{ captureEnabled: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ enabled: boolean; }"
+          }
+        ],
+        "returns": "Promise<{ captureEnabled: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.1.0"
+          }
+        ],
+        "docs": "Enable or disable screenshots and screen recordings for capture requests: when a workflow, an AI agent or a\nteammate asks the user in the widget to show the issue, the widget steps aside, a small bar lets the user go to\nthe right screen, and the SDK captures the app once they tap Capture (or records it between Start and Stop).\nNothing is captured without that tap. While disabled, the widget only offers to upload a file.\nEnabled by default. Works on iOS, Android and web and can be called before or after initialize.",
+        "complexTypes": [],
+        "slug": "setcaptureenabled"
+      },
+      {
+        "name": "setRemoteLogCollectionEnabled",
+        "signature": "(options: { enabled: boolean; }) => Promise<{ remoteLogCollectionEnabled: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ enabled: boolean; }"
+          }
+        ],
+        "returns": "Promise<{ remoteLogCollectionEnabled: boolean; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.1.0"
+          }
+        ],
+        "docs": "Enable or disable sending the app's logs for capture requests: a workflow or an AI agent can ask for the logs\nwhile the app runs (no user action), and screenshots and recordings can bring the logs around them. The logs are\nwhat a bug report carries (console and network logs, custom data, env data, custom events; the replay only when\nit is asked for and enabled in the dashboard), and the existing settings still apply (e.g. setDisableEnvData).\nWhile disabled, log requests are answered as not supported and captures are sent without logs.\nEnabled by default. Works on iOS, Android and web and can be called before or after initialize.",
+        "complexTypes": [],
+        "slug": "setremotelogcollectionenabled"
       },
       {
         "name": "setLanguage",

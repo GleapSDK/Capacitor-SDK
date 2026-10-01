@@ -313,6 +313,42 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { colorScheme: options.colorScheme };
   }
 
+  async setCaptureEnabled(options: {
+    enabled: boolean;
+  }): Promise<{ captureEnabled: boolean }> {
+    if (typeof options?.enabled !== 'boolean') {
+      throw new Error('No enabled value provided');
+    }
+
+    // A JavaScript SDK older than capture requests has nothing to switch.
+    const jsSdk = Gleap as unknown as {
+      setCaptureEnabled?: (enabled: boolean) => void;
+    };
+    if (typeof jsSdk.setCaptureEnabled === 'function') {
+      jsSdk.setCaptureEnabled(options.enabled);
+    }
+
+    return { captureEnabled: options.enabled };
+  }
+
+  async setRemoteLogCollectionEnabled(options: {
+    enabled: boolean;
+  }): Promise<{ remoteLogCollectionEnabled: boolean }> {
+    if (typeof options?.enabled !== 'boolean') {
+      throw new Error('No enabled value provided');
+    }
+
+    // A JavaScript SDK older than capture requests has nothing to switch.
+    const jsSdk = Gleap as unknown as {
+      setRemoteLogCollectionEnabled?: (enabled: boolean) => void;
+    };
+    if (typeof jsSdk.setRemoteLogCollectionEnabled === 'function') {
+      jsSdk.setRemoteLogCollectionEnabled(options.enabled);
+    }
+
+    return { remoteLogCollectionEnabled: options.enabled };
+  }
+
   async identify(options: {
     userId: string;
     userHash?: string | undefined;
@@ -384,6 +420,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
   async attachNetworkLogs(): Promise<{ networkLogsAttached: boolean }> {
     // The JavaScript SDK records the page's requests itself on web.
     return { networkLogsAttached: false };
+  }
+
+  async logsFlushed(): Promise<void> {
+    // The JavaScript SDK collects the logs on web itself: nothing is buffered here.
   }
 
   async attachConsoleLogs(): Promise<{ consoleLogsAttached: boolean }> {

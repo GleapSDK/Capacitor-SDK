@@ -2,6 +2,8 @@ package io.gleapplugins.capacitor;
 
 import android.Manifest;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
@@ -12,6 +14,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import io.gleap.APPLICATIONTYPE;
 import io.gleap.Gleap;
+import io.gleap.GleapLogFlushHandler;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapSessionProperties;
@@ -62,6 +65,12 @@ public class GleapPlugin extends Plugin {
     private volatile JSObject lastLogConfig;
     // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
     private volatile boolean webViewConsoleLogsDisabled = false;
+    // Capture requests: log flushes the native SDK waits for (at most 500 ms) until the WebView log capture handed
+    // over what it buffers, by flush id.
+    private final Map<String, Runnable> pendingLogFlushes = new ConcurrentHashMap<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    // An unanswered flush (e.g. the page reloaded) is forgotten after this; the SDK stopped waiting long before.
+    private static final long LOG_FLUSH_FORGET_MS = 1000;
 
     @Override
     public void load() {
@@ -119,6 +128,8 @@ public class GleapPlugin extends Plugin {
         // Set the application type
         Gleap.getInstance().setApplicationType(APPLICATIONTYPE.CAPACITOR);
 
+        registerLogFlushHandler();
+
         // A reloaded WebView calls initialize again: hand it the config that was already loaded.
         JSObject logConfig = lastLogConfig;
         if (logConfig != null) {
@@ -129,6 +140,76 @@ public class GleapPlugin extends Plugin {
         JSObject ret = new JSObject();
         ret.put("initialized", true);
         call.resolve(ret);
+    }
+
+    /**
+     * Capture requests: before the native SDK collects the logs for a request, the WebView log capture hands over
+     * what it buffers (pushed at most every 500 ms otherwise). The SDK calls this on the main thread and waits at
+     * most 500 ms for done; without a flushLogs listener it does not wait.
+     */
+    private void registerLogFlushHandler() {
+        try {
+            implementation.setLogFlushHandler(
+                new GleapLogFlushHandler() {
+                    @Override
+                    public void onFlushRequested(Runnable done) {
+                        requestLogFlush(done);
+                    }
+                }
+            );
+        } catch (Exception | LinkageError ex) {
+            System.out.println(ex);
+        }
+    }
+
+    private void requestLogFlush(Runnable done) {
+        if (done == null) {
+            return;
+        }
+        if (!hasListeners("flushLogs")) {
+            done.run();
+            return;
+        }
+        final String flushId = UUID.randomUUID().toString();
+        pendingLogFlushes.put(flushId, done);
+        try {
+            JSObject data = new JSObject();
+            data.put("flushId", flushId);
+            notifyListeners("flushLogs", data);
+        } catch (Exception ex) {
+            finishLogFlush(flushId);
+            return;
+        }
+        mainHandler.postDelayed(
+            new Runnable() {
+                @Override
+                public void run() {
+                    pendingLogFlushes.remove(flushId);
+                }
+            },
+            LOG_FLUSH_FORGET_MS
+        );
+    }
+
+    private void finishLogFlush(String flushId) {
+        if (flushId == null) {
+            return;
+        }
+        Runnable done = pendingLogFlushes.remove(flushId);
+        if (done != null) {
+            try {
+                done.run();
+            } catch (Exception ignore) {}
+        }
+    }
+
+    /**
+     * The WebView log capture handed over what it buffered for the flush with this id.
+     */
+    @PluginMethod
+    public void logsFlushed(PluginCall call) {
+        finishLogFlush(call.getString("flushId"));
+        call.resolve();
     }
 
     // Data region & host overrides. All of them must be called before initialize.
@@ -903,6 +984,50 @@ public class GleapPlugin extends Plugin {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
         ret.put("colorScheme", colorScheme);
+        call.resolve(ret);
+    }
+
+    /**
+     * Enables or disables screenshots and screen recordings for capture requests.
+     */
+    @PluginMethod
+    public void setCaptureEnabled(PluginCall call) {
+        Boolean enabled = call.getBoolean("enabled");
+        if (enabled == null) {
+            call.reject("No enabled value provided");
+            return;
+        }
+
+        try {
+            implementation.setCaptureEnabled(enabled);
+        } catch (Exception | LinkageError ex) {
+            System.out.println(ex);
+        }
+
+        JSObject ret = new JSObject();
+        ret.put("captureEnabled", enabled);
+        call.resolve(ret);
+    }
+
+    /**
+     * Enables or disables sending the app's logs for capture requests.
+     */
+    @PluginMethod
+    public void setRemoteLogCollectionEnabled(PluginCall call) {
+        Boolean enabled = call.getBoolean("enabled");
+        if (enabled == null) {
+            call.reject("No enabled value provided");
+            return;
+        }
+
+        try {
+            implementation.setRemoteLogCollectionEnabled(enabled);
+        } catch (Exception | LinkageError ex) {
+            System.out.println(ex);
+        }
+
+        JSObject ret = new JSObject();
+        ret.put("remoteLogCollectionEnabled", enabled);
         call.resolve(ret);
     }
 

@@ -196,6 +196,28 @@ export class GleapWeb extends WebPlugin {
         });
         return { colorScheme: options.colorScheme };
     }
+    async setCaptureEnabled(options) {
+        if (typeof (options === null || options === void 0 ? void 0 : options.enabled) !== 'boolean') {
+            throw new Error('No enabled value provided');
+        }
+        // A JavaScript SDK older than capture requests has nothing to switch.
+        const jsSdk = Gleap;
+        if (typeof jsSdk.setCaptureEnabled === 'function') {
+            jsSdk.setCaptureEnabled(options.enabled);
+        }
+        return { captureEnabled: options.enabled };
+    }
+    async setRemoteLogCollectionEnabled(options) {
+        if (typeof (options === null || options === void 0 ? void 0 : options.enabled) !== 'boolean') {
+            throw new Error('No enabled value provided');
+        }
+        // A JavaScript SDK older than capture requests has nothing to switch.
+        const jsSdk = Gleap;
+        if (typeof jsSdk.setRemoteLogCollectionEnabled === 'function') {
+            jsSdk.setRemoteLogCollectionEnabled(options.enabled);
+        }
+        return { remoteLogCollectionEnabled: options.enabled };
+    }
     async identify(options) {
         var userData = {
             name: options.name,
@@ -232,6 +254,9 @@ export class GleapWeb extends WebPlugin {
     async attachNetworkLogs() {
         // The JavaScript SDK records the page's requests itself on web.
         return { networkLogsAttached: false };
+    }
+    async logsFlushed() {
+        // The JavaScript SDK collects the logs on web itself: nothing is buffered here.
     }
     async attachConsoleLogs() {
         // The JavaScript SDK records the page's console itself on web.

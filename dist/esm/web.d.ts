@@ -124,6 +124,16 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }): Promise<{
         colorScheme: string;
     }>;
+    setCaptureEnabled(options: {
+        enabled: boolean;
+    }): Promise<{
+        captureEnabled: boolean;
+    }>;
+    setRemoteLogCollectionEnabled(options: {
+        enabled: boolean;
+    }): Promise<{
+        remoteLogCollectionEnabled: boolean;
+    }>;
     identify(options: {
         userId: string;
         userHash?: string | undefined;
@@ -167,6 +177,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     attachNetworkLogs(): Promise<{
         networkLogsAttached: boolean;
     }>;
+    logsFlushed(): Promise<void>;
     attachConsoleLogs(): Promise<{
         consoleLogsAttached: boolean;
     }>;

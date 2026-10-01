@@ -27,7 +27,7 @@ The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** o
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.0.0'
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.1.0'
 end
 ```
 
@@ -131,11 +131,13 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
 * [`attachNetworkLogs(...)`](#attachnetworklogs)
 * [`attachConsoleLogs(...)`](#attachconsolelogs)
+* [`logsFlushed(...)`](#logsflushed)
 * [`setEnvDataPropsToIgnore(...)`](#setenvdatapropstoignore)
 * [`registerAgentTool(...)`](#registeragenttool)
 * [`sendAgentToolResult(...)`](#sendagenttoolresult)
 * [`addListener('agentToolExecution', ...)`](#addlisteneragenttoolexecution-)
 * [`addListener('logConfigLoaded', ...)`](#addlistenerlogconfigloaded-)
+* [`addListener('flushLogs', ...)`](#addlistenerflushlogs-)
 * [`setTicketAttribute(...)`](#setticketattribute)
 * [`unsetTicketAttribute(...)`](#unsetticketattribute)
 * [`clearTicketAttributes()`](#clearticketattributes)
@@ -174,6 +176,8 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`setDisableInAppNotifications(...)`](#setdisableinappnotifications)
 * [`setDisableEnvData(...)`](#setdisableenvdata)
 * [`setColorScheme(...)`](#setcolorscheme)
+* [`setCaptureEnabled(...)`](#setcaptureenabled)
+* [`setRemoteLogCollectionEnabled(...)`](#setremotelogcollectionenabled)
 * [`setLanguage(...)`](#setlanguage)
 * [`disableConsoleLogOverwrite()`](#disableconsolelogoverwrite)
 * [`enableDebugConsoleLog()`](#enabledebugconsolelog)
@@ -580,6 +584,25 @@ No-op on web, where the JavaScript SDK records the console itself.
 --------------------
 
 
+### logsFlushed(...)
+
+```typescript
+logsFlushed(options: { flushId: string; }) => Promise<void>
+```
+
+Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native
+SDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.
+No-op on web.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ flushId: string; }</code> |
+
+**Since:** 19.1.0
+
+--------------------
+
+
 ### setEnvDataPropsToIgnore(...)
 
 ```typescript
@@ -676,6 +699,28 @@ WebView log capture needs (network logs are only recorded when they are enabled 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 19.0.0
+
+--------------------
+
+
+### addListener('flushLogs', ...)
+
+```typescript
+addListener(eventName: 'flushLogs', listenerFunc: (data: { flushId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's
+WebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with
+`logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.
+
+| Param              | Type                                                 |
+| ------------------ | ---------------------------------------------------- |
+| **`eventName`**    | <code>'flushLogs'</code>                             |
+| **`listenerFunc`** | <code>(data: { flushId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 19.1.0
 
 --------------------
 
@@ -1392,6 +1437,53 @@ Can be called before or after initialize and applies live.
 --------------------
 
 
+### setCaptureEnabled(...)
+
+```typescript
+setCaptureEnabled(options: { enabled: boolean; }) => Promise<{ captureEnabled: boolean; }>
+```
+
+Enable or disable screenshots and screen recordings for capture requests: when a workflow, an AI agent or a
+teammate asks the user in the widget to show the issue, the widget steps aside, a small bar lets the user go to
+the right screen, and the SDK captures the app once they tap Capture (or records it between Start and Stop).
+Nothing is captured without that tap. While disabled, the widget only offers to upload a file.
+Enabled by default. Works on iOS, Android and web and can be called before or after initialize.
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ enabled: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ captureEnabled: boolean; }&gt;</code>
+
+**Since:** 19.1.0
+
+--------------------
+
+
+### setRemoteLogCollectionEnabled(...)
+
+```typescript
+setRemoteLogCollectionEnabled(options: { enabled: boolean; }) => Promise<{ remoteLogCollectionEnabled: boolean; }>
+```
+
+Enable or disable sending the app's logs for capture requests: a workflow or an AI agent can ask for the logs
+while the app runs (no user action), and screenshots and recordings can bring the logs around them. The logs are
+what a bug report carries (console and network logs, custom data, env data, custom events; the replay only when
+it is asked for and enabled in the dashboard), and the existing settings still apply (e.g. setDisableEnvData).
+While disabled, log requests are answered as not supported and captures are sent without logs.
+Enabled by default. Works on iOS, Android and web and can be called before or after initialize.
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ enabled: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ remoteLogCollectionEnabled: boolean; }&gt;</code>
+
+**Since:** 19.1.0
+
+--------------------
+
+
 ### setLanguage(...)
 
 ```typescript
@@ -1530,9 +1622,7 @@ The network log settings of your Gleap project, sent by the native SDK once its 
 
 Construct a type with a set of properties K of type T
 
-<code>{
- [P in K]: T;
- }</code>
+<code>{ [P in K]: T; }</code>
 
 
 #### GleapEventCallback
