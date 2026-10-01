@@ -29,7 +29,9 @@ const FLUSH_BEFORE_METHODS = [
 export interface LogTarget {
   attachConsoleLogs(options: { logs: GleapConsoleLogEntry[] }): Promise<unknown>;
   attachNetworkLogs(options: { logs: GleapNetworkLogEntry[] }): Promise<unknown>;
+  logsFlushed(options: { flushId: string }): Promise<unknown>;
   addListener(eventName: 'logConfigLoaded', listenerFunc: (config: GleapLogConfig) => void): Promise<unknown>;
+  addListener(eventName: 'flushLogs', listenerFunc: (data: { flushId: string }) => void): Promise<unknown>;
 }
 
 interface Channel {
@@ -97,6 +99,7 @@ export class WebViewLogCapture {
     // logs are enabled (like the JavaScript SDK), so nothing is held in memory before that.
     this.networkCapture.install();
     this.listenForConfig();
+    this.listenForFlush();
   }
 
   /**
@@ -122,6 +125,38 @@ export class WebViewLogCapture {
       }
     } catch (e) {
       // The native side predates the event: network logs stay off.
+    }
+  }
+
+  /**
+   * Capture requests: right before the native SDK collects the logs for a request, it asks for what is still
+   * buffered here (pushed at most every PUSH_DELAY_MS otherwise) and waits up to 500 ms for the answer.
+   */
+  private listenForFlush(): void {
+    try {
+      const handle = this.target.addListener('flushLogs', (data) => {
+        const flushId = data && typeof data.flushId === 'string' ? data.flushId : null;
+        runOutsideZone(() =>
+          this.flushNow().then(() => {
+            if (flushId) {
+              this.answerFlush(flushId);
+            }
+          }),
+        );
+      });
+      if (handle && typeof handle.catch === 'function') {
+        handle.catch(() => undefined);
+      }
+    } catch (e) {
+      // The native side predates the event: nothing asks for flushes.
+    }
+  }
+
+  private answerFlush(flushId: string): void {
+    try {
+      Promise.resolve(this.target.logsFlushed({ flushId })).catch(() => undefined);
+    } catch (e) {
+      // The native side gives up waiting after 500 ms.
     }
   }
 
@@ -170,14 +205,22 @@ export class WebViewLogCapture {
     this.markDirty(this.networkChannel);
   }
 
-  /** Pushes pending changes now (before a plugin call that can produce a report). */
-  flushNow(): void {
+  /**
+   * Pushes pending changes now (before a plugin call that can produce a report, or when the native SDK collects the
+   * logs for a capture request). Resolves once the native side took them; never rejects.
+   */
+  flushNow(): Promise<void> {
+    const pushes: Promise<unknown>[] = [];
     try {
-      this.flushChannel(this.consoleChannel);
-      this.flushChannel(this.networkChannel);
+      pushes.push(this.flushChannel(this.consoleChannel));
+      pushes.push(this.flushChannel(this.networkChannel));
     } catch (e) {
       // Ignore.
     }
+    return Promise.all(pushes).then(
+      () => undefined,
+      () => undefined,
+    );
   }
 
   private updateRules(): void {
@@ -216,13 +259,14 @@ export class WebViewLogCapture {
     }
   }
 
-  private flushChannel(channel: Channel): void {
+  /** Resolves once the push it started (if any) was answered; never rejects. */
+  private flushChannel(channel: Channel): Promise<void> {
     if (channel.timer !== null) {
       clearTimeout(channel.timer);
       channel.timer = null;
     }
     if (!channel.isDirty || !this.canPush(channel)) {
-      return;
+      return Promise.resolve();
     }
     channel.isDirty = false;
 
@@ -230,21 +274,21 @@ export class WebViewLogCapture {
     if (channel.name === 'console') {
       const logs = this.consoleCapture ? this.consoleCapture.getEntries() : [];
       if (logs.length === 0 && !channel.hasPushedLogs) {
-        return;
+        return Promise.resolve();
       }
       channel.hasPushedLogs = logs.length > 0;
       push = runOutsideZone(() => this.target.attachConsoleLogs({ logs }));
     } else {
       const logs = this.isNetworkEnabled ? this.buildNetworkLogs() : [];
       if (logs.length === 0 && !channel.hasPushedLogs) {
-        return;
+        return Promise.resolve();
       }
       channel.hasPushedLogs = logs.length > 0;
       push = runOutsideZone(() => this.target.attachNetworkLogs({ logs }));
     }
 
     try {
-      Promise.resolve(push).then(
+      return Promise.resolve(push).then(
         () => {
           channel.failures = 0;
         },
@@ -252,6 +296,7 @@ export class WebViewLogCapture {
       );
     } catch (e) {
       this.onPushFailed(channel);
+      return Promise.resolve();
     }
   }
 

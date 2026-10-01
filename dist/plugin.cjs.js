@@ -1981,6 +1981,7 @@ class WebViewLogCapture {
         // logs are enabled (like the JavaScript SDK), so nothing is held in memory before that.
         this.networkCapture.install();
         this.listenForConfig();
+        this.listenForFlush();
     }
     /**
      * Android debug builds (Capacitor's loggingBehavior) write the WebView console to logcat, which the
@@ -2001,6 +2002,36 @@ class WebViewLogCapture {
         }
         catch (e) {
             // The native side predates the event: network logs stay off.
+        }
+    }
+    /**
+     * Capture requests: right before the native SDK collects the logs for a request, it asks for what is still
+     * buffered here (pushed at most every PUSH_DELAY_MS otherwise) and waits up to 500 ms for the answer.
+     */
+    listenForFlush() {
+        try {
+            const handle = this.target.addListener('flushLogs', (data) => {
+                const flushId = data && typeof data.flushId === 'string' ? data.flushId : null;
+                runOutsideZone(() => this.flushNow().then(() => {
+                    if (flushId) {
+                        this.answerFlush(flushId);
+                    }
+                }));
+            });
+            if (handle && typeof handle.catch === 'function') {
+                handle.catch(() => undefined);
+            }
+        }
+        catch (e) {
+            // The native side predates the event: nothing asks for flushes.
+        }
+    }
+    answerFlush(flushId) {
+        try {
+            Promise.resolve(this.target.logsFlushed({ flushId })).catch(() => undefined);
+        }
+        catch (e) {
+            // The native side gives up waiting after 500 ms.
         }
     }
     applyRemoteConfig(config) {
@@ -2045,15 +2076,20 @@ class WebViewLogCapture {
         this.markDirty(this.consoleChannel);
         this.markDirty(this.networkChannel);
     }
-    /** Pushes pending changes now (before a plugin call that can produce a report). */
+    /**
+     * Pushes pending changes now (before a plugin call that can produce a report, or when the native SDK collects the
+     * logs for a capture request). Resolves once the native side took them; never rejects.
+     */
     flushNow() {
+        const pushes = [];
         try {
-            this.flushChannel(this.consoleChannel);
-            this.flushChannel(this.networkChannel);
+            pushes.push(this.flushChannel(this.consoleChannel));
+            pushes.push(this.flushChannel(this.networkChannel));
         }
         catch (e) {
             // Ignore.
         }
+        return Promise.all(pushes).then(() => undefined, () => undefined);
     }
     updateRules() {
         this.rules = createRedactionRules([...this.remoteProps, ...this.localProps], [...this.remoteBlacklist, ...this.localBlacklist]);
@@ -2084,20 +2120,21 @@ class WebViewLogCapture {
             channel.timer = null;
         }
     }
+    /** Resolves once the push it started (if any) was answered; never rejects. */
     flushChannel(channel) {
         if (channel.timer !== null) {
             clearTimeout(channel.timer);
             channel.timer = null;
         }
         if (!channel.isDirty || !this.canPush(channel)) {
-            return;
+            return Promise.resolve();
         }
         channel.isDirty = false;
         let push;
         if (channel.name === 'console') {
             const logs = this.consoleCapture ? this.consoleCapture.getEntries() : [];
             if (logs.length === 0 && !channel.hasPushedLogs) {
-                return;
+                return Promise.resolve();
             }
             channel.hasPushedLogs = logs.length > 0;
             push = runOutsideZone(() => this.target.attachConsoleLogs({ logs }));
@@ -2105,18 +2142,19 @@ class WebViewLogCapture {
         else {
             const logs = this.isNetworkEnabled ? this.buildNetworkLogs() : [];
             if (logs.length === 0 && !channel.hasPushedLogs) {
-                return;
+                return Promise.resolve();
             }
             channel.hasPushedLogs = logs.length > 0;
             push = runOutsideZone(() => this.target.attachNetworkLogs({ logs }));
         }
         try {
-            Promise.resolve(push).then(() => {
+            return Promise.resolve(push).then(() => {
                 channel.failures = 0;
             }, () => this.onPushFailed(channel));
         }
         catch (e) {
             this.onPushFailed(channel);
+            return Promise.resolve();
         }
     }
     onPushFailed(channel) {
@@ -2531,6 +2569,9 @@ class GleapWeb extends core.WebPlugin {
     async attachNetworkLogs() {
         // The JavaScript SDK records the page's requests itself on web.
         return { networkLogsAttached: false };
+    }
+    async logsFlushed() {
+        // The JavaScript SDK collects the logs on web itself: nothing is buffered here.
     }
     async attachConsoleLogs() {
         // The JavaScript SDK records the page's console itself on web.

@@ -255,6 +255,9 @@ export class GleapWeb extends WebPlugin {
         // The JavaScript SDK records the page's requests itself on web.
         return { networkLogsAttached: false };
     }
+    async logsFlushed() {
+        // The JavaScript SDK collects the logs on web itself: nothing is buffered here.
+    }
     async attachConsoleLogs() {
         // The JavaScript SDK records the page's console itself on web.
         return { consoleLogsAttached: false };

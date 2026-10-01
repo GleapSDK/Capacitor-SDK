@@ -317,6 +317,15 @@ export interface GleapPlugin {
   }>;
 
   /**
+  * Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native
+  * SDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.
+  * No-op on web.
+  */
+  logsFlushed(options: {
+    flushId: string;
+  }): Promise<void>;
+
+  /**
   * Set env data props to ignore. The given env data keys (exact and case-sensitive, e.g. "deviceName" or "currentUrl")
   * are removed before a ticket or conversation is sent. Each call replaces the previous list, an empty list resets it.
   * Can be called before or after initialize.
@@ -375,6 +384,16 @@ export interface GleapPlugin {
   addListener(
     eventName: 'logConfigLoaded',
     listenerFunc: (config: GleapLogConfig) => void,
+  ): Promise<PluginListenerHandle>;
+
+  /**
+  * Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's
+  * WebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with
+  * `logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.
+  */
+  addListener(
+    eventName: 'flushLogs',
+    listenerFunc: (data: { flushId: string }) => void,
   ): Promise<PluginListenerHandle>;
 
   /**

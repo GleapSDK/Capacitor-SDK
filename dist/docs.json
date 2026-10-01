@@ -437,6 +437,22 @@
         "slug": "attachconsolelogs"
       },
       {
+        "name": "logsFlushed",
+        "signature": "(options: { flushId: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ flushId: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native\nSDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.\nNo-op on web.",
+        "complexTypes": [],
+        "slug": "logsflushed"
+      },
+      {
         "name": "setEnvDataPropsToIgnore",
         "signature": "(options: { propsToIgnore: string[]; }) => Promise<{ envDataPropsToIgnoreSet: boolean; }>",
         "parameters": [
@@ -555,6 +571,29 @@
           "GleapLogConfig"
         ],
         "slug": "addlistenerlogconfigloaded-"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'flushLogs', listenerFunc: (data: { flushId: string; }) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'flushLogs'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(data: { flushId: string; }) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [],
+        "docs": "Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's\nWebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with\n`logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistenerflushlogs-"
       },
       {
         "name": "setTicketAttribute",

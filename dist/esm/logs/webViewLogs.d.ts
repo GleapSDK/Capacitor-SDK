@@ -8,7 +8,13 @@ export interface LogTarget {
     attachNetworkLogs(options: {
         logs: GleapNetworkLogEntry[];
     }): Promise<unknown>;
+    logsFlushed(options: {
+        flushId: string;
+    }): Promise<unknown>;
     addListener(eventName: 'logConfigLoaded', listenerFunc: (config: GleapLogConfig) => void): Promise<unknown>;
+    addListener(eventName: 'flushLogs', listenerFunc: (data: {
+        flushId: string;
+    }) => void): Promise<unknown>;
 }
 /**
  * Captures console output and fetch/XHR traffic inside the WebView of a native (iOS / Android) app
@@ -42,17 +48,27 @@ export declare class WebViewLogCapture {
      */
     private nativeLogsConsole;
     private listenForConfig;
+    /**
+     * Capture requests: right before the native SDK collects the logs for a request, it asks for what is still
+     * buffered here (pushed at most every PUSH_DELAY_MS otherwise) and waits up to 500 ms for the answer.
+     */
+    private listenForFlush;
+    private answerFlush;
     applyRemoteConfig(config: GleapLogConfig | null | undefined): void;
     setLocalPropsToIgnore(props: unknown): void;
     setLocalBlacklist(blacklist: unknown): void;
     /** disableConsoleLogOverwrite(): restore the console and drop what was recorded (also natively). */
     disableConsole(): void;
     onInitialize(): void;
-    /** Pushes pending changes now (before a plugin call that can produce a report). */
-    flushNow(): void;
+    /**
+     * Pushes pending changes now (before a plugin call that can produce a report, or when the native SDK collects the
+     * logs for a capture request). Resolves once the native side took them; never rejects.
+     */
+    flushNow(): Promise<void>;
     private updateRules;
     private canPush;
     private markDirty;
+    /** Resolves once the push it started (if any) was answered; never rejects. */
     private flushChannel;
     private onPushFailed;
     /** Redacted copies of the buffered entries; unchanged entries reuse their previous copy. */

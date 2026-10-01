@@ -29,6 +29,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "setEnvDataPropsToIgnore", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "attachNetworkLogs", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "attachConsoleLogs", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "logsFlushed", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "attachCustomData", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setCustomData", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "removeCustomData", returnType: CAPPluginReturnPromise),
@@ -93,6 +94,9 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     private var lastLogConfig: [String: Any]?
     // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
     private var webViewConsoleLogsDisabled = false
+    // Capture requests: log flushes the native SDK waits for (at most 500 ms) until the WebView log capture handed
+    // over what it buffers, by flush id (main queue only).
+    private var pendingLogFlushes: [String: () -> Void] = [:]
 
     @objc func initialize(_ call: CAPPluginCall) {
         // Check if key is present
@@ -114,6 +118,8 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         // Initialize Gleap with API key
         Gleap.initialize(withToken: api_key)
         
+        registerLogFlushHandler()
+        
         // A reloaded WebView calls initialize again: hand it the config that was already loaded.
         DispatchQueue.main.async {
             if let logConfig = self.lastLogConfig {
@@ -125,6 +131,38 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         call.resolve([
             "initialized": true
         ])
+    }
+    
+    // Capture requests: before the native SDK collects the logs for a request, the WebView log capture hands over
+    // what it buffers (pushed at most every 500 ms otherwise). The SDK waits at most 500 ms for done; without a
+    // flushLogs listener it does not wait.
+    private func registerLogFlushHandler() {
+        Gleap.setLogFlushHandler { [weak self] done in
+            DispatchQueue.main.async {
+                guard let self = self, self.hasListeners("flushLogs") else {
+                    done()
+                    return
+                }
+                let flushId = UUID().uuidString
+                self.pendingLogFlushes[flushId] = done
+                self.notifyListeners("flushLogs", data: ["flushId": flushId])
+                // An unanswered flush (e.g. the page reloaded) is forgotten; the SDK stopped waiting long before.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                    self?.pendingLogFlushes.removeValue(forKey: flushId)
+                }
+            }
+        }
+    }
+    
+    // The WebView log capture handed over what it buffered for the flush with this id.
+    @objc func logsFlushed(_ call: CAPPluginCall) {
+        let flushId = call.getString("flushId")
+        DispatchQueue.main.async {
+            if let flushId = flushId, let done = self.pendingLogFlushes.removeValue(forKey: flushId) {
+                done()
+            }
+        }
+        call.resolve()
     }
     
     // Data region & host overrides. All of them must be called before initialize.

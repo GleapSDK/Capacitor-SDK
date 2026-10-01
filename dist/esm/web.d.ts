@@ -177,6 +177,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     attachNetworkLogs(): Promise<{
         networkLogsAttached: boolean;
     }>;
+    logsFlushed(): Promise<void>;
     attachConsoleLogs(): Promise<{
         consoleLogsAttached: boolean;
     }>;

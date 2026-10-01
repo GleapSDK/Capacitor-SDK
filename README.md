@@ -131,11 +131,13 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`setNetworkLogPropsToIgnore(...)`](#setnetworklogpropstoignore)
 * [`attachNetworkLogs(...)`](#attachnetworklogs)
 * [`attachConsoleLogs(...)`](#attachconsolelogs)
+* [`logsFlushed(...)`](#logsflushed)
 * [`setEnvDataPropsToIgnore(...)`](#setenvdatapropstoignore)
 * [`registerAgentTool(...)`](#registeragenttool)
 * [`sendAgentToolResult(...)`](#sendagenttoolresult)
 * [`addListener('agentToolExecution', ...)`](#addlisteneragenttoolexecution-)
 * [`addListener('logConfigLoaded', ...)`](#addlistenerlogconfigloaded-)
+* [`addListener('flushLogs', ...)`](#addlistenerflushlogs-)
 * [`setTicketAttribute(...)`](#setticketattribute)
 * [`unsetTicketAttribute(...)`](#unsetticketattribute)
 * [`clearTicketAttributes()`](#clearticketattributes)
@@ -582,6 +584,23 @@ No-op on web, where the JavaScript SDK records the console itself.
 --------------------
 
 
+### logsFlushed(...)
+
+```typescript
+logsFlushed(options: { flushId: string; }) => Promise<void>
+```
+
+Answers a `flushLogs` event once the WebView console and network logs the plugin buffers were handed to the native
+SDK, so it collects the logs for a capture request with them. The plugin calls this for you on iOS and Android.
+No-op on web.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ flushId: string; }</code> |
+
+--------------------
+
+
 ### setEnvDataPropsToIgnore(...)
 
 ```typescript
@@ -678,6 +697,26 @@ WebView log capture needs (network logs are only recorded when they are enabled 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 19.0.0
+
+--------------------
+
+
+### addListener('flushLogs', ...)
+
+```typescript
+addListener(eventName: 'flushLogs', listenerFunc: (data: { flushId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+Called on iOS and Android right before the native SDK collects the logs for a capture request: the plugin's
+WebView log capture hands over what it buffers (it pushes at most every 500 ms otherwise) and answers with
+`logsFlushed`. The native SDK waits at most 500 ms for the answer. The plugin listens for you.
+
+| Param              | Type                                                 |
+| ------------------ | ---------------------------------------------------- |
+| **`eventName`**    | <code>'flushLogs'</code>                             |
+| **`listenerFunc`** | <code>(data: { flushId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
