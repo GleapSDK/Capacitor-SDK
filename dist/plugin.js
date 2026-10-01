@@ -2471,6 +2471,28 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             });
             return { colorScheme: options.colorScheme };
         }
+        async setCaptureEnabled(options) {
+            if (typeof (options === null || options === void 0 ? void 0 : options.enabled) !== 'boolean') {
+                throw new Error('No enabled value provided');
+            }
+            // A JavaScript SDK older than capture requests has nothing to switch.
+            const jsSdk = Gleap$1;
+            if (typeof jsSdk.setCaptureEnabled === 'function') {
+                jsSdk.setCaptureEnabled(options.enabled);
+            }
+            return { captureEnabled: options.enabled };
+        }
+        async setRemoteLogCollectionEnabled(options) {
+            if (typeof (options === null || options === void 0 ? void 0 : options.enabled) !== 'boolean') {
+                throw new Error('No enabled value provided');
+            }
+            // A JavaScript SDK older than capture requests has nothing to switch.
+            const jsSdk = Gleap$1;
+            if (typeof jsSdk.setRemoteLogCollectionEnabled === 'function') {
+                jsSdk.setRemoteLogCollectionEnabled(options.enabled);
+            }
+            return { remoteLogCollectionEnabled: options.enabled };
+        }
         async identify(options) {
             var userData = {
                 name: options.name,

@@ -906,6 +906,50 @@ public class GleapPlugin extends Plugin {
         call.resolve(ret);
     }
 
+    /**
+     * Enables or disables screenshots and screen recordings for capture requests.
+     */
+    @PluginMethod
+    public void setCaptureEnabled(PluginCall call) {
+        Boolean enabled = call.getBoolean("enabled");
+        if (enabled == null) {
+            call.reject("No enabled value provided");
+            return;
+        }
+
+        try {
+            implementation.setCaptureEnabled(enabled);
+        } catch (Exception | LinkageError ex) {
+            System.out.println(ex);
+        }
+
+        JSObject ret = new JSObject();
+        ret.put("captureEnabled", enabled);
+        call.resolve(ret);
+    }
+
+    /**
+     * Enables or disables sending the app's logs for capture requests.
+     */
+    @PluginMethod
+    public void setRemoteLogCollectionEnabled(PluginCall call) {
+        Boolean enabled = call.getBoolean("enabled");
+        if (enabled == null) {
+            call.reject("No enabled value provided");
+            return;
+        }
+
+        try {
+            implementation.setRemoteLogCollectionEnabled(enabled);
+        } catch (Exception | LinkageError ex) {
+            System.out.println(ex);
+        }
+
+        JSObject ret = new JSObject();
+        ret.put("remoteLogCollectionEnabled", enabled);
+        call.resolve(ret);
+    }
+
     @PluginMethod
     public void showFeedbackButton(PluginCall call) {
         boolean show = call.getBoolean("show", false);

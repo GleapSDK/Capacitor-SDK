@@ -73,6 +73,8 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "setDisableInAppNotifications", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setDisableEnvData", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setColorScheme", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setCaptureEnabled", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setRemoteLogCollectionEnabled", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startClassicForm", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startConversation", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "openConversations", returnType: CAPPluginReturnPromise),
@@ -755,6 +757,34 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         // Provide feedback that it has been success
         call.resolve([
             "colorScheme": colorScheme
+        ])
+    }
+    
+    // Enables or disables screenshots and screen recordings for capture requests.
+    @objc func setCaptureEnabled(_ call: CAPPluginCall) {
+        guard let enabled = call.getBool("enabled") else {
+            call.reject("No enabled value provided")
+            return
+        }
+        
+        Gleap.setCaptureEnabled(enabled)
+        
+        call.resolve([
+            "captureEnabled": enabled
+        ])
+    }
+    
+    // Enables or disables sending the app's logs for capture requests.
+    @objc func setRemoteLogCollectionEnabled(_ call: CAPPluginCall) {
+        guard let enabled = call.getBool("enabled") else {
+            call.reject("No enabled value provided")
+            return
+        }
+        
+        Gleap.setRemoteLogCollectionEnabled(enabled)
+        
+        call.resolve([
+            "remoteLogCollectionEnabled": enabled
         ])
     }
     
