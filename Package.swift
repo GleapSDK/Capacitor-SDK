@@ -16,7 +16,7 @@ let package = Package(
         // Capacitor rewrites this to the app's Capacitor major version during `npx cap sync`.
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", from: "7.0.0"),
         // Native Gleap iOS SDK, released together with this plugin (same version).
-        .package(url: "https://github.com/GleapSDK/Gleap-iOS-SDK.git", from: "19.2.0")
+        .package(url: "https://github.com/GleapSDK/Gleap-iOS-SDK.git", from: "19.2.1")
     ],
     targets: [
         .target(
