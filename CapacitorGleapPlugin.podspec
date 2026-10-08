@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   s.source_files = 'ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}'
   s.ios.deployment_target = '15.0'
   s.dependency 'Capacitor'
-  s.dependency 'Gleap', '19.1.0'
+  s.dependency 'Gleap', '19.2.0'
   s.swift_version = '5.1'
 end
