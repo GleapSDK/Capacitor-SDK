@@ -27,7 +27,7 @@ The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** o
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.2.1'
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.2.2'
 end
 ```
 

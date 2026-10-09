@@ -1,7 +1,7 @@
 {
   "homepage": "https://www.gleap.ai",
   "name": "capacitor-gleap-plugin",
-  "version": "19.2.1",
+  "version": "19.2.2",
   "description": "Gleap SDK for Capacitor and Ionic: AI customer support, live chat, in-app bug reporting and customer feedback.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
