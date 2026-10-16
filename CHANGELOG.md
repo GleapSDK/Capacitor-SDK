@@ -1,5 +1,10 @@
 # Changelog
 
+## 19.3.0
+Inline banners can push the page down instead of covering it on Android and iOS: the new `banner-height-changed` event (`setEventCallback`) and `getBannerHeight()` give the height in CSS pixels from the top edge (the banner covers the status bar; 0 when none is shown or the banner floats). See the README for the CSS. Web returns 0: the web SDK pushes the page itself.
+Updated native iOS dependency to 19.3.0
+Updated native Android dependency to 19.3.0
+
 ## 19.2.4
 Android: the realtime socket opens and closes far less often (no reconnect on a network change or an unchanged identify, closed with 1001 after 10 s in the background, backoff reset only after a healthy socket); see the Android SDK 19.2.4 notes.
 Updated native iOS dependency to 19.2.4

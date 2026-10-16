@@ -27,7 +27,7 @@ The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** o
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.2.4'
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.3.0'
 end
 ```
 
@@ -81,6 +81,33 @@ await Gleap.setColorScheme({ colorScheme: isDarkTheme ? "dark" : "light", darkBa
 ```
 
 `setColorScheme` only takes effect when "Adapt to dark / light mode" is enabled in the Gleap dashboard; it then overrides the dashboard's color scheme. Before the first call the dashboard setting applies. In dark mode the widget uses the dark mode colors, logo, header image and composer glow set in the Gleap dashboard; without dark colors it keeps its normal colors. `lightBackgroundColor` / `darkBackgroundColor` override the background in light / dark mode. Can be called before or after `initialize`.
+
+## Inline banners
+
+On Android and iOS, inline banners (the banner style set in the Gleap dashboard) are drawn natively at the top of the screen, over the WebView, and cover the status bar. To push your page down below them instead of covering it, like inline banners on the web, pad the page by the banner's height. It arrives as the `banner-height-changed` event, in CSS pixels from the top edge (0 when no inline banner is shown; floating banners stay at 0):
+
+```typescript
+const applyBannerHeight = (height: number) =>
+  document.documentElement.style.setProperty("--gleap-banner-height", `${height}px`);
+
+await Gleap.setEventCallback((message) => {
+  if (message?.name === "banner-height-changed") {
+    applyBannerHeight(message.data);
+  }
+});
+await Gleap.initialize({ API_KEY: "..." });
+applyBannerHeight((await Gleap.getBannerHeight()).height);
+```
+
+```css
+body {
+  /* The banner covers the status bar, so it replaces the top safe-area inset while shown. */
+  padding-top: max(var(--gleap-banner-height, 0px), env(safe-area-inset-top));
+  transition: padding-top 0.25s ease-out;
+}
+```
+
+Without this, nothing changes: banners overlay the app as before. On the web the Gleap web SDK pushes the page down itself.
 
 ## Protected conversation files
 
@@ -165,6 +192,7 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`openFeatureRequests(...)`](#openfeaturerequests)
 * [`close()`](#close)
 * [`isOpened()`](#isopened)
+* [`getBannerHeight()`](#getbannerheight)
 * [`startFeedbackFlow(...)`](#startfeedbackflow)
 * [`startClassicForm(...)`](#startclassicform)
 * [`startConversation(...)`](#startconversation)
@@ -1212,6 +1240,26 @@ Check widget status code
 --------------------
 
 
+### getBannerHeight()
+
+```typescript
+getBannerHeight() => Promise<{ height: number; }>
+```
+
+The space the shown inline banner takes at the top of the screen, in CSS
+pixels from the top edge (the banner covers the status bar), 0 when none
+is shown. Floating banners stay at 0. Changes arrive as the
+`banner-height-changed` event of `setEventCallback` (data: the height);
+pad your page by it to keep it below inline banners. Web: always 0, the
+web SDK pushes the page down itself.
+
+**Returns:** <code>Promise&lt;{ height: number; }&gt;</code>
+
+**Since:** 19.3.0
+
+--------------------
+
+
 ### startFeedbackFlow(...)
 
 ```typescript
@@ -1622,7 +1670,9 @@ The network log settings of your Gleap project, sent by the native SDK once its 
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### GleapEventCallback

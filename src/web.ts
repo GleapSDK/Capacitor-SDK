@@ -711,6 +711,10 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     return { isOpened: Gleap.isOpened() };
   }
 
+  async getBannerHeight(): Promise<{ height: number }> {
+    return { height: 0 };
+  }
+
   async disableConsoleLogOverwrite(): Promise<{ consoleLogDisabled: boolean }> {
     Gleap.disableConsoleLogOverwrite();
 

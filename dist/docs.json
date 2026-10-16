@@ -1142,6 +1142,21 @@
         "slug": "isopened"
       },
       {
+        "name": "getBannerHeight",
+        "signature": "() => Promise<{ height: number; }>",
+        "parameters": [],
+        "returns": "Promise<{ height: number; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "19.3.0"
+          }
+        ],
+        "docs": "The space the shown inline banner takes at the top of the screen, in CSS\npixels from the top edge (the banner covers the status bar), 0 when none\nis shown. Floating banners stay at 0. Changes arrive as the\n`banner-height-changed` event of `setEventCallback` (data: the height);\npad your page by it to keep it below inline banners. Web: always 0, the\nweb SDK pushes the page down itself.",
+        "complexTypes": [],
+        "slug": "getbannerheight"
+      },
+      {
         "name": "startFeedbackFlow",
         "signature": "(options: { feedbackFlow?: string; showBackButton?: boolean; }) => Promise<{ startedFeedbackFlow: boolean; }>",
         "parameters": [
