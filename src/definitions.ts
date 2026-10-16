@@ -706,6 +706,20 @@ export interface GleapPlugin {
   }>;
 
   /**
+   * The space the shown inline banner takes at the top of the screen, in CSS
+   * pixels from the top edge (the banner covers the status bar), 0 when none
+   * is shown. Floating banners stay at 0. Changes arrive as the
+   * `banner-height-changed` event of `setEventCallback` (data: the height);
+   * pad your page by it to keep it below inline banners. Web: always 0, the
+   * web SDK pushes the page down itself.
+   *
+   * @since 19.3.0
+   */
+  getBannerHeight(): Promise<{
+    height: number;
+  }>;
+
+  /**
  * Start feedback flow
  *
  * @since 7.0.0

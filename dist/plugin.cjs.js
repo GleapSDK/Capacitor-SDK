@@ -2705,6 +2705,9 @@ class GleapWeb extends core.WebPlugin {
     async isOpened() {
         return { isOpened: Gleap$1.isOpened() };
     }
+    async getBannerHeight() {
+        return { height: 0 };
+    }
     async disableConsoleLogOverwrite() {
         Gleap$1.disableConsoleLogOverwrite();
         return { consoleLogDisabled: true };

@@ -33,6 +33,7 @@ import io.gleap.callbacks.RegisterPushMessageGroupCallback;
 import io.gleap.callbacks.UnRegisterPushMessageGroupCallback;
 import io.gleap.callbacks.WidgetClosedCallback;
 import io.gleap.callbacks.WidgetOpenedCallback;
+import io.gleap.callbacks.BannerHeightChangedCallback;
 import io.gleap.callbacks.NotificationUnreadCountUpdatedCallback;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1144,6 +1145,13 @@ public class GleapPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void getBannerHeight(PluginCall call) {
+        JSObject ret = new JSObject();
+        ret.put("height", implementation.getBannerHeight());
+        call.resolve(ret);
+    }
+
+    @PluginMethod
     public void isOpened(PluginCall call) throws GleapNotInitialisedException {
         // Build Json object and resolve success
         JSObject ret = new JSObject();
@@ -1461,6 +1469,17 @@ public class GleapPlugin extends Plugin {
                     JSObject data = new JSObject();
                     data.put("name", "notification-count-updated");
                     data.put("data", count);
+                    call.resolve(data);
+                }
+            }
+        );
+
+        implementation.setBannerHeightChangedCallback(new BannerHeightChangedCallback() {
+                @Override
+                public void invoke(int height) {
+                    JSObject data = new JSObject();
+                    data.put("name", "banner-height-changed");
+                    data.put("data", height);
                     call.resolve(data);
                 }
             }

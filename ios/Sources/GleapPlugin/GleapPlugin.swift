@@ -57,6 +57,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "openFeatureRequests", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "close", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "isOpened", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getBannerHeight", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "showFeedbackButton", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "enableDebugConsoleLog", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "log", returnType: CAPPluginReturnPromise),
@@ -1045,6 +1046,12 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         ])
     }
     
+    @objc func getBannerHeight(_ call: CAPPluginCall) {
+        call.resolve([
+            "height": Double(Gleap.bannerHeight())
+        ])
+    }
+    
     @objc func startBot(_ call: CAPPluginCall) {
         let botId = call.getString("botId") ?? ""
         let showBackButton = call.getBool("showBackButton") ?? true
@@ -1211,6 +1218,10 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
 
     public func notificationCountUpdated(_ count: Int32) {
         notifyEventUpdate(name: "notification-count-updated", data: count)
+    }
+
+    public func bannerHeightChanged(_ height: CGFloat) {
+        notifyEventUpdate(name: "banner-height-changed", data: Double(height))
     }
     
     public func onToolExecution(_ toolExecution: [AnyHashable : Any]) {

@@ -352,6 +352,9 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     isOpened(): Promise<{
         isOpened: boolean;
     }>;
+    getBannerHeight(): Promise<{
+        height: number;
+    }>;
     disableConsoleLogOverwrite(): Promise<{
         consoleLogDisabled: boolean;
     }>;
