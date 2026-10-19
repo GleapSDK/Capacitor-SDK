@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.3.1
+Updated native iOS dependency to 19.3.1
+Updated native Android dependency to 19.3.1
+
 ## 19.3.0
 Inline banners can push the page down instead of covering it on Android and iOS: the new `banner-height-changed` event (`setEventCallback`) and `getBannerHeight()` give the height in CSS pixels from the top edge (the banner covers the status bar; 0 when none is shown or the banner floats). See the README for the CSS. Web returns 0: the web SDK pushes the page itself.
 Updated native iOS dependency to 19.3.0
