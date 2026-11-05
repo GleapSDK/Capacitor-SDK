@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+Customer identity: `Gleap.setUserJwt({ token })`, `Gleap.setUserJwtProvider(fn)` and `Gleap.setAuthTokens({ tokens })` wrap the native SDK methods on iOS and Android and the Gleap JavaScript SDK on web. `setUserJwt` identifies the user with one HS256 JWT signed by your backend (the token is the whole identify, kept in memory only); `setAuthTokens` stores per-user tokens for API tools on the signed contact (a `null` value removes one). The provider stays in JavaScript: when the native (or JavaScript) SDK needs a fresh token (it expired, or expires within 5 minutes) it emits the `userJwtExpired` event, the plugin calls the provider and answers with `userJwtProviderResult`, and the SDK sends the identify again with the new token. The SDK keeps the rules (one call at a time, 10 second timeout, 30 second pause after a failure). Needs native SDKs with these methods (the next synchronized native release) and, on web, a Gleap JavaScript SDK with them.
+
 ## 19.3.1
 Updated native iOS dependency to 19.3.1
 Updated native Android dependency to 19.3.1

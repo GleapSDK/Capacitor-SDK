@@ -52,6 +52,10 @@ export interface GleapLogConfig {
     networkLogPropsToIgnore: string[];
     networkLogBlacklist: string[];
 }
+/**
+ * Fetches a fresh identity token (JWT) from your backend; see `setUserJwtProvider`.
+ */
+export declare type GleapUserJwtProvider = () => string | null | Promise<string | null>;
 export interface GleapPlugin {
     /**
     * Initialize Gleap with an API key
@@ -176,13 +180,62 @@ export interface GleapPlugin {
         identify: boolean;
     }>;
     /**
-    * Clear user identity
+    * Clear user identity: the contact, its identity token and auth tokens. The JWT provider stays set.
     *
     * @since 7.0.0
     */
     clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;
+    /**
+    * Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is
+    * the whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact
+    * as signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only
+    * and sent again whenever it changes. A token that is not a JWT, has no user id or is over 4096 characters is
+    * refused with a log line and nothing is sent. Resolves once the native (or JavaScript) SDK has the token.
+    */
+    setUserJwt(options: {
+        token: string;
+    }): Promise<void>;
+    /**
+    * Sets the function that fetches a fresh identity token from your backend. Gleap calls it when the server answers
+    * that the token expired (and retries once with the new token), and before it renews the file access or sends the
+    * identify again when the token expires within 5 minutes. One call at a time; a call without an answer within
+    * 10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or
+    * throw) when fetching failed. `clearIdentity` keeps the provider; pass `null` to remove it. The provider runs in
+    * JavaScript: the plugin answers the `userJwtExpired` event for you.
+    */
+    setUserJwtProvider(provider: GleapUserJwtProvider | null): Promise<void>;
+    /**
+    * Stores per-user tokens on the signed contact that your API tools may send to your backend on this user's behalf
+    * (`{{session.authTokens.<name>}}`). Each call replaces the named tokens; a `null` value removes one. Names start
+    * with a letter and use letters, digits, `_` and `-` (at most 40 characters). Needs a signed identity
+    * (`setUserJwt`). Kept in memory only and sent again after the next signed identify on a new session.
+    */
+    setAuthTokens(options: {
+        tokens: Record<string, string | null>;
+    }): Promise<void>;
+    /**
+    * Turns the native JWT provider on or off. Used by `setUserJwtProvider`.
+    */
+    setUserJwtProviderEnabled(options: {
+        enabled: boolean;
+    }): Promise<void>;
+    /**
+    * Answers a `userJwtExpired` request with the provider's token (`null` when it failed). Used by
+    * `setUserJwtProvider`.
+    */
+    userJwtProviderResult(options: {
+        requestId: string;
+        token: string | null;
+    }): Promise<void>;
+    /**
+    * Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you
+    * and answers with `userJwtProviderResult`.
+    */
+    addListener(eventName: 'userJwtExpired', listenerFunc: (data: {
+        requestId: string;
+    }) => void): Promise<PluginListenerHandle>;
     /**
     * Get the current user identity
     *

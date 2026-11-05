@@ -4,6 +4,7 @@ export class GleapWeb extends WebPlugin {
     constructor() {
         super(...arguments);
         this.pendingAgentToolExecutions = {};
+        this.pendingUserJwtRequests = {};
     }
     async initialize(options) {
         if (GleapWeb.initialized) {
@@ -274,6 +275,50 @@ export class GleapWeb extends WebPlugin {
         Gleap.clearIdentity();
         return { clearIdentity: true };
     }
+    // Customer identity: the Gleap JavaScript SDK does the work and keeps the provider's rules.
+    async setUserJwt(options) {
+        const gleapSdk = Gleap;
+        if (typeof gleapSdk.setUserJwt !== 'function') {
+            console.warn('Gleap: setUserJwt requires a newer version of the Gleap JS SDK.');
+            return;
+        }
+        await gleapSdk.setUserJwt(options.token);
+    }
+    async setAuthTokens(options) {
+        const gleapSdk = Gleap;
+        if (typeof gleapSdk.setAuthTokens !== 'function') {
+            console.warn('Gleap: setAuthTokens requires a newer version of the Gleap JS SDK.');
+            return;
+        }
+        await gleapSdk.setAuthTokens(options.tokens);
+    }
+    // Handled by the plugin wrapper (userJwtProvider.ts), which uses the two methods below.
+    async setUserJwtProvider() {
+        return;
+    }
+    async setUserJwtProviderEnabled(options) {
+        const gleapSdk = Gleap;
+        if (typeof gleapSdk.setUserJwtProvider !== 'function') {
+            console.warn('Gleap: setUserJwtProvider requires a newer version of the Gleap JS SDK.');
+            return;
+        }
+        if (!options.enabled) {
+            gleapSdk.setUserJwtProvider(null);
+            return;
+        }
+        gleapSdk.setUserJwtProvider(() => new Promise(resolve => {
+            const requestId = `web-jwt-${++GleapWeb.userJwtRequestCounter}`;
+            this.pendingUserJwtRequests[requestId] = resolve;
+            this.notifyListeners('userJwtExpired', { requestId });
+        }));
+    }
+    async userJwtProviderResult(options) {
+        const resolve = this.pendingUserJwtRequests[options.requestId];
+        if (resolve) {
+            delete this.pendingUserJwtRequests[options.requestId];
+            resolve(options.token || null);
+        }
+    }
     async getIdentity() {
         return { identity: Gleap.getIdentity() };
     }
@@ -428,4 +473,5 @@ export class GleapWeb extends WebPlugin {
 GleapWeb.callbacks = {};
 GleapWeb.initialized = false;
 GleapWeb.agentToolExecutionCounter = 0;
+GleapWeb.userJwtRequestCounter = 0;
 //# sourceMappingURL=web.js.map

@@ -24,6 +24,10 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "identify", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "updateContact", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clearIdentity", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setUserJwt", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setAuthTokens", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setUserJwtProviderEnabled", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "userJwtProviderResult", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setNetworkLogsBlacklist", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setNetworkLogPropsToIgnore", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setEnvDataPropsToIgnore", returnType: CAPPluginReturnPromise),
@@ -91,6 +95,8 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     
     private var callQueue: [String: CallType] = [:]
     private var pendingAgentToolExecutions: [String: GleapAgentToolCompletion] = [:]
+    // setUserJwtProvider: the native SDK's token requests waiting for the JS provider (main queue only).
+    private var pendingUserJwtRequests: [String: (String?) -> Void] = [:]
     // Network log settings from the last loaded config, for the WebView log capture (main queue only).
     private var lastLogConfig: [String: Any]?
     // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
@@ -369,6 +375,66 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         ])
     }
     
+    // Customer identity: the token is the whole identify (see Gleap.setUserJwt).
+    @objc func setUserJwt(_ call: CAPPluginCall) {
+        guard let token = call.options["token"] as? String else {
+            call.reject("Must provide a token")
+            return
+        }
+        DispatchQueue.main.async {
+            Gleap.setUserJwt(token)
+            call.resolve()
+        }
+    }
+
+    // Customer identity: per-user tokens for API tools; null (NSNull) removes one.
+    @objc func setAuthTokens(_ call: CAPPluginCall) {
+        guard let tokens = call.options["tokens"] as? [String: Any] else {
+            call.reject("Must provide tokens")
+            return
+        }
+        DispatchQueue.main.async {
+            Gleap.setAuthTokens(tokens)
+            call.resolve()
+        }
+    }
+
+    // Customer identity: the JS provider answers each userJwtExpired event with userJwtProviderResult. The native
+    // SDK keeps the rules (one call at a time, 10 s timeout, 30 s pause after a failure).
+    @objc func setUserJwtProviderEnabled(_ call: CAPPluginCall) {
+        let enabled = call.getBool("enabled") ?? false
+        DispatchQueue.main.async {
+            if !enabled {
+                Gleap.setUserJwtProvider(nil)
+                call.resolve()
+                return
+            }
+            Gleap.setUserJwtProvider { [weak self] completion in
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        completion(nil)
+                        return
+                    }
+                    let requestId = UUID().uuidString
+                    self.pendingUserJwtRequests[requestId] = completion
+                    self.notifyListeners("userJwtExpired", data: ["requestId": requestId])
+                }
+            }
+            call.resolve()
+        }
+    }
+
+    @objc func userJwtProviderResult(_ call: CAPPluginCall) {
+        let requestId = call.getString("requestId") ?? ""
+        let token = call.getString("token")
+        DispatchQueue.main.async {
+            if let completion = self.pendingUserJwtRequests.removeValue(forKey: requestId) {
+                completion(token?.isEmpty == false ? token : nil)
+            }
+            call.resolve()
+        }
+    }
+
     @objc func getIdentity(_ call: CAPPluginCall) {
         call.resolve([
             "identity": Gleap.getIdentity()

@@ -12,6 +12,12 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     [executionId: string]: (result: string) => void;
   } = {};
 
+  static userJwtRequestCounter = 0;
+
+  private pendingUserJwtRequests: {
+    [requestId: string]: (token: string | null) => void;
+  } = {};
+
   async initialize(options: {
     API_KEY: string;
   }): Promise<{ initialized: boolean }> {
@@ -449,6 +455,58 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
     Gleap.clearIdentity();
 
     return { clearIdentity: true };
+  }
+
+  // Customer identity: the Gleap JavaScript SDK does the work and keeps the provider's rules.
+  async setUserJwt(options: { token: string }): Promise<void> {
+    const gleapSdk = Gleap as any;
+    if (typeof gleapSdk.setUserJwt !== 'function') {
+      console.warn('Gleap: setUserJwt requires a newer version of the Gleap JS SDK.');
+      return;
+    }
+    await gleapSdk.setUserJwt(options.token);
+  }
+
+  async setAuthTokens(options: { tokens: Record<string, string | null> }): Promise<void> {
+    const gleapSdk = Gleap as any;
+    if (typeof gleapSdk.setAuthTokens !== 'function') {
+      console.warn('Gleap: setAuthTokens requires a newer version of the Gleap JS SDK.');
+      return;
+    }
+    await gleapSdk.setAuthTokens(options.tokens);
+  }
+
+  // Handled by the plugin wrapper (userJwtProvider.ts), which uses the two methods below.
+  async setUserJwtProvider(): Promise<void> {
+    return;
+  }
+
+  async setUserJwtProviderEnabled(options: { enabled: boolean }): Promise<void> {
+    const gleapSdk = Gleap as any;
+    if (typeof gleapSdk.setUserJwtProvider !== 'function') {
+      console.warn('Gleap: setUserJwtProvider requires a newer version of the Gleap JS SDK.');
+      return;
+    }
+    if (!options.enabled) {
+      gleapSdk.setUserJwtProvider(null);
+      return;
+    }
+    gleapSdk.setUserJwtProvider(
+      () =>
+        new Promise<string | null>(resolve => {
+          const requestId = `web-jwt-${++GleapWeb.userJwtRequestCounter}`;
+          this.pendingUserJwtRequests[requestId] = resolve;
+          this.notifyListeners('userJwtExpired', { requestId });
+        }),
+    );
+  }
+
+  async userJwtProviderResult(options: { requestId: string; token: string | null }): Promise<void> {
+    const resolve = this.pendingUserJwtRequests[options.requestId];
+    if (resolve) {
+      delete this.pendingUserJwtRequests[options.requestId];
+      resolve(options.token || null);
+    }
   }
 
   async getIdentity(): Promise<{

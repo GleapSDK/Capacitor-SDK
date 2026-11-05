@@ -7,6 +7,8 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     static initialized: boolean;
     static agentToolExecutionCounter: number;
     private pendingAgentToolExecutions;
+    static userJwtRequestCounter: number;
+    private pendingUserJwtRequests;
     initialize(options: {
         API_KEY: string;
     }): Promise<{
@@ -194,6 +196,20 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;
+    setUserJwt(options: {
+        token: string;
+    }): Promise<void>;
+    setAuthTokens(options: {
+        tokens: Record<string, string | null>;
+    }): Promise<void>;
+    setUserJwtProvider(): Promise<void>;
+    setUserJwtProviderEnabled(options: {
+        enabled: boolean;
+    }): Promise<void>;
+    userJwtProviderResult(options: {
+        requestId: string;
+        token: string | null;
+    }): Promise<void>;
     getIdentity(): Promise<{
         identity: {
             userId: string;
