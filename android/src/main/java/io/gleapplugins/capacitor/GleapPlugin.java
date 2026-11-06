@@ -67,6 +67,10 @@ public class GleapPlugin extends Plugin {
     private final Map<String, GleapAgentToolResultCallback> pendingAgentToolExecutions = new ConcurrentHashMap<>();
     // setUserJwtProvider: the native SDK's token requests waiting for the JS provider.
     private final Map<String, GleapUserJwtProvider.Callback> pendingUserJwtRequests = new ConcurrentHashMap<>();
+    // The native SDK stops waiting for a token after 10 s; an unanswered request is forgotten a little later.
+    private static final long USER_JWT_REQUEST_FORGET_MS = 15000;
+    // The native SDK asks one token at a time, so more than a few pending requests are stale ones.
+    private static final int USER_JWT_PENDING_MAX = 16;
     // Network log settings from the last loaded config, for the WebView log capture.
     private volatile JSObject lastLogConfig;
     // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
@@ -503,8 +507,20 @@ public class GleapPlugin extends Plugin {
         Gleap.getInstance().setUserJwtProvider(new GleapUserJwtProvider() {
             @Override
             public void fetchToken(Callback callback) {
-                String requestId = UUID.randomUUID().toString();
+                final String requestId = UUID.randomUUID().toString();
+                if (pendingUserJwtRequests.size() >= USER_JWT_PENDING_MAX) {
+                    pendingUserJwtRequests.clear();
+                }
                 pendingUserJwtRequests.put(requestId, callback);
+                mainHandler.postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            pendingUserJwtRequests.remove(requestId);
+                        }
+                    },
+                    USER_JWT_REQUEST_FORGET_MS
+                );
                 JSObject eventData = new JSObject();
                 eventData.put("requestId", requestId);
                 notifyListeners("userJwtExpired", eventData);

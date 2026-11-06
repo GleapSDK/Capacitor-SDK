@@ -2702,9 +2702,18 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             }
             await gleapSdk.setUserJwt(options.token);
         }
-        // Stored and passed on with initialize: the JavaScript SDK has no setter, so call it before initialize.
+        // Stored for initialize (the JavaScript SDK takes it as an initialize option) and handed to
+        // Gleap.setSessionDuration, which applies it to a running session. An older JavaScript SDK without
+        // the setter only gets it with initialize.
         async setSessionDuration(options) {
             GleapWeb.sessionDuration = Math.max(0, Math.floor(options.milliseconds) || 0);
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.setSessionDuration === 'function') {
+                gleapSdk.setSessionDuration(GleapWeb.sessionDuration);
+            }
+            else if (GleapWeb.initialized) {
+                console.warn('Gleap: setSessionDuration after initialize requires a newer version of the Gleap JS SDK.');
+            }
         }
         async setAuthTokens(options) {
             const gleapSdk = Gleap$1;
