@@ -111,7 +111,9 @@ Without this, nothing changes: banners overlay the app as before. On the web the
 
 ## Customer identity (JWT)
 
-Sign the user in with one HS256 JWT your backend signs with an identity key (Settings → Security → Customer identity). The token's `userId` names the user; everything else on the contact comes from the token. The SDK keeps it in memory only. See [Customer identity](https://docs.gleap.ai/documentation/guides/customer-identity).
+### Signed identity (recommended)
+
+Your backend signs an HS256 JWT with an identity key from Settings → Security → Identity keys (put the key id in the `kid` header; the secret never leaves your server). The `userId` claim is required. Optional claims: `email`, `name`, `company` (`{ id, name }`), `plan`, and provider ids such as `stripeCustomerId`. Set `exp` to at most one hour. Everything in the token lands on the contact as signed data the app cannot change. Pass the token to the SDK after login and on every app start of a logged-in user; `setUserJwt` keeps it in memory only. `setUserJwtProvider` fetches a fresh token when it expires, and `setAuthTokens` hands Kai your own API tokens for this user. See [Customer identity](https://docs.gleap.ai/documentation/guides/customer-identity).
 
 ```js
 import { Gleap } from "capacitor-gleap-plugin";
@@ -134,15 +136,19 @@ await Gleap.setAuthTokens({ tokens: { backend: accessToken } });
 
 The provider runs in JavaScript: when the native SDK needs a fresh token it sends the `userJwtExpired` event, and the plugin calls your provider and hands the token back (`userJwtProviderResult`); the native SDK then sends the identify again with it.
 
-## Protected conversation files
+### Legacy user hash
 
-With "Require authenticated file access" (Project settings → User identity), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Identify the customer with a user hash (created on your server with the project's identity verification secret) on every app start:
+Instead of a token you can still identify with a user hash: the HMAC-SHA256 of the user id, created on your server with the project's identity verification secret. It is accepted while "Accept legacy user hash" stays on in the project's security settings.
 
 ```typescript
 await Gleap.identify({ userId: "user-1", userHash: userHash, email: "jane@example.com" });
 ```
 
-Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is identified with a user hash:
+## Protected conversation files
+
+With "Require authenticated file access" (Project settings → User identity), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Identify the customer with a signed identity (`Gleap.setUserJwt`, or the legacy user hash) on every app start.
+
+Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is identified with a signed identity:
 
 ```typescript
 import { App } from "@capacitor/app";
@@ -1808,7 +1814,9 @@ The network log settings of your Gleap project, sent by the native SDK once its 
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### GleapUserJwtProvider
