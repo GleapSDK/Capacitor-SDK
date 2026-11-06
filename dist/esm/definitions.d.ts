@@ -191,8 +191,9 @@ export interface GleapPlugin {
     * Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is
     * the whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact
     * as signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only
-    * and sent again whenever it changes. A token that is not a JWT, has no user id or is over 4096 characters is
-    * refused with a log line and nothing is sent. Resolves once the native (or JavaScript) SDK has the token.
+    * and sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or
+    * is over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the
+    * bare string. Resolves once the native (or JavaScript) SDK has the token.
     */
     setUserJwt(options: {
         token: string;
@@ -225,22 +226,8 @@ export interface GleapPlugin {
         tokens: Record<string, string | null>;
     }): Promise<void>;
     /**
-    * Turns the native JWT provider on or off. Used by `setUserJwtProvider`.
-    */
-    setUserJwtProviderEnabled(options: {
-        enabled: boolean;
-    }): Promise<void>;
-    /**
-    * Answers a `userJwtExpired` request with the provider's token (`null` when it failed). Used by
-    * `setUserJwtProvider`.
-    */
-    userJwtProviderResult(options: {
-        requestId: string;
-        token: string | null;
-    }): Promise<void>;
-    /**
     * Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you
-    * and answers with `userJwtProviderResult`.
+    * and answers it for you.
     */
     addListener(eventName: 'userJwtExpired', listenerFunc: (data: {
         requestId: string;
@@ -911,4 +898,26 @@ export interface GleapPlugin {
     }): Promise<{
         notificationContainerOffsetSet: boolean;
     }>;
+}
+/**
+ * The native side of `setUserJwtProvider`: the plugin's own calls, not for app code and not part of `GleapPlugin`.
+ * @internal
+ */
+export interface GleapUserJwtProviderBridge {
+    /**
+    * Turns the native JWT provider on or off. Used by `setUserJwtProvider`; not for app code.
+    * @internal
+    */
+    setUserJwtProviderEnabled(options: {
+        enabled: boolean;
+    }): Promise<void>;
+    /**
+    * Answers a `userJwtExpired` request with the provider's token (`null` when it failed). Used by
+    * `setUserJwtProvider`; not for app code.
+    * @internal
+    */
+    userJwtProviderResult(options: {
+        requestId: string;
+        token: string | null;
+    }): Promise<void>;
 }

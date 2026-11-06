@@ -115,6 +115,8 @@ Without this, nothing changes: banners overlay the app as before. On the web the
 
 Your backend signs an HS256 JWT with an identity key from Settings → Security → Identity keys (put the key id in the `kid` header; the secret never leaves your server). The `userId` claim is required. Optional claims: `email`, `name`, `company` (`{ id, name }`), `plan`, and provider ids such as `stripeCustomerId`. Set `exp` to at most one hour. Everything in the token lands on the contact as signed data the app cannot change. Pass the token to the SDK after login and on every app start of a logged-in user; `setUserJwt` keeps it in memory only. `setUserJwtProvider` fetches a fresh token when it expires, and `setAuthTokens` hands Kai your own API tokens for this user. See [Customer identity](https://docs.gleap.ai/documentation/guides/customer-identity).
 
+> **Pass an object:** `Gleap.setUserJwt({ token })`, not `Gleap.setUserJwt(token)`. Like every method of this plugin, it takes one options object. The provider is the exception: it returns the bare token string (or `null`).
+
 ```js
 import { Gleap } from "capacitor-gleap-plugin";
 
@@ -137,7 +139,7 @@ await Gleap.setSessionDuration({ milliseconds: 24 * 60 * 60 * 1000 });
 await Gleap.setAuthTokens({ tokens: { backend: accessToken } });
 ```
 
-The provider runs in JavaScript: when the native SDK needs a fresh token it sends the `userJwtExpired` event, and the plugin calls your provider and hands the token back (`userJwtProviderResult`); the native SDK then sends the identify again with it.
+The provider runs in JavaScript: when the native SDK needs a fresh token it sends the `userJwtExpired` event, and the plugin calls your provider and hands the token back; the native SDK then sends the identify again with it.
 
 `setSessionDuration(ms)` shortens the signed session; the project's maximum applies.
 
@@ -188,8 +190,6 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`setSessionDuration(...)`](#setsessionduration)
 * [`setUserJwtProvider(...)`](#setuserjwtprovider)
 * [`setAuthTokens(...)`](#setauthtokens)
-* [`setUserJwtProviderEnabled(...)`](#setuserjwtproviderenabled)
-* [`userJwtProviderResult(...)`](#userjwtproviderresult)
 * [`addListener('userJwtExpired', ...)`](#addlisteneruserjwtexpired-)
 * [`getIdentity()`](#getidentity)
 * [`isUserIdentified()`](#isuseridentified)
@@ -477,8 +477,9 @@ setUserJwt(options: { token: string; }) => Promise<void>
 Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is
 the whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact
 as signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only
-and sent again whenever it changes. A token that is not a JWT, has no user id or is over 4096 characters is
-refused with a log line and nothing is sent. Resolves once the native (or JavaScript) SDK has the token.
+and sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or
+is over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the
+bare string. Resolves once the native (or JavaScript) SDK has the token.
 
 | Param         | Type                            |
 | ------------- | ------------------------------- |
@@ -543,37 +544,6 @@ with a letter and use letters, digits, `_` and `-` (at most 40 characters). Need
 --------------------
 
 
-### setUserJwtProviderEnabled(...)
-
-```typescript
-setUserJwtProviderEnabled(options: { enabled: boolean; }) => Promise<void>
-```
-
-Turns the native JWT provider on or off. Used by `setUserJwtProvider`.
-
-| Param         | Type                               |
-| ------------- | ---------------------------------- |
-| **`options`** | <code>{ enabled: boolean; }</code> |
-
---------------------
-
-
-### userJwtProviderResult(...)
-
-```typescript
-userJwtProviderResult(options: { requestId: string; token: string | null; }) => Promise<void>
-```
-
-Answers a `userJwtExpired` request with the provider's token (`null` when it failed). Used by
-`setUserJwtProvider`.
-
-| Param         | Type                                                       |
-| ------------- | ---------------------------------------------------------- |
-| **`options`** | <code>{ requestId: string; token: string \| null; }</code> |
-
---------------------
-
-
 ### addListener('userJwtExpired', ...)
 
 ```typescript
@@ -581,7 +551,7 @@ addListener(eventName: 'userJwtExpired', listenerFunc: (data: { requestId: strin
 ```
 
 Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you
-and answers with `userJwtProviderResult`.
+and answers it for you.
 
 | Param              | Type                                                   |
 | ------------------ | ------------------------------------------------------ |

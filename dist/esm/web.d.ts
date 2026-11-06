@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
-import type { GleapEventCallback, GleapPlugin } from './definitions';
-export declare class GleapWeb extends WebPlugin implements GleapPlugin {
+import type { GleapEventCallback, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
+export declare class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProviderBridge {
     static callbacks: {
         [key: string]: GleapEventCallback;
     };

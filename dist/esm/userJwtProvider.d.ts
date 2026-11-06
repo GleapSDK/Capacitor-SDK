@@ -1,5 +1,5 @@
-import type { GleapPlugin, GleapUserJwtProvider } from './definitions';
-declare type IdentityPlugin = Pick<GleapPlugin, 'addListener' | 'setUserJwtProviderEnabled' | 'userJwtProviderResult'>;
+import type { GleapPlugin, GleapUserJwtProvider, GleapUserJwtProviderBridge } from './definitions';
+declare type IdentityPlugin = Pick<GleapPlugin, 'addListener'> & GleapUserJwtProviderBridge;
 /**
  * `Gleap.setUserJwtProvider(fn)`: the provider stays in JavaScript. The native (or JavaScript) SDK keeps the rules
  * (one call at a time, 10 s timeout, 30 s pause after a failure) and asks for a token with the `userJwtExpired`

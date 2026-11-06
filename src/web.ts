@@ -1,9 +1,9 @@
 import { WebPlugin } from '@capacitor/core';
 import Gleap from 'gleap';
 
-import type { GleapEventCallback, GleapPlugin } from './definitions';
+import type { GleapEventCallback, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
 
-export class GleapWeb extends WebPlugin implements GleapPlugin {
+export class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProviderBridge {
   static callbacks: { [key: string]: GleapEventCallback } = {};
   static initialized = false;
   static sessionDuration = 0;

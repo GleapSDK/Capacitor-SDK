@@ -1,13 +1,13 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { GleapPlugin } from './definitions';
+import type { GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
 import {
   installWebViewLogCapture,
   wrapPluginWithLogCapture,
 } from './logs/webViewLogs';
 import { withUserJwtProvider } from './userJwtProvider';
 
-const GleapNative = registerPlugin<GleapPlugin>('Gleap', {
+const GleapNative = registerPlugin<GleapPlugin & GleapUserJwtProviderBridge>('Gleap', {
   web: () => import('./web').then(m => new m.GleapWeb()),
 });
 

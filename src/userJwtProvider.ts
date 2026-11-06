@@ -1,6 +1,6 @@
-import type { GleapPlugin, GleapUserJwtProvider } from './definitions';
+import type { GleapPlugin, GleapUserJwtProvider, GleapUserJwtProviderBridge } from './definitions';
 
-type IdentityPlugin = Pick<GleapPlugin, 'addListener' | 'setUserJwtProviderEnabled' | 'userJwtProviderResult'>;
+type IdentityPlugin = Pick<GleapPlugin, 'addListener'> & GleapUserJwtProviderBridge;
 
 /**
  * `Gleap.setUserJwtProvider(fn)`: the provider stays in JavaScript. The native (or JavaScript) SDK keeps the rules

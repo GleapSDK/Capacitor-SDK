@@ -246,7 +246,7 @@
         ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is\nthe whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact\nas signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only\nand sent again whenever it changes. A token that is not a JWT, has no user id or is over 4096 characters is\nrefused with a log line and nothing is sent. Resolves once the native (or JavaScript) SDK has the token.",
+        "docs": "Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is\nthe whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact\nas signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only\nand sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or\nis over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the\nbare string. Resolves once the native (or JavaScript) SDK has the token.",
         "complexTypes": [],
         "slug": "setuserjwt"
       },
@@ -303,38 +303,6 @@
         "slug": "setauthtokens"
       },
       {
-        "name": "setUserJwtProviderEnabled",
-        "signature": "(options: { enabled: boolean; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ enabled: boolean; }"
-          }
-        ],
-        "returns": "Promise<void>",
-        "tags": [],
-        "docs": "Turns the native JWT provider on or off. Used by `setUserJwtProvider`.",
-        "complexTypes": [],
-        "slug": "setuserjwtproviderenabled"
-      },
-      {
-        "name": "userJwtProviderResult",
-        "signature": "(options: { requestId: string; token: string | null; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ requestId: string; token: string | null; }"
-          }
-        ],
-        "returns": "Promise<void>",
-        "tags": [],
-        "docs": "Answers a `userJwtExpired` request with the provider's token (`null` when it failed). Used by\n`setUserJwtProvider`.",
-        "complexTypes": [],
-        "slug": "userjwtproviderresult"
-      },
-      {
         "name": "addListener",
         "signature": "(eventName: 'userJwtExpired', listenerFunc: (data: { requestId: string; }) => void) => Promise<PluginListenerHandle>",
         "parameters": [
@@ -351,7 +319,7 @@
         ],
         "returns": "Promise<PluginListenerHandle>",
         "tags": [],
-        "docs": "Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you\nand answers with `userJwtProviderResult`.",
+        "docs": "Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you\nand answers it for you.",
         "complexTypes": [
           "PluginListenerHandle"
         ],
