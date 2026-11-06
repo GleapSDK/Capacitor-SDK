@@ -5,6 +5,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
         [key: string]: GleapEventCallback;
     };
     static initialized: boolean;
+    static sessionDuration: number;
     static agentToolExecutionCounter: number;
     private pendingAgentToolExecutions;
     static userJwtRequestCounter: number;
@@ -198,6 +199,9 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     }>;
     setUserJwt(options: {
         token: string;
+    }): Promise<void>;
+    setSessionDuration(options: {
+        milliseconds: number;
     }): Promise<void>;
     setAuthTokens(options: {
         tokens: Record<string, string | null>;

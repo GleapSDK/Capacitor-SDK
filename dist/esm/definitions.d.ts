@@ -198,6 +198,15 @@ export interface GleapPlugin {
         token: string;
     }): Promise<void>;
     /**
+    * Shortens how long a signed session stays signed, in milliseconds. Sent with every identify; the project's
+    * maximum (Settings > Security) applies when yours is longer. Call it before `setUserJwt` (on web, before
+    * `initialize`, because the JavaScript SDK takes it as an initialize option). `0` or less goes back to the
+    * project's maximum.
+    */
+    setSessionDuration(options: {
+        milliseconds: number;
+    }): Promise<void>;
+    /**
     * Sets the function that fetches a fresh identity token from your backend. Gleap calls it when the server answers
     * that the token expired (and retries once with the new token), and before it renews the file access or sends the
     * identify again when the token expires within 5 minutes. One call at a time; a call without an answer within

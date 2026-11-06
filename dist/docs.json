@@ -251,6 +251,22 @@
         "slug": "setuserjwt"
       },
       {
+        "name": "setSessionDuration",
+        "signature": "(options: { milliseconds: number; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ milliseconds: number; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Shortens how long a signed session stays signed, in milliseconds. Sent with every identify; the project's\nmaximum (Settings > Security) applies when yours is longer. Call it before `setUserJwt` (on web, before\n`initialize`, because the JavaScript SDK takes it as an initialize option). `0` or less goes back to the\nproject's maximum.",
+        "complexTypes": [],
+        "slug": "setsessionduration"
+      },
+      {
         "name": "setUserJwtProvider",
         "signature": "(provider: GleapUserJwtProvider | null) => Promise<void>",
         "parameters": [

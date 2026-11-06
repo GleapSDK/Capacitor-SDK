@@ -6,6 +6,7 @@ import type { GleapEventCallback, GleapPlugin } from './definitions';
 export class GleapWeb extends WebPlugin implements GleapPlugin {
   static callbacks: { [key: string]: GleapEventCallback } = {};
   static initialized = false;
+  static sessionDuration = 0;
   static agentToolExecutionCounter = 0;
 
   private pendingAgentToolExecutions: {
@@ -25,7 +26,14 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       return { initialized: true };
     }
 
-    Gleap.initialize(options.API_KEY);
+    if (GleapWeb.sessionDuration > 0) {
+      // The JavaScript SDK takes the session duration as an initialize option.
+      (Gleap as any).initialize(options.API_KEY, {
+        sessionDuration: GleapWeb.sessionDuration,
+      });
+    } else {
+      Gleap.initialize(options.API_KEY);
+    }
 
     GleapWeb.initialized = true;
     this.registerCallbackListeners();
@@ -465,6 +473,11 @@ export class GleapWeb extends WebPlugin implements GleapPlugin {
       return;
     }
     await gleapSdk.setUserJwt(options.token);
+  }
+
+  // Stored and passed on with initialize: the JavaScript SDK has no setter, so call it before initialize.
+  async setSessionDuration(options: { milliseconds: number }): Promise<void> {
+    GleapWeb.sessionDuration = Math.max(0, Math.floor(options.milliseconds) || 0);
   }
 
   async setAuthTokens(options: { tokens: Record<string, string | null> }): Promise<void> {

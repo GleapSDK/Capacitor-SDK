@@ -130,11 +130,16 @@ Gleap.setUserJwtProvider(async () => {
   return token;
 });
 
+// Optional: shorten the signed session (milliseconds; on web call it before initialize)
+await Gleap.setSessionDuration({ milliseconds: 24 * 60 * 60 * 1000 });
+
 // Optional: tokens API tools may use to call your backend as this user (null removes one)
 await Gleap.setAuthTokens({ tokens: { backend: accessToken } });
 ```
 
 The provider runs in JavaScript: when the native SDK needs a fresh token it sends the `userJwtExpired` event, and the plugin calls your provider and hands the token back (`userJwtProviderResult`); the native SDK then sends the identify again with it.
+
+`setSessionDuration(ms)` shortens the signed session; the project's maximum applies.
 
 ### Legacy user hash
 
@@ -180,6 +185,7 @@ App.addListener("appUrlOpen", ({ url }) => {
 * [`updateContact(...)`](#updatecontact)
 * [`clearIdentity()`](#clearidentity)
 * [`setUserJwt(...)`](#setuserjwt)
+* [`setSessionDuration(...)`](#setsessionduration)
 * [`setUserJwtProvider(...)`](#setuserjwtprovider)
 * [`setAuthTokens(...)`](#setauthtokens)
 * [`setUserJwtProviderEnabled(...)`](#setuserjwtproviderenabled)
@@ -477,6 +483,24 @@ refused with a log line and nothing is sent. Resolves once the native (or JavaSc
 | Param         | Type                            |
 | ------------- | ------------------------------- |
 | **`options`** | <code>{ token: string; }</code> |
+
+--------------------
+
+
+### setSessionDuration(...)
+
+```typescript
+setSessionDuration(options: { milliseconds: number; }) => Promise<void>
+```
+
+Shortens how long a signed session stays signed, in milliseconds. Sent with every identify; the project's
+maximum (Settings &gt; Security) applies when yours is longer. Call it before `setUserJwt` (on web, before
+`initialize`, because the JavaScript SDK takes it as an initialize option). `0` or less goes back to the
+project's maximum.
+
+| Param         | Type                                   |
+| ------------- | -------------------------------------- |
+| **`options`** | <code>{ milliseconds: number; }</code> |
 
 --------------------
 
@@ -1814,9 +1838,7 @@ The network log settings of your Gleap project, sent by the native SDK once its 
 
 Construct a type with a set of properties K of type T
 
-<code>{
- [P in K]: T;
- }</code>
+<code>{ [P in K]: T; }</code>
 
 
 #### GleapUserJwtProvider

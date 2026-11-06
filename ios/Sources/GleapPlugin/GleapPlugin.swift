@@ -25,6 +25,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         CAPPluginMethod(name: "updateContact", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clearIdentity", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setUserJwt", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setSessionDuration", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setAuthTokens", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setUserJwtProviderEnabled", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "userJwtProviderResult", returnType: CAPPluginReturnPromise),
@@ -383,6 +384,18 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         }
         DispatchQueue.main.async {
             Gleap.setUserJwt(token)
+            call.resolve()
+        }
+    }
+
+    // Customer identity: caps how long a signed session stays signed (milliseconds).
+    @objc func setSessionDuration(_ call: CAPPluginCall) {
+        guard let milliseconds = call.options["milliseconds"] as? NSNumber else {
+            call.reject("Must provide milliseconds")
+            return
+        }
+        DispatchQueue.main.async {
+            Gleap.setSessionDuration(milliseconds.intValue)
             call.resolve()
         }
     }

@@ -451,6 +451,20 @@ public class GleapPlugin extends Plugin {
     }
 
     /**
+     * Customer identity: caps how long a signed session stays signed (milliseconds).
+     */
+    @PluginMethod
+    public void setSessionDuration(PluginCall call) {
+        Double milliseconds = call.getDouble("milliseconds");
+        if (milliseconds == null) {
+            call.reject("Must provide milliseconds");
+            return;
+        }
+        Gleap.getInstance().setSessionDuration(milliseconds.longValue());
+        call.resolve();
+    }
+
+    /**
      * Customer identity: per-user tokens for API tools; a null value removes one.
      */
     @PluginMethod

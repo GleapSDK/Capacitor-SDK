@@ -2386,7 +2386,15 @@ class GleapWeb extends core.WebPlugin {
         if (GleapWeb.initialized) {
             return { initialized: true };
         }
-        Gleap$1.initialize(options.API_KEY);
+        if (GleapWeb.sessionDuration > 0) {
+            // The JavaScript SDK takes the session duration as an initialize option.
+            Gleap$1.initialize(options.API_KEY, {
+                sessionDuration: GleapWeb.sessionDuration,
+            });
+        }
+        else {
+            Gleap$1.initialize(options.API_KEY);
+        }
         GleapWeb.initialized = true;
         this.registerCallbackListeners();
         return { initialized: true };
@@ -2660,6 +2668,10 @@ class GleapWeb extends core.WebPlugin {
         }
         await gleapSdk.setUserJwt(options.token);
     }
+    // Stored and passed on with initialize: the JavaScript SDK has no setter, so call it before initialize.
+    async setSessionDuration(options) {
+        GleapWeb.sessionDuration = Math.max(0, Math.floor(options.milliseconds) || 0);
+    }
     async setAuthTokens(options) {
         const gleapSdk = Gleap$1;
         if (typeof gleapSdk.setAuthTokens !== 'function') {
@@ -2846,6 +2858,7 @@ class GleapWeb extends core.WebPlugin {
 }
 GleapWeb.callbacks = {};
 GleapWeb.initialized = false;
+GleapWeb.sessionDuration = 0;
 GleapWeb.agentToolExecutionCounter = 0;
 GleapWeb.userJwtRequestCounter = 0;
 
