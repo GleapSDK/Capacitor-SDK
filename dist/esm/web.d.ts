@@ -1,5 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
-import type { GleapEventCallback, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
+import type { GleapEventCallback, GleapInitializeOptions, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
 export declare class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProviderBridge {
     static callbacks: {
         [key: string]: GleapEventCallback;
@@ -10,9 +10,7 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin, GleapUse
     private pendingAgentToolExecutions;
     static userJwtRequestCounter: number;
     private pendingUserJwtRequests;
-    initialize(options: {
-        API_KEY: string;
-    }): Promise<{
+    initialize(options: GleapInitializeOptions): Promise<{
         initialized: boolean;
     }>;
     setRegion(options: {

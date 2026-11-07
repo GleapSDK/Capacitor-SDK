@@ -2253,6 +2253,39 @@ function wrapPluginWithLogCapture(plugin, capture) {
     });
 }
 
+/** The Project ID from `initialize` options: `projectId`, or the former `API_KEY`. */
+function resolveProjectId(options) {
+    if (!options || typeof options !== 'object') {
+        return undefined;
+    }
+    if (typeof options.projectId === 'string' && options.projectId.length > 0) {
+        return options.projectId;
+    }
+    if (typeof options.API_KEY === 'string' && options.API_KEY.length > 0) {
+        return options.API_KEY;
+    }
+    return undefined;
+}
+/**
+ * `initialize({ projectId })` sends the Project ID under both names, so a native build that only reads
+ * `API_KEY` (an app updated over the air) keeps working.
+ */
+function withProjectIdInitialize(plugin) {
+    const initialize = (options) => {
+        const projectId = resolveProjectId(options);
+        const native = Reflect.get(plugin, 'initialize');
+        return native.call(plugin, projectId ? Object.assign(Object.assign({}, options), { projectId, API_KEY: projectId }) : options);
+    };
+    return new Proxy(plugin, {
+        get(target, property, receiver) {
+            if (property === 'initialize') {
+                return initialize;
+            }
+            return Reflect.get(target, property, receiver);
+        },
+    });
+}
+
 /**
  * `Gleap.setUserJwtProvider(fn)`: the provider stays in JavaScript. The native (or JavaScript) SDK keeps the rules
  * (one call at a time, 10 s timeout, 30 s pause after a failure) and asks for a token with the `userJwtExpired`
@@ -2358,8 +2391,9 @@ const GleapNative = core.registerPlugin('Gleap', {
 // fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
 // which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
-// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts).
-const Gleap = withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative);
+// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts); initialize accepts
+// { projectId } next to the former { API_KEY } (see projectId.ts).
+const Gleap = withProjectIdInitialize(withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative));
 const registeredAgentTools = {};
 let agentToolListenerAttached = false;
 /**
@@ -2433,14 +2467,18 @@ class GleapWeb extends core.WebPlugin {
         if (GleapWeb.initialized) {
             return { initialized: true };
         }
+        const projectId = resolveProjectId(options);
+        if (!projectId) {
+            throw new Error('Must provide a projectId');
+        }
         if (GleapWeb.sessionDuration > 0) {
             // The JavaScript SDK takes the session duration as an initialize option.
-            Gleap$1.initialize(options.API_KEY, {
+            Gleap$1.initialize(projectId, {
                 sessionDuration: GleapWeb.sessionDuration,
             });
         }
         else {
-            Gleap$1.initialize(options.API_KEY);
+            Gleap$1.initialize(projectId);
         }
         GleapWeb.initialized = true;
         this.registerCallbackListeners();

@@ -107,10 +107,14 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     private var pendingLogFlushes: [String: () -> Void] = [:]
 
     @objc func initialize(_ call: CAPPluginCall) {
-        // Check if key is present
-        guard let api_key = call.options["API_KEY"] as? String else {
-            call.reject("Missing API Key")
-            return;
+        // The Project ID: projectId, or the former name API_KEY (same value).
+        var projectId = call.getString("projectId") ?? ""
+        if projectId.isEmpty {
+            projectId = call.getString("API_KEY") ?? ""
+        }
+        guard !projectId.isEmpty else {
+            call.reject("Must provide a projectId")
+            return
         }
         
         // Receive configLoaded, which carries the network log settings for the WebView log capture.
@@ -123,8 +127,8 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         // console copies only once it knows it runs inside Capacitor.
         Gleap.setApplicationType(CAPACITOR)
 
-        // Initialize Gleap with API key
-        Gleap.initialize(withToken: api_key)
+        // initialize(withToken:) takes the Project ID (formerly the SDK key) in every supported iOS SDK version.
+        Gleap.initialize(withToken: projectId)
         
         registerLogFlushHandler()
         

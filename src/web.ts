@@ -1,7 +1,8 @@
 import { WebPlugin } from '@capacitor/core';
 import Gleap from 'gleap';
 
-import type { GleapEventCallback, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
+import type { GleapEventCallback, GleapInitializeOptions, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
+import { resolveProjectId } from './projectId';
 
 export class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProviderBridge {
   static callbacks: { [key: string]: GleapEventCallback } = {};
@@ -19,20 +20,23 @@ export class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProv
     [requestId: string]: (token: string | null) => void;
   } = {};
 
-  async initialize(options: {
-    API_KEY: string;
-  }): Promise<{ initialized: boolean }> {
+  async initialize(options: GleapInitializeOptions): Promise<{ initialized: boolean }> {
     if (GleapWeb.initialized) {
       return { initialized: true };
     }
 
+    const projectId = resolveProjectId(options);
+    if (!projectId) {
+      throw new Error('Must provide a projectId');
+    }
+
     if (GleapWeb.sessionDuration > 0) {
       // The JavaScript SDK takes the session duration as an initialize option.
-      (Gleap as any).initialize(options.API_KEY, {
+      (Gleap as any).initialize(projectId, {
         sessionDuration: GleapWeb.sessionDuration,
       });
     } else {
-      Gleap.initialize(options.API_KEY);
+      Gleap.initialize(projectId);
     }
 
     GleapWeb.initialized = true;

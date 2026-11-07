@@ -7,12 +7,12 @@
     "methods": [
       {
         "name": "initialize",
-        "signature": "(options: { API_KEY: string; }) => Promise<{ initialized: boolean; }>",
+        "signature": "(options: GleapInitializeOptions) => Promise<{ initialized: boolean; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ API_KEY: string; }"
+            "type": "GleapInitializeOptions"
           }
         ],
         "returns": "Promise<{ initialized: boolean; }>",
@@ -22,8 +22,10 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Initialize Gleap with an API key",
-        "complexTypes": [],
+        "docs": "Initialize Gleap with your Project ID: `initialize({ projectId: \"YOUR_PROJECT_ID\" })`.\nThe Project ID was called \"API key\" before (`{ API_KEY }`, still accepted); the value is the same.",
+        "complexTypes": [
+          "GleapInitializeOptions"
+        ],
         "slug": "initialize"
       },
       {
@@ -1596,6 +1598,34 @@
     "properties": []
   },
   "interfaces": [
+    {
+      "name": "GleapInitializeOptions",
+      "slug": "gleapinitializeoptions",
+      "docs": "Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings > Project).\n`API_KEY` is the former name of the same value and keeps working.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "projectId",
+          "tags": [],
+          "docs": "Your Project ID (formerly \"SDK key\" / \"API key\").",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "API_KEY",
+          "tags": [
+            {
+              "text": "Use `projectId`.",
+              "name": "deprecated"
+            }
+          ],
+          "docs": "Former name of `projectId` (same value). Still accepted.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
     {
       "name": "PluginListenerHandle",
       "slug": "pluginlistenerhandle",

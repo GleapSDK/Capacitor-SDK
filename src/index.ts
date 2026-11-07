@@ -5,6 +5,7 @@ import {
   installWebViewLogCapture,
   wrapPluginWithLogCapture,
 } from './logs/webViewLogs';
+import { withProjectIdInitialize } from './projectId';
 import { withUserJwtProvider } from './userJwtProvider';
 
 const GleapNative = registerPlugin<GleapPlugin & GleapUserJwtProviderBridge>('Gleap', {
@@ -16,9 +17,10 @@ const GleapNative = registerPlugin<GleapPlugin & GleapUserJwtProviderBridge>('Gl
 // which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
 
-// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts).
-const Gleap: GleapPlugin = withUserJwtProvider(
-  webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative,
+// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts); initialize accepts
+// { projectId } next to the former { API_KEY } (see projectId.ts).
+const Gleap: GleapPlugin = withProjectIdInitialize(
+  withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative),
 );
 
 const registeredAgentTools: {
