@@ -2410,6 +2410,17 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
         await Gleap.registerAgentTool({ name });
     };
 
+    var __rest = (undefined && undefined.__rest) || function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
+        return t;
+    };
     class GleapWeb extends core.WebPlugin {
         constructor() {
             super(...arguments);
@@ -2751,7 +2762,9 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             }
         }
         async getIdentity() {
-            return { identity: Gleap$1.getIdentity() };
+            // The JS SDK returns the session (user fields) plus gleapId/gleapHash/grant; the plugin exposes the user fields.
+            const _a = Gleap$1.getIdentity(), { gleapId: _gleapId, gleapHash: _gleapHash, grant: _grant } = _a, identity = __rest(_a, ["gleapId", "gleapHash", "grant"]);
+            return { identity: Object.assign({ userId: typeof identity.userId === 'string' ? identity.userId : '' }, identity) };
         }
         async isUserIdentified() {
             return { isUserIdentified: Gleap$1.isUserIdentified() };

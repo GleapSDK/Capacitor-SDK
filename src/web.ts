@@ -544,7 +544,9 @@ export class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProv
       value?: number | undefined;
     };
   }> {
-    return { identity: Gleap.getIdentity() };
+    // The JS SDK returns the session (user fields) plus gleapId/gleapHash/grant; the plugin exposes the user fields.
+    const { gleapId: _gleapId, gleapHash: _gleapHash, grant: _grant, ...identity } = Gleap.getIdentity();
+    return { identity: { userId: typeof identity.userId === 'string' ? identity.userId : '', ...identity } };
   }
 
   async isUserIdentified(): Promise<{ isUserIdentified: boolean }> {
