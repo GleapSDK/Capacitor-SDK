@@ -22,7 +22,7 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Initialize Gleap with your Project ID: `initialize({ projectId: \"YOUR_PROJECT_ID\" })`.\nThe Project ID was called \"API key\" before (`{ API_KEY }`, still accepted); the value is the same.",
+        "docs": "Initialize Gleap with your Project ID: `initialize({ projectId: \"YOUR_PROJECT_ID\" })`.\nFind it in the Gleap dashboard under Settings → Project → General. It was formerly called \"API key\" /\n\"SDK key\": existing values keep working, and the deprecated `{ API_KEY }` still takes the same value.",
         "complexTypes": [
           "GleapInitializeOptions"
         ],
@@ -192,7 +192,7 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Set user identity",
+        "docs": "Identifies the user with contact data only: without an identity token this is an unsigned contact.\nTo sign the user in, pass an identity token with `setUserJwt`; no separate `identify` call is needed then.\nOlder integrations that pass a `userHash` keep working; see Upgrade to identity tokens\n(https://docs.gleap.ai/en/articles/16752008-upgrade-to-identity-tokens).",
         "complexTypes": [
           "Record"
         ],
@@ -232,7 +232,7 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Clear user identity: the contact, its identity token and auth tokens. The JWT provider stays set.",
+        "docs": "Clear user identity: the contact, its identity token and auth tokens. Call it on logout. The JWT provider\nstays set.",
         "complexTypes": [],
         "slug": "clearidentity"
       },
@@ -248,7 +248,7 @@
         ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is\nthe whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact\nas signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only\nand sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or\nis over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the\nbare string. Resolves once the native (or JavaScript) SDK has the token.",
+        "docs": "Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key (Settings →\nSecurity → Customer identity → Identity keys). The token is the whole identify: its `userId` (or `user_id`)\nclaim names the user and every other claim lands on the contact as signed data; no other contact field is sent,\nand no separate `identify` call is needed. Call it after login and on every app start of a logged-in user, and\n`clearIdentity` on logout. Kept in memory only\nand sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or\nis over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the\nbare string. Resolves once the native (or JavaScript) SDK has the token.\nSee Customer identity (https://docs.gleap.ai/en/articles/709-customer-identity).",
         "complexTypes": [],
         "slug": "setuserjwt"
       },
@@ -280,7 +280,7 @@
         ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Sets the function that fetches a fresh identity token from your backend. Gleap calls it when the server answers\nthat the token expired (and retries once with the new token), and before it renews the file access or sends the\nidentify again when the token expires within 5 minutes. One call at a time; a call without an answer within\n10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or\nthrow) when fetching failed. `clearIdentity` keeps the provider; pass `null` to remove it. The provider runs in\nJavaScript: the plugin answers the `userJwtExpired` event for you.",
+        "docs": "Sets the function that fetches a fresh identity token from your backend. Gleap calls it when the server answers\nthat the token expired (and retries once with the new token), and before it renews the file access or sends the\nidentify again when the token expires within 5 minutes. One call at a time; a call without an answer within\n10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or\nthrow) when fetching failed. With the native SDKs 19.5.0 (and the Gleap JavaScript SDK 19.6.0 on web) it also\nrestores the signed session after an app restart (on web, a page reload). `clearIdentity` keeps the provider;\npass `null` to remove it. The provider runs in JavaScript: the plugin answers the `userJwtExpired` event for you.",
         "complexTypes": [
           "GleapUserJwtProvider"
         ],
@@ -1371,7 +1371,7 @@
             "text": "19.0.1"
           }
         ],
-        "docs": "Open the conversation of a protected file from an emailed link.\nWith \"Require authenticated file access\" enabled, email replies link attachments to your customer\napplication URL with a `gleapFile` query parameter. If that URL opens your app (for example as a\nuniversal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or\n`App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.\nThe conversation opens once the customer is identified with a user hash (`identify` with `userHash`);\nthe link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,\nso this resolves `{ opened: false }` there.",
+        "docs": "Open the conversation of a protected file from an emailed link.\nWith \"Protect new files\" on (Settings → Security → Conversation files), email replies link attachments to your customer\napplication URL with a `gleapFile` query parameter. If that URL opens your app (for example as a\nuniversal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or\n`App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.\nThe conversation opens once the customer is signed in with an identity token (`setUserJwt`);\nthe link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,\nso this resolves `{ opened: false }` there.",
         "complexTypes": [],
         "slug": "openprotectedfilefromurl"
       },
@@ -1601,7 +1601,7 @@
     {
       "name": "GleapInitializeOptions",
       "slug": "gleapinitializeoptions",
-      "docs": "Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings > Project).\n`API_KEY` is the former name of the same value and keeps working.",
+      "docs": "Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings → Project → General).\n`API_KEY` is the former name of the same value and keeps working.",
       "tags": [],
       "methods": [],
       "properties": [

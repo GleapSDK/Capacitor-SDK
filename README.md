@@ -6,7 +6,7 @@ This plugin supports Capacitor 7 and later (iOS via Swift Package Manager or Coc
 
 Thanks to Stephan Nagel (congrapp) for his work on the Gleap Capacitor plugin.
 
-[SDK documentation](https://docs.gleap.ai/documentation/ioniccapacitor/README) · [Website](https://www.gleap.ai) · [Plans and pricing](https://www.gleap.ai/pricing)
+[SDK documentation](https://docs.gleap.ai/en/articles/563-ionic-capacitor-sdk-setup) · [Website](https://www.gleap.ai) · [Plans and pricing](https://www.gleap.ai/pricing)
 
 ## Install
 
@@ -27,7 +27,7 @@ The plugin needs Capacitor 7 or later and an iOS deployment target of **15.0** o
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.4.0'
+  pod 'Gleap', :git => 'https://github.com/GleapSDK/Gleap-iOS-SDK.git', :tag => '19.5.0'
 end
 ```
 
@@ -41,7 +41,7 @@ import { Gleap } from "capacitor-gleap-plugin";
 await Gleap.initialize({ projectId: "YOUR_PROJECT_ID" });
 ```
 
-Find the Project ID in the Gleap dashboard under Settings > Project. It was called "API key" before: `initialize({ API_KEY: "..." })` still works and takes the same value.
+Find the Project ID in the [Gleap dashboard](https://app.gleap.ai) under **Settings → Project → General**. It was formerly called "API key" / "SDK key": existing values keep working, and the deprecated `initialize({ API_KEY: "..." })` still takes the same value.
 
 `setUserJwtProvider` can be called before or after `initialize`.
 
@@ -123,19 +123,17 @@ Without this, nothing changes: banners overlay the app as before. On the web the
 
 ## Customer identity (JWT)
 
-### Signed identity (recommended)
-
-Your backend signs an HS256 JWT with an identity key from Settings → Security → Identity keys (put the key id in the `kid` header; the secret never leaves your server). The `userId` claim is required. Optional claims: `email`, `name`, `company` (`{ id, name }`), `plan`, and provider ids such as `stripeCustomerId`. Set `exp` to at most one hour. Everything in the token lands on the contact as signed data the app cannot change. Pass the token to the SDK after login and on every app start of a logged-in user; `setUserJwt` keeps it in memory only. `setUserJwtProvider` fetches a fresh token when it expires, and `setAuthTokens` hands Kai your own API tokens for this user. See [Customer identity](https://docs.gleap.ai/documentation/guides/customer-identity).
+Sign your users in with an identity token: a short HS256 JWT your backend signs with an identity key from **Settings → Security → Customer identity → Identity keys** (put the key id in the `kid` header; the secret never leaves your server). The `userId` claim is required. Optional claims: `email`, `name`, `company` (`{ id, name }`), `plan`, and provider ids such as `stripeCustomerId`. Set `exp` to at most one hour. Everything in the token lands on the contact as signed data the app cannot change. Pass the token to the SDK with `setUserJwt` after login and on every app start of a logged-in user; no separate `identify` call is needed, and `setUserJwt` keeps the token in memory only. The optional `setUserJwtProvider` returns a fresh token: it renews the session when the token expires and, from 19.5.0, also restores the signed session after an app restart. Call `clearIdentity` on logout. `setAuthTokens` hands Kai your own API tokens for this user. See [Customer identity](https://docs.gleap.ai/en/articles/709-customer-identity) and [Capacitor SDK: user identity](https://docs.gleap.ai/en/articles/564-ionic-capacitor-sdk-user-identity).
 
 > **Pass an object:** `Gleap.setUserJwt({ token })`, not `Gleap.setUserJwt(token)`. Like every method of this plugin, it takes one options object. The provider is the exception: it returns the bare token string (or `null`).
 
 ```js
 import { Gleap } from "capacitor-gleap-plugin";
 
-// After login and on every app start of a logged-in user
+// After login and on every app start of a logged-in user (token from your backend)
 await Gleap.setUserJwt({ token });
 
-// Called when the token has expired or is about to; return a fresh one
+// Optional: return a fresh token when the current one has expired or is about to
 Gleap.setUserJwtProvider(async () => {
   const response = await fetch("https://api.example.com/gleap-token", {
     headers: { Authorization: `Bearer ${accessToken}` },
@@ -149,25 +147,22 @@ await Gleap.setSessionDuration({ milliseconds: 24 * 60 * 60 * 1000 });
 
 // Optional: tokens API tools may use to call your backend as this user (null removes one)
 await Gleap.setAuthTokens({ tokens: { backend: accessToken } });
+
+// On logout
+await Gleap.clearIdentity();
 ```
 
 The provider runs in JavaScript: when the native SDK needs a fresh token it sends the `userJwtExpired` event, and the plugin calls your provider and hands the token back; the native SDK then sends the identify again with it.
 
 `setSessionDuration(ms)` shortens the signed session; the project's maximum applies.
 
-### Legacy user hash
-
-Instead of a token you can still identify with a user hash: the HMAC-SHA256 of the user id, created on your server with the project's identity verification secret. It is accepted while "Accept legacy user hash" stays on in the project's security settings.
-
-```typescript
-await Gleap.identify({ userId: "user-1", userHash: userHash, email: "jane@example.com" });
-```
+`identify({ userId, ... })` without a token creates an unsigned contact. Older integrations that pass a user hash to `identify` keep working; see [Upgrade to identity tokens](https://docs.gleap.ai/en/articles/16752008-upgrade-to-identity-tokens).
 
 ## Protected conversation files
 
-With "Require authenticated file access" (Project settings → User identity), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Identify the customer with a signed identity (`Gleap.setUserJwt`, or the legacy user hash) on every app start.
+With "Protect new files" (Settings → Security → Conversation files, see [Authenticated conversation files](https://docs.gleap.ai/en/articles/710-authenticated-conversation-files)), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Sign the customer in with an identity token (`Gleap.setUserJwt`) on every app start.
 
-Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is identified with a signed identity:
+Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is signed in:
 
 ```typescript
 import { App } from "@capacitor/app";
@@ -280,7 +275,8 @@ initialize(options: GleapInitializeOptions) => Promise<{ initialized: boolean; }
 ```
 
 Initialize Gleap with your Project ID: `initialize({ projectId: "YOUR_PROJECT_ID" })`.
-The Project ID was called "API key" before (`{ API_KEY }`, still accepted); the value is the same.
+Find it in the Gleap dashboard under Settings → Project → General. It was formerly called "API key" /
+"SDK key": existing values keep working, and the deprecated `{ API_KEY }` still takes the same value.
 
 | Param         | Type                                                                      |
 | ------------- | ------------------------------------------------------------------------- |
@@ -434,7 +430,10 @@ Set a custom modal url. Must be called before initialize.
 identify(options: { userId: string; userHash?: string; name?: string; email?: string; phone?: string; companyId?: string; companyName?: string; avatar?: string; sla?: number; plan?: string; value?: number; customData?: Record<string, any>; }) => Promise<{ identify: boolean; }>
 ```
 
-Set user identity
+Identifies the user with contact data only: without an identity token this is an unsigned contact.
+To sign the user in, pass an identity token with `setUserJwt`; no separate `identify` call is needed then.
+Older integrations that pass a `userHash` keep working; see Upgrade to identity tokens
+(https://docs.gleap.ai/en/articles/16752008-upgrade-to-identity-tokens).
 
 | Param         | Type                                                                                                                                                                                                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -472,7 +471,8 @@ Update user properties
 clearIdentity() => Promise<{ clearIdentity: boolean; }>
 ```
 
-Clear user identity: the contact, its identity token and auth tokens. The JWT provider stays set.
+Clear user identity: the contact, its identity token and auth tokens. Call it on logout. The JWT provider
+stays set.
 
 **Returns:** <code>Promise&lt;{ clearIdentity: boolean; }&gt;</code>
 
@@ -487,12 +487,15 @@ Clear user identity: the contact, its identity token and auth tokens. The JWT pr
 setUserJwt(options: { token: string; }) => Promise<void>
 ```
 
-Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is
-the whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact
-as signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only
+Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key (Settings →
+Security → Customer identity → Identity keys). The token is the whole identify: its `userId` (or `user_id`)
+claim names the user and every other claim lands on the contact as signed data; no other contact field is sent,
+and no separate `identify` call is needed. Call it after login and on every app start of a logged-in user, and
+`clearIdentity` on logout. Kept in memory only
 and sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or
 is over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the
 bare string. Resolves once the native (or JavaScript) SDK has the token.
+See Customer identity (https://docs.gleap.ai/en/articles/709-customer-identity).
 
 | Param         | Type                            |
 | ------------- | ------------------------------- |
@@ -529,8 +532,9 @@ Sets the function that fetches a fresh identity token from your backend. Gleap c
 that the token expired (and retries once with the new token), and before it renews the file access or sends the
 identify again when the token expires within 5 minutes. One call at a time; a call without an answer within
 10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or
-throw) when fetching failed. `clearIdentity` keeps the provider; pass `null` to remove it. The provider runs in
-JavaScript: the plugin answers the `userJwtExpired` event for you.
+throw) when fetching failed. With the native SDKs 19.5.0 (and the Gleap JavaScript SDK 19.6.0 on web) it also
+restores the signed session after an app restart (on web, a page reload). `clearIdentity` keeps the provider;
+pass `null` to remove it. The provider runs in JavaScript: the plugin answers the `userJwtExpired` event for you.
 
 | Param          | Type                                                                          |
 | -------------- | ----------------------------------------------------------------------------- |
@@ -1513,11 +1517,11 @@ openProtectedFileFromUrl(options: { url: string; }) => Promise<{ opened: boolean
 ```
 
 Open the conversation of a protected file from an emailed link.
-With "Require authenticated file access" enabled, email replies link attachments to your customer
+With "Protect new files" on (Settings → Security → Conversation files), email replies link attachments to your customer
 application URL with a `gleapFile` query parameter. If that URL opens your app (for example as a
 universal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or
 `App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.
-The conversation opens once the customer is identified with a user hash (`identify` with `userHash`);
+The conversation opens once the customer is signed in with an identity token (`setUserJwt`);
 the link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,
 so this resolves `{ opened: false }` there.
 
@@ -1757,7 +1761,7 @@ Set the notification container offset
 
 #### GleapInitializeOptions
 
-Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings &gt; Project).
+Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings → Project → General).
 `API_KEY` is the former name of the same value and keeps working.
 
 | Prop            | Type                | Description                                              |
