@@ -106,6 +106,19 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     // over what it buffers, by flush id (main queue only).
     private var pendingLogFlushes: [String: () -> Void] = [:]
 
+    /// The Project ID (formerly the SDK key). Native iOS SDK 19.5.0+ has initialize(withProjectId:)
+    /// (initialize(withToken:) is deprecated there); 19.4.0 only has initialize(withToken:), which takes
+    /// the same value. Looked up at runtime so this builds and runs against both.
+    static func initializeGleap(withProjectId projectId: String) {
+        let gleapClass: AnyObject = Gleap.self
+        let projectIdSelector = NSSelectorFromString("initializeWithProjectId:")
+        if gleapClass.responds(to: projectIdSelector) {
+            _ = gleapClass.perform(projectIdSelector, with: projectId)
+        } else {
+            _ = gleapClass.perform(NSSelectorFromString("initializeWithToken:"), with: projectId)
+        }
+    }
+
     @objc func initialize(_ call: CAPPluginCall) {
         // The Project ID: projectId, or the former name API_KEY (same value).
         var projectId = call.getString("projectId") ?? ""
@@ -127,8 +140,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         // console copies only once it knows it runs inside Capacitor.
         Gleap.setApplicationType(CAPACITOR)
 
-        // initialize(withToken:) takes the Project ID (formerly the SDK key) in every supported iOS SDK version.
-        Gleap.initialize(withToken: projectId)
+        GleapPlugin.initializeGleap(withProjectId: projectId)
         
         registerLogFlushHandler()
         
