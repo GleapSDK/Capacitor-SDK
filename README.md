@@ -41,7 +41,7 @@ import { Gleap } from "capacitor-gleap-plugin";
 await Gleap.initialize({ projectId: "YOUR_PROJECT_ID" });
 ```
 
-Find the Project ID in the [Gleap dashboard](https://app.gleap.io) under **Settings → Project → General**. It was formerly called "API key" / "SDK key": existing values keep working, and the deprecated `initialize({ API_KEY: "..." })` still takes the same value.
+Find the Project ID in the [Gleap dashboard](https://app.gleap.ai) under **Settings → Project → General**. It was formerly called "API key" / "SDK key": existing values keep working, and the deprecated `initialize({ API_KEY: "..." })` still takes the same value.
 
 `setUserJwtProvider` can be called before or after `initialize`.
 
@@ -160,7 +160,7 @@ The provider runs in JavaScript: when the native SDK needs a fresh token it send
 
 ## Protected conversation files
 
-With "Require authenticated file access" (Project settings → User identity), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Sign the customer in with an identity token (`Gleap.setUserJwt`) on every app start.
+With "Protect new files" (Settings → Security → Conversation files, see [Authenticated conversation files](https://docs.gleap.ai/en/articles/710-authenticated-conversation-files)), conversation files can only be opened by agents and by the verified customer the conversation belongs to. Sign the customer in with an identity token (`Gleap.setUserJwt`) on every app start.
 
 Email replies link attachments to your customer application URL with a `gleapFile` query parameter. If that URL opens your app (universal link / App Link), pass it to Gleap; the conversation opens once the customer is signed in:
 
@@ -1517,7 +1517,7 @@ openProtectedFileFromUrl(options: { url: string; }) => Promise<{ opened: boolean
 ```
 
 Open the conversation of a protected file from an emailed link.
-With "Require authenticated file access" enabled, email replies link attachments to your customer
+With "Protect new files" on (Settings → Security → Conversation files), email replies link attachments to your customer
 application URL with a `gleapFile` query parameter. If that URL opens your app (for example as a
 universal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or
 `App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.
