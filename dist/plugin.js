@@ -2251,6 +2251,104 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
         });
     }
 
+    /**
+     * `Gleap.setUserJwtProvider(fn)`: the provider stays in JavaScript. The native (or JavaScript) SDK keeps the rules
+     * (one call at a time, 10 s timeout, 30 s pause after a failure) and asks for a token with the `userJwtExpired`
+     * event; the answer goes back with `userJwtProviderResult`.
+     */
+    function createUserJwtProviderSetter(plugin) {
+        let currentProvider = null;
+        let listening = null;
+        const answer = async (requestId) => {
+            let token = null;
+            try {
+                const provider = currentProvider;
+                if (provider) {
+                    const result = await provider();
+                    token = typeof result === 'string' && result.length > 0 ? result : null;
+                }
+            }
+            catch (e) {
+                token = null;
+            }
+            try {
+                await plugin.userJwtProviderResult({ requestId, token });
+            }
+            catch (e) {
+                // An older native build without the method: nothing waits for the answer.
+            }
+        };
+        return async (provider) => {
+            if (provider !== null && typeof provider !== 'function') {
+                console.warn('Gleap: setUserJwtProvider expects a function returning a token (or a Promise of one).');
+                return;
+            }
+            currentProvider = provider;
+            if (provider && !listening) {
+                listening = plugin.addListener('userJwtExpired', (data) => {
+                    if (data && typeof data.requestId === 'string' && data.requestId) {
+                        void answer(data.requestId);
+                    }
+                });
+                await listening;
+            }
+            try {
+                await plugin.setUserJwtProviderEnabled({ enabled: provider !== null });
+            }
+            catch (e) {
+                console.warn('Gleap: setUserJwtProvider needs a native build of capacitor-gleap-plugin that includes it.');
+            }
+        };
+    }
+    // Identity methods a native build from before them does not have. Like the provider, they warn instead of
+    // rejecting: an app updated over the air keeps working on the older native build.
+    const IDENTITY_METHODS = ['setUserJwt', 'setSessionDuration', 'setAuthTokens'];
+    /** True for Capacitor's rejection of a method the native plugin does not implement. */
+    function isUnimplemented(error) {
+        const e = error;
+        return !!e && (e.code === 'UNIMPLEMENTED' || (typeof e.message === 'string' && /not implemented/i.test(e.message)));
+    }
+    /** `method` of `plugin`, resolving with a warning when the native build does not have it yet. */
+    function warnWhenUnimplemented(plugin, method) {
+        return async (...args) => {
+            const native = Reflect.get(plugin, method);
+            try {
+                if (typeof native !== 'function') {
+                    throw { code: 'UNIMPLEMENTED' };
+                }
+                await native.apply(plugin, args);
+            }
+            catch (e) {
+                if (!isUnimplemented(e)) {
+                    throw e;
+                }
+                console.warn(`Gleap: ${method} needs a native build of capacitor-gleap-plugin that includes it.`);
+            }
+        };
+    }
+    /**
+     * The plugin with `setUserJwtProvider` handled in JavaScript, and `setUserJwt`, `setSessionDuration` and
+     * `setAuthTokens` warning (not rejecting) on an older native build.
+     */
+    function withUserJwtProvider(plugin) {
+        const setUserJwtProvider = createUserJwtProviderSetter(plugin);
+        const guarded = {};
+        for (const method of IDENTITY_METHODS) {
+            guarded[method] = warnWhenUnimplemented(plugin, method);
+        }
+        return new Proxy(plugin, {
+            get(target, property, receiver) {
+                if (property === 'setUserJwtProvider') {
+                    return setUserJwtProvider;
+                }
+                if (typeof property === 'string' && Object.prototype.hasOwnProperty.call(guarded, property)) {
+                    return guarded[property];
+                }
+                return Reflect.get(target, property, receiver);
+            },
+        });
+    }
+
     const GleapNative = core.registerPlugin('Gleap', {
         web: () => Promise.resolve().then(function () { return web; }).then(m => new m.GleapWeb()),
     });
@@ -2258,9 +2356,8 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
     // fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
     // which cannot see either on its own.
     const webViewLogCapture = installWebViewLogCapture(GleapNative);
-    const Gleap = webViewLogCapture
-        ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture)
-        : GleapNative;
+    // setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts).
+    const Gleap = withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative);
     const registeredAgentTools = {};
     let agentToolListenerAttached = false;
     /**
@@ -2313,16 +2410,36 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
         await Gleap.registerAgentTool({ name });
     };
 
+    var __rest = (undefined && undefined.__rest) || function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
+        return t;
+    };
     class GleapWeb extends core.WebPlugin {
         constructor() {
             super(...arguments);
             this.pendingAgentToolExecutions = {};
+            this.pendingUserJwtRequests = {};
         }
         async initialize(options) {
             if (GleapWeb.initialized) {
                 return { initialized: true };
             }
-            Gleap$1.initialize(options.API_KEY);
+            if (GleapWeb.sessionDuration > 0) {
+                // The JavaScript SDK takes the session duration as an initialize option.
+                Gleap$1.initialize(options.API_KEY, {
+                    sessionDuration: GleapWeb.sessionDuration,
+                });
+            }
+            else {
+                Gleap$1.initialize(options.API_KEY);
+            }
             GleapWeb.initialized = true;
             this.registerCallbackListeners();
             return { initialized: true };
@@ -2587,8 +2704,67 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
             Gleap$1.clearIdentity();
             return { clearIdentity: true };
         }
+        // Customer identity: the Gleap JavaScript SDK does the work and keeps the provider's rules.
+        async setUserJwt(options) {
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.setUserJwt !== 'function') {
+                console.warn('Gleap: setUserJwt requires a newer version of the Gleap JS SDK.');
+                return;
+            }
+            await gleapSdk.setUserJwt(options.token);
+        }
+        // Stored for initialize (the JavaScript SDK takes it as an initialize option) and handed to
+        // Gleap.setSessionDuration, which applies it to a running session. An older JavaScript SDK without
+        // the setter only gets it with initialize.
+        async setSessionDuration(options) {
+            GleapWeb.sessionDuration = Math.max(0, Math.floor(options.milliseconds) || 0);
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.setSessionDuration === 'function') {
+                gleapSdk.setSessionDuration(GleapWeb.sessionDuration);
+            }
+            else if (GleapWeb.initialized) {
+                console.warn('Gleap: setSessionDuration after initialize requires a newer version of the Gleap JS SDK.');
+            }
+        }
+        async setAuthTokens(options) {
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.setAuthTokens !== 'function') {
+                console.warn('Gleap: setAuthTokens requires a newer version of the Gleap JS SDK.');
+                return;
+            }
+            await gleapSdk.setAuthTokens(options.tokens);
+        }
+        // Handled by the plugin wrapper (userJwtProvider.ts), which uses the two methods below.
+        async setUserJwtProvider() {
+            return;
+        }
+        async setUserJwtProviderEnabled(options) {
+            const gleapSdk = Gleap$1;
+            if (typeof gleapSdk.setUserJwtProvider !== 'function') {
+                console.warn('Gleap: setUserJwtProvider requires a newer version of the Gleap JS SDK.');
+                return;
+            }
+            if (!options.enabled) {
+                gleapSdk.setUserJwtProvider(null);
+                return;
+            }
+            gleapSdk.setUserJwtProvider(() => new Promise(resolve => {
+                const requestId = `web-jwt-${++GleapWeb.userJwtRequestCounter}`;
+                this.pendingUserJwtRequests[requestId] = resolve;
+                this.notifyListeners('userJwtExpired', { requestId });
+            }));
+        }
+        async userJwtProviderResult(options) {
+            const resolve = this.pendingUserJwtRequests[options.requestId];
+            if (resolve) {
+                delete this.pendingUserJwtRequests[options.requestId];
+                resolve(options.token || null);
+            }
+        }
         async getIdentity() {
-            return { identity: Gleap$1.getIdentity() };
+            // The JS SDK returns the session (user fields) plus gleapId/gleapHash/grant; the plugin exposes the user fields.
+            const _a = Gleap$1.getIdentity(), { gleapId: _gleapId, gleapHash: _gleapHash, grant: _grant } = _a, identity = __rest(_a, ["gleapId", "gleapHash", "grant"]);
+            return { identity: Object.assign({ userId: typeof identity.userId === 'string' ? identity.userId : '' }, identity) };
         }
         async isUserIdentified() {
             return { isUserIdentified: Gleap$1.isUserIdentified() };
@@ -2738,7 +2914,9 @@ var capacitorGleap = (function (exports, core, Gleap$1) {
     }
     GleapWeb.callbacks = {};
     GleapWeb.initialized = false;
+    GleapWeb.sessionDuration = 0;
     GleapWeb.agentToolExecutionCounter = 0;
+    GleapWeb.userJwtRequestCounter = 0;
 
     var web = /*#__PURE__*/Object.freeze({
         __proto__: null,

@@ -1,12 +1,15 @@
 import { WebPlugin } from '@capacitor/core';
-import type { GleapEventCallback, GleapPlugin } from './definitions';
-export declare class GleapWeb extends WebPlugin implements GleapPlugin {
+import type { GleapEventCallback, GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
+export declare class GleapWeb extends WebPlugin implements GleapPlugin, GleapUserJwtProviderBridge {
     static callbacks: {
         [key: string]: GleapEventCallback;
     };
     static initialized: boolean;
+    static sessionDuration: number;
     static agentToolExecutionCounter: number;
     private pendingAgentToolExecutions;
+    static userJwtRequestCounter: number;
+    private pendingUserJwtRequests;
     initialize(options: {
         API_KEY: string;
     }): Promise<{
@@ -194,6 +197,23 @@ export declare class GleapWeb extends WebPlugin implements GleapPlugin {
     clearIdentity(): Promise<{
         clearIdentity: boolean;
     }>;
+    setUserJwt(options: {
+        token: string;
+    }): Promise<void>;
+    setSessionDuration(options: {
+        milliseconds: number;
+    }): Promise<void>;
+    setAuthTokens(options: {
+        tokens: Record<string, string | null>;
+    }): Promise<void>;
+    setUserJwtProvider(): Promise<void>;
+    setUserJwtProviderEnabled(options: {
+        enabled: boolean;
+    }): Promise<void>;
+    userJwtProviderResult(options: {
+        requestId: string;
+        token: string | null;
+    }): Promise<void>;
     getIdentity(): Promise<{
         identity: {
             userId: string;

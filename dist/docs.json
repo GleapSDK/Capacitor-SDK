@@ -230,9 +230,100 @@
             "text": "7.0.0"
           }
         ],
-        "docs": "Clear user identity",
+        "docs": "Clear user identity: the contact, its identity token and auth tokens. The JWT provider stays set.",
         "complexTypes": [],
         "slug": "clearidentity"
+      },
+      {
+        "name": "setUserJwt",
+        "signature": "(options: { token: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ token: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is\nthe whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact\nas signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only\nand sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or\nis over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the\nbare string. Resolves once the native (or JavaScript) SDK has the token.",
+        "complexTypes": [],
+        "slug": "setuserjwt"
+      },
+      {
+        "name": "setSessionDuration",
+        "signature": "(options: { milliseconds: number; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ milliseconds: number; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Shortens how long a signed session stays signed, in milliseconds. Sent with every identify; the project's\nmaximum (Settings > Security) applies when yours is longer. Call it before `setUserJwt` (on web, before\n`initialize`, because the JavaScript SDK takes it as an initialize option). `0` or less goes back to the\nproject's maximum.",
+        "complexTypes": [],
+        "slug": "setsessionduration"
+      },
+      {
+        "name": "setUserJwtProvider",
+        "signature": "(provider: GleapUserJwtProvider | null) => Promise<void>",
+        "parameters": [
+          {
+            "name": "provider",
+            "docs": "",
+            "type": "GleapUserJwtProvider | null"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Sets the function that fetches a fresh identity token from your backend. Gleap calls it when the server answers\nthat the token expired (and retries once with the new token), and before it renews the file access or sends the\nidentify again when the token expires within 5 minutes. One call at a time; a call without an answer within\n10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or\nthrow) when fetching failed. `clearIdentity` keeps the provider; pass `null` to remove it. The provider runs in\nJavaScript: the plugin answers the `userJwtExpired` event for you.",
+        "complexTypes": [
+          "GleapUserJwtProvider"
+        ],
+        "slug": "setuserjwtprovider"
+      },
+      {
+        "name": "setAuthTokens",
+        "signature": "(options: { tokens: Record<string, string | null>; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ tokens: Record<string, string | null>; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Stores per-user tokens on the signed contact that your API tools may send to your backend on this user's behalf\n(`{{session.authTokens.<name>}}`). Each call replaces the named tokens; a `null` value removes one. Names start\nwith a letter and use letters, digits, `_` and `-` (at most 40 characters). Needs a signed identity\n(`setUserJwt`). Kept in memory only and sent again after the next signed identify on a new session.",
+        "complexTypes": [
+          "Record"
+        ],
+        "slug": "setauthtokens"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'userJwtExpired', listenerFunc: (data: { requestId: string; }) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'userJwtExpired'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(data: { requestId: string; }) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [],
+        "docs": "Called when the native (or JavaScript) SDK needs a fresh identity token. `setUserJwtProvider` listens for you\nand answers it for you.",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlisteneruserjwtexpired-"
       },
       {
         "name": "getIdentity",
@@ -1506,6 +1597,22 @@
   },
   "interfaces": [
     {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    },
+    {
       "name": "GleapNetworkLogEntry",
       "slug": "gleapnetworklogentry",
       "docs": "A network log entry (fetch / XMLHttpRequest) as the plugin hands it to the native SDK.",
@@ -1590,22 +1697,6 @@
           "docs": "",
           "complexTypes": [],
           "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "PluginListenerHandle",
-      "slug": "pluginlistenerhandle",
-      "docs": "",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "remove",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "() => Promise<void>"
         }
       ]
     },
@@ -1695,6 +1786,17 @@
             "K",
             "T"
           ]
+        }
+      ]
+    },
+    {
+      "name": "GleapUserJwtProvider",
+      "slug": "gleapuserjwtprovider",
+      "docs": "Fetches a fresh identity token (JWT) from your backend; see `setUserJwtProvider`.",
+      "types": [
+        {
+          "text": "(): string | Promise<string | null> | null",
+          "complexTypes": []
         }
       ]
     },

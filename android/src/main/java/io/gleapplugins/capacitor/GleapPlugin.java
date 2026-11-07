@@ -18,6 +18,7 @@ import io.gleap.GleapLogFlushHandler;
 import io.gleap.GleapLogLevel;
 import io.gleap.GleapNotInitialisedException;
 import io.gleap.GleapSessionProperties;
+import io.gleap.GleapUserJwtProvider;
 import io.gleap.SurveyType;
 import io.gleap.callbacks.AiToolExecutedCallback;
 import io.gleap.callbacks.GleapAgentToolHandler;
@@ -40,6 +41,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -62,6 +65,12 @@ public class GleapPlugin extends Plugin {
 
     private Gleap implementation;
     private final Map<String, GleapAgentToolResultCallback> pendingAgentToolExecutions = new ConcurrentHashMap<>();
+    // setUserJwtProvider: the native SDK's token requests waiting for the JS provider.
+    private final Map<String, GleapUserJwtProvider.Callback> pendingUserJwtRequests = new ConcurrentHashMap<>();
+    // The native SDK stops waiting for a token after 10 s; an unanswered request is forgotten a little later.
+    private static final long USER_JWT_REQUEST_FORGET_MS = 15000;
+    // The native SDK asks one token at a time, so more than a few pending requests are stale ones.
+    private static final int USER_JWT_PENDING_MAX = 16;
     // Network log settings from the last loaded config, for the WebView log capture.
     private volatile JSObject lastLogConfig;
     // Set by disableConsoleLogOverwrite: WebView console logs are no longer attached.
@@ -429,6 +438,106 @@ public class GleapPlugin extends Plugin {
         JSObject ret = new JSObject();
         ret.put("clearIdentity", true);
         call.resolve(ret);
+    }
+
+    /**
+     * Customer identity: the token is the whole identify (see Gleap.getInstance().setUserJwt).
+     */
+    @PluginMethod
+    public void setUserJwt(PluginCall call) {
+        String token = call.getString("token");
+        if (token == null) {
+            call.reject("Must provide a token");
+            return;
+        }
+        Gleap.getInstance().setUserJwt(token);
+        call.resolve();
+    }
+
+    /**
+     * Customer identity: caps how long a signed session stays signed (milliseconds).
+     */
+    @PluginMethod
+    public void setSessionDuration(PluginCall call) {
+        Double milliseconds = call.getDouble("milliseconds");
+        if (milliseconds == null) {
+            call.reject("Must provide milliseconds");
+            return;
+        }
+        Gleap.getInstance().setSessionDuration(milliseconds.longValue());
+        call.resolve();
+    }
+
+    /**
+     * Customer identity: per-user tokens for API tools; a null value removes one.
+     */
+    @PluginMethod
+    public void setAuthTokens(PluginCall call) {
+        JSObject tokens = call.getObject("tokens");
+        if (tokens == null) {
+            call.reject("Must provide tokens");
+            return;
+        }
+        Map<String, String> map = new HashMap<>();
+        Iterator<String> names = tokens.keys();
+        while (names.hasNext()) {
+            String name = names.next();
+            Object value = tokens.opt(name);
+            if (value == null || value == JSONObject.NULL) {
+                map.put(name, null);
+            } else if (value instanceof String) {
+                map.put(name, (String) value);
+            }
+        }
+        Gleap.getInstance().setAuthTokens(map);
+        call.resolve();
+    }
+
+    /**
+     * Customer identity: the JS provider answers each userJwtExpired event with userJwtProviderResult. The
+     * native SDK keeps the rules (one call at a time, 10 s timeout, 30 s pause after a failure).
+     */
+    @PluginMethod
+    public void setUserJwtProviderEnabled(PluginCall call) {
+        if (!Boolean.TRUE.equals(call.getBoolean("enabled", false))) {
+            Gleap.getInstance().setUserJwtProvider(null);
+            call.resolve();
+            return;
+        }
+        Gleap.getInstance().setUserJwtProvider(new GleapUserJwtProvider() {
+            @Override
+            public void fetchToken(Callback callback) {
+                final String requestId = UUID.randomUUID().toString();
+                if (pendingUserJwtRequests.size() >= USER_JWT_PENDING_MAX) {
+                    pendingUserJwtRequests.clear();
+                }
+                pendingUserJwtRequests.put(requestId, callback);
+                mainHandler.postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            pendingUserJwtRequests.remove(requestId);
+                        }
+                    },
+                    USER_JWT_REQUEST_FORGET_MS
+                );
+                JSObject eventData = new JSObject();
+                eventData.put("requestId", requestId);
+                notifyListeners("userJwtExpired", eventData);
+            }
+        });
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void userJwtProviderResult(PluginCall call) {
+        String requestId = call.getString("requestId");
+        String token = call.getString("token");
+        GleapUserJwtProvider.Callback callback = requestId != null ? pendingUserJwtRequests.remove(requestId) : null;
+        if (callback != null) {
+            callback.onToken(token != null && !token.isEmpty() ? token : null);
+        }
+        call.resolve();
     }
 
     @PluginMethod

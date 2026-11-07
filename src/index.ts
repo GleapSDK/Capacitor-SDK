@@ -1,12 +1,13 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { GleapPlugin } from './definitions';
+import type { GleapPlugin, GleapUserJwtProviderBridge } from './definitions';
 import {
   installWebViewLogCapture,
   wrapPluginWithLogCapture,
 } from './logs/webViewLogs';
+import { withUserJwtProvider } from './userJwtProvider';
 
-const GleapNative = registerPlugin<GleapPlugin>('Gleap', {
+const GleapNative = registerPlugin<GleapPlugin & GleapUserJwtProviderBridge>('Gleap', {
   web: () => import('./web').then(m => new m.GleapWeb()),
 });
 
@@ -15,9 +16,10 @@ const GleapNative = registerPlugin<GleapPlugin>('Gleap', {
 // which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
 
-const Gleap: GleapPlugin = webViewLogCapture
-  ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture)
-  : GleapNative;
+// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts).
+const Gleap: GleapPlugin = withUserJwtProvider(
+  webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative,
+);
 
 const registeredAgentTools: {
   [name: string]: (params: any) => any | Promise<any>;
