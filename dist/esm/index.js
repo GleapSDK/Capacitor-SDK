@@ -1,5 +1,6 @@
 import { registerPlugin } from '@capacitor/core';
 import { installWebViewLogCapture, wrapPluginWithLogCapture, } from './logs/webViewLogs';
+import { withProjectIdInitialize } from './projectId';
 import { withUserJwtProvider } from './userJwtProvider';
 const GleapNative = registerPlugin('Gleap', {
     web: () => import('./web').then(m => new m.GleapWeb()),
@@ -8,8 +9,9 @@ const GleapNative = registerPlugin('Gleap', {
 // fetch/XHR traffic once the project config enables network logs), and hand both to the native SDK,
 // which cannot see either on its own.
 const webViewLogCapture = installWebViewLogCapture(GleapNative);
-// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts).
-const Gleap = withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative);
+// setUserJwtProvider keeps the provider in JavaScript (see userJwtProvider.ts); initialize accepts
+// { projectId } next to the former { API_KEY } (see projectId.ts).
+const Gleap = withProjectIdInitialize(withUserJwtProvider(webViewLogCapture ? wrapPluginWithLogCapture(GleapNative, webViewLogCapture) : GleapNative));
 const registeredAgentTools = {};
 let agentToolListenerAttached = false;
 /**

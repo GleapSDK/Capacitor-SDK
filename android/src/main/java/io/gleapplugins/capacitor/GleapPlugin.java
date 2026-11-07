@@ -124,16 +124,19 @@ public class GleapPlugin extends Plugin {
 
     @PluginMethod
     public void initialize(PluginCall call) {
-        String api_key = call.getString("API_KEY");
+        // The Project ID: projectId, or the former name API_KEY (same value).
+        String projectId = call.getString("projectId");
+        if (projectId == null || projectId.isEmpty()) {
+            projectId = call.getString("API_KEY");
+        }
 
-        // If API_KEY is empty, then pass back error
-        if (!call.getData().has("API_KEY")) {
-            call.reject("Must provide an API Key");
+        if (projectId == null || projectId.isEmpty()) {
+            call.reject("Must provide a projectId");
             return;
         }
 
-        // Initialize Gleap with API Key
-        Gleap.initialize(api_key, getActivity().getApplication());
+        // Gleap.initialize(String, Application) takes the Project ID (formerly the SDK key).
+        Gleap.initialize(projectId, getActivity().getApplication());
 
         // Set the application type
         Gleap.getInstance().setApplicationType(APPLICATIONTYPE.CAPACITOR);

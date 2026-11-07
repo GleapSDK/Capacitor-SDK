@@ -1,5 +1,11 @@
 # Changelog
 
+## 19.5.0
+The key `Gleap.initialize` takes is now called **Project ID** (formerly "API key" / "SDK key"). The value is the same and every existing key keeps working; nothing needs to change in your app.
+New: `Gleap.initialize({ projectId: "YOUR_PROJECT_ID" })`. The former `{ API_KEY }` is still accepted and marked deprecated in the typings (`GleapInitializeOptions`). The plugin sends the Project ID under both names, so JavaScript updated over the air keeps working on an older native build. On iOS and Android it is passed to the native `initialize(withToken:)` / `Gleap.initialize(String, Application)` of the current native SDKs (19.4.0); on web to `Gleap.initialize(projectId)` of the JavaScript SDK.
+`setUserJwtProvider` works when it is set before or after `initialize` (covered by tests; no behaviour change).
+Native iOS and Android dependencies stay at 19.4.0.
+
 ## 19.4.0
 Customer identity: `Gleap.setUserJwt({ token })`, `Gleap.setUserJwtProvider(fn)` and `Gleap.setAuthTokens({ tokens })` wrap the native SDK methods on iOS and Android and the Gleap JavaScript SDK on web. `setUserJwt` identifies the user with one HS256 JWT signed by your backend (the token is the whole identify, kept in memory only); `setAuthTokens` stores per-user tokens for API tools on the signed contact (a `null` value removes one). The provider stays in JavaScript: when the native (or JavaScript) SDK needs a fresh token (it expired, or expires within 5 minutes) it emits the `userJwtExpired` event, the plugin calls the provider and answers with `userJwtProviderResult`, and the SDK sends the identify again with the new token. The SDK keeps the rules (one call at a time, 10 second timeout, 30 second pause after a failure). Needs native SDKs with these methods (the next synchronized native release) and, on web, a Gleap JavaScript SDK with them. New: `Gleap.setSessionDuration({ milliseconds })` shortens the signed session (the project's maximum applies); on web it goes to the JavaScript SDK's `initialize` option and `Gleap.setSessionDuration`.
 Requires gleap ≥ 19.5.0 on web (`setUserJwt`, `setUserJwtProvider`, `setAuthTokens`, `setSessionDuration`): the release step bumps the web dependency.

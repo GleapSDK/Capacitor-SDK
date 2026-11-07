@@ -33,6 +33,18 @@ end
 
 Swift Package Manager is the recommended setup: after December 2, 2026 new Gleap iOS SDK versions are only released through GitHub and Swift Package Manager.
 
+## Initialize
+
+```typescript
+import { Gleap } from "capacitor-gleap-plugin";
+
+await Gleap.initialize({ projectId: "YOUR_PROJECT_ID" });
+```
+
+Find the Project ID in the Gleap dashboard under Settings > Project. It was called "API key" before: `initialize({ API_KEY: "..." })` still works and takes the same value.
+
+`setUserJwtProvider` can be called before or after `initialize`.
+
 ## Capacitor 6
 
 Please install the plugin version from our capacitor-v6 brunch with `npm install GleapSDK/Capacitor-SDK#capacitor-v6 --save` if you are using capacitor 6.
@@ -53,7 +65,7 @@ Gleap projects live in a data region. The SDK talks to the EU region by default.
 import { Gleap } from "capacitor-gleap-plugin";
 
 await Gleap.setRegion({ region: "us" });
-await Gleap.initialize({ API_KEY: "YOUR_API_KEY" });
+await Gleap.initialize({ projectId: "YOUR_PROJECT_ID" });
 ```
 
 `setRegion` sets the API, websocket and realtime hosts at once (supported regions: `"eu"` and `"us"`). The static widget hosts (frame, banner, modal) are global and are not changed by the region.
@@ -95,7 +107,7 @@ await Gleap.setEventCallback((message) => {
     applyBannerHeight(message.data);
   }
 });
-await Gleap.initialize({ API_KEY: "..." });
+await Gleap.initialize({ projectId: "YOUR_PROJECT_ID" });
 applyBannerHeight((await Gleap.getBannerHeight()).height);
 ```
 
@@ -264,14 +276,15 @@ App.addListener("appUrlOpen", ({ url }) => {
 ### initialize(...)
 
 ```typescript
-initialize(options: { API_KEY: string; }) => Promise<{ initialized: boolean; }>
+initialize(options: GleapInitializeOptions) => Promise<{ initialized: boolean; }>
 ```
 
-Initialize Gleap with an API key
+Initialize Gleap with your Project ID: `initialize({ projectId: "YOUR_PROJECT_ID" })`.
+The Project ID was called "API key" before (`{ API_KEY }`, still accepted); the value is the same.
 
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ API_KEY: string; }</code> |
+| Param         | Type                                                                      |
+| ------------- | ------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#gleapinitializeoptions">GleapInitializeOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ initialized: boolean; }&gt;</code>
 
@@ -1740,6 +1753,17 @@ Set the notification container offset
 
 
 ### Interfaces
+
+
+#### GleapInitializeOptions
+
+Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings &gt; Project).
+`API_KEY` is the former name of the same value and keeps working.
+
+| Prop            | Type                | Description                                              |
+| --------------- | ------------------- | -------------------------------------------------------- |
+| **`projectId`** | <code>string</code> | Your Project ID (formerly "SDK key" / "API key").        |
+| **`API_KEY`**   | <code>string</code> | Former name of `projectId` (same value). Still accepted. |
 
 
 #### PluginListenerHandle

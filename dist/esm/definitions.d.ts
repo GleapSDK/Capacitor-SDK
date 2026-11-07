@@ -56,15 +56,28 @@ export interface GleapLogConfig {
  * Fetches a fresh identity token (JWT) from your backend; see `setUserJwtProvider`.
  */
 export declare type GleapUserJwtProvider = () => string | null | Promise<string | null>;
+/**
+ * Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings > Project).
+ * `API_KEY` is the former name of the same value and keeps working.
+ */
+export interface GleapInitializeOptions {
+    /** Your Project ID (formerly "SDK key" / "API key"). */
+    projectId?: string;
+    /**
+     * Former name of `projectId` (same value). Still accepted.
+     *
+     * @deprecated Use `projectId`.
+     */
+    API_KEY?: string;
+}
 export interface GleapPlugin {
     /**
-    * Initialize Gleap with an API key
+    * Initialize Gleap with your Project ID: `initialize({ projectId: "YOUR_PROJECT_ID" })`.
+    * The Project ID was called "API key" before (`{ API_KEY }`, still accepted); the value is the same.
     *
     * @since 7.0.0
     */
-    initialize(options: {
-        API_KEY: string;
-    }): Promise<{
+    initialize(options: GleapInitializeOptions): Promise<{
         initialized: boolean;
     }>;
     /**

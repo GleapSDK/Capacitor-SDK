@@ -106,11 +106,28 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
     // over what it buffers, by flush id (main queue only).
     private var pendingLogFlushes: [String: () -> Void] = [:]
 
+    /// The Project ID (formerly the SDK key). Native iOS SDK 19.5.0+ has initialize(withProjectId:)
+    /// (initialize(withToken:) is deprecated there); 19.4.0 only has initialize(withToken:), which takes
+    /// the same value. Looked up at runtime so this builds and runs against both.
+    static func initializeGleap(withProjectId projectId: String) {
+        let gleapClass: AnyObject = Gleap.self
+        let projectIdSelector = NSSelectorFromString("initializeWithProjectId:")
+        if gleapClass.responds(to: projectIdSelector) {
+            _ = gleapClass.perform(projectIdSelector, with: projectId)
+        } else {
+            _ = gleapClass.perform(NSSelectorFromString("initializeWithToken:"), with: projectId)
+        }
+    }
+
     @objc func initialize(_ call: CAPPluginCall) {
-        // Check if key is present
-        guard let api_key = call.options["API_KEY"] as? String else {
-            call.reject("Missing API Key")
-            return;
+        // The Project ID: projectId, or the former name API_KEY (same value).
+        var projectId = call.getString("projectId") ?? ""
+        if projectId.isEmpty {
+            projectId = call.getString("API_KEY") ?? ""
+        }
+        guard !projectId.isEmpty else {
+            call.reject("Must provide a projectId")
+            return
         }
         
         // Receive configLoaded, which carries the network log settings for the WebView log capture.
@@ -123,8 +140,7 @@ public class GleapPlugin: CAPPlugin, CAPBridgedPlugin, GleapDelegate {
         // console copies only once it knows it runs inside Capacitor.
         Gleap.setApplicationType(CAPACITOR)
 
-        // Initialize Gleap with API key
-        Gleap.initialize(withToken: api_key)
+        GleapPlugin.initializeGleap(withProjectId: projectId)
         
         registerLogFlushHandler()
         

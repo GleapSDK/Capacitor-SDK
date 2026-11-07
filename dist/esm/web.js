@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import { WebPlugin } from '@capacitor/core';
 import Gleap from 'gleap';
+import { resolveProjectId } from './projectId';
 export class GleapWeb extends WebPlugin {
     constructor() {
         super(...arguments);
@@ -21,14 +22,18 @@ export class GleapWeb extends WebPlugin {
         if (GleapWeb.initialized) {
             return { initialized: true };
         }
+        const projectId = resolveProjectId(options);
+        if (!projectId) {
+            throw new Error('Must provide a projectId');
+        }
         if (GleapWeb.sessionDuration > 0) {
             // The JavaScript SDK takes the session duration as an initialize option.
-            Gleap.initialize(options.API_KEY, {
+            Gleap.initialize(projectId, {
                 sessionDuration: GleapWeb.sessionDuration,
             });
         }
         else {
-            Gleap.initialize(options.API_KEY);
+            Gleap.initialize(projectId);
         }
         GleapWeb.initialized = true;
         this.registerCallbackListeners();

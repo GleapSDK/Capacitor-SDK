@@ -1,3 +1,4 @@
+import { withProjectIdInitialize } from './projectId';
 import { createUserJwtProviderSetter, withUserJwtProvider } from './userJwtProvider';
 
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -91,5 +92,37 @@ describe('identity methods on an older native build', () => {
     await gleap.setUserJwt({ token: 'a.b.c' });
     expect(native.setUserJwt).toHaveBeenCalledWith({ token: 'a.b.c' });
     await expect(gleap.setAuthTokens({ tokens: {} })).rejects.toThrow('bad tokens');
+  });
+});
+
+describe('setUserJwtProvider and initialize order', () => {
+  // Composed like index.ts: the native SDKs and the JavaScript SDK keep the provider across initialize.
+  const compose = () => {
+    const { plugin, emit } = fakePlugin();
+    const native = Object.assign(plugin, { initialize: jest.fn(async () => ({ initialized: true })) });
+    const gleap = withProjectIdInitialize(withUserJwtProvider(native as any)) as any;
+    return { native, gleap, emit };
+  };
+
+  it('a provider set before initialize answers token requests', async () => {
+    const { native, gleap, emit } = compose();
+    await gleap.setUserJwtProvider(() => 'early.jwt.token');
+    await gleap.initialize({ projectId: 'P1' });
+    expect(native.setUserJwtProviderEnabled).toHaveBeenCalledWith({ enabled: true });
+    expect(native.initialize).toHaveBeenCalledWith({ projectId: 'P1', API_KEY: 'P1' });
+
+    emit('userJwtExpired', { requestId: 'r1' });
+    await flush();
+    expect(native.userJwtProviderResult).toHaveBeenCalledWith({ requestId: 'r1', token: 'early.jwt.token' });
+  });
+
+  it('a provider set after initialize answers token requests', async () => {
+    const { native, gleap, emit } = compose();
+    await gleap.initialize({ API_KEY: 'K1' });
+    await gleap.setUserJwtProvider(async () => 'late.jwt.token');
+
+    emit('userJwtExpired', { requestId: 'r2' });
+    await flush();
+    expect(native.userJwtProviderResult).toHaveBeenCalledWith({ requestId: 'r2', token: 'late.jwt.token' });
   });
 });
