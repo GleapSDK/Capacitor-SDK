@@ -149,6 +149,10 @@ window.customElements.define(
 
       self.shadowRoot.querySelector('#take-photo').addEventListener('click', async function (e) {
         try {
+          // Demo only: an unsigned contact. To sign a user in, pass an identity token
+          // from your backend after login and on every app start:
+          //   Gleap.setUserJwt({ token: 'IDENTITY_TOKEN_FROM_YOUR_BACKEND' });
+          // and call Gleap.clearIdentity() on logout.
           Gleap.identify({
             userId: '12222222',
             email: 'lukas@gleap.io',

@@ -57,7 +57,7 @@ export interface GleapLogConfig {
  */
 export declare type GleapUserJwtProvider = () => string | null | Promise<string | null>;
 /**
- * Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings > Project).
+ * Options for `initialize`: your Project ID as `projectId` (Gleap dashboard: Settings → Project → General).
  * `API_KEY` is the former name of the same value and keeps working.
  */
 export interface GleapInitializeOptions {
@@ -73,7 +73,8 @@ export interface GleapInitializeOptions {
 export interface GleapPlugin {
     /**
     * Initialize Gleap with your Project ID: `initialize({ projectId: "YOUR_PROJECT_ID" })`.
-    * The Project ID was called "API key" before (`{ API_KEY }`, still accepted); the value is the same.
+    * Find it in the Gleap dashboard under Settings → Project → General. It was formerly called "API key" /
+    * "SDK key": existing values keep working, and the deprecated `{ API_KEY }` still takes the same value.
     *
     * @since 7.0.0
     */
@@ -153,7 +154,10 @@ export interface GleapPlugin {
         url: string;
     }>;
     /**
-    * Set user identity
+    * Identifies the user with contact data only: without an identity token this is an unsigned contact.
+    * To sign the user in, pass an identity token with `setUserJwt`; no separate `identify` call is needed then.
+    * Older integrations that pass a `userHash` keep working; see Upgrade to identity tokens
+    * (https://docs.gleap.ai/en/articles/16752008-upgrade-to-identity-tokens).
     *
     * @since 7.0.0
     */
@@ -193,7 +197,8 @@ export interface GleapPlugin {
         identify: boolean;
     }>;
     /**
-    * Clear user identity: the contact, its identity token and auth tokens. The JWT provider stays set.
+    * Clear user identity: the contact, its identity token and auth tokens. Call it on logout. The JWT provider
+    * stays set.
     *
     * @since 7.0.0
     */
@@ -201,12 +206,15 @@ export interface GleapPlugin {
         clearIdentity: boolean;
     }>;
     /**
-    * Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key. The token is
-    * the whole identify: its `userId` (or `user_id`) claim names the user and every other claim lands on the contact
-    * as signed data; no other contact field is sent. Call it after login and on every app start. Kept in memory only
+    * Identifies the user with an identity token: an HS256 JWT your backend signs with an identity key (Settings →
+    * Security → Customer identity → Identity keys). The token is the whole identify: its `userId` (or `user_id`)
+    * claim names the user and every other claim lands on the contact as signed data; no other contact field is sent,
+    * and no separate `identify` call is needed. Call it after login and on every app start of a logged-in user, and
+    * `clearIdentity` on logout. Kept in memory only
     * and sent again when it says something new (another claim or key). A token that is not a JWT, has no user id or
     * is over 4096 characters is refused with a log line and nothing is sent. Takes an object: `{ token }`, not the
     * bare string. Resolves once the native (or JavaScript) SDK has the token.
+    * See Customer identity (https://docs.gleap.ai/en/articles/709-customer-identity).
     */
     setUserJwt(options: {
         token: string;
@@ -225,8 +233,9 @@ export interface GleapPlugin {
     * that the token expired (and retries once with the new token), and before it renews the file access or sends the
     * identify again when the token expires within 5 minutes. One call at a time; a call without an answer within
     * 10 seconds counts as failed, and after a failure Gleap waits 30 seconds before it asks again. Return `null` (or
-    * throw) when fetching failed. `clearIdentity` keeps the provider; pass `null` to remove it. The provider runs in
-    * JavaScript: the plugin answers the `userJwtExpired` event for you.
+    * throw) when fetching failed. With the native SDKs 19.5.0 (and the Gleap JavaScript SDK 19.6.0 on web) it also
+    * restores the signed session after an app restart (on web, a page reload). `clearIdentity` keeps the provider;
+    * pass `null` to remove it. The provider runs in JavaScript: the plugin answers the `userJwtExpired` event for you.
     */
     setUserJwtProvider(provider: GleapUserJwtProvider | null): Promise<void>;
     /**
@@ -771,7 +780,7 @@ export interface GleapPlugin {
     * application URL with a `gleapFile` query parameter. If that URL opens your app (for example as a
     * universal link / App Link), pass it here, e.g. from `App.addListener('appUrlOpen')` or
     * `App.getLaunchUrl()` of `@capacitor/app`. `opened` is true when the URL carries a Gleap file reference.
-    * The conversation opens once the customer is identified with a user hash (`identify` with `userHash`);
+    * The conversation opens once the customer is signed in with an identity token (`setUserJwt`);
     * the link alone grants nothing. On web the JavaScript SDK handles `?gleapFile=` automatically on page load,
     * so this resolves `{ opened: false }` there.
     *
