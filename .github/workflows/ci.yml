@@ -1,4 +1,5 @@
-# The pre-publish checks of release.yml, without publishing.
+# The pre-publish checks of release.yml, without publishing, plus the tests, the checks' own tests and the native
+# builds. No path filter: a check that never reports cannot pass.
 name: CI
 
 on:
@@ -17,6 +18,7 @@ jobs:
   check:
     name: Build and pack
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -28,10 +30,60 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # tsc + rollup + docgen. `npm run lint` is not run: eslint/prettier fail on
-      # main today (pre-existing), and verify:ios/verify:android need native toolchains.
+      - name: Tests
+        run: npm test -- --ci
+
+      # tsc + rollup + docgen. `npm run lint` is not run: eslint/prettier fail on old code, so quality.yml runs them
+      # on what a PR adds. The native builds are the verify-android and verify-ios jobs below.
       - name: Build
         run: npm run build
 
+      # dist/ and the API part of README.md are committed: they must be what the build writes from src/.
+      - name: dist/ and README.md match the sources
+        run: |
+          if [ -n "$(git status --porcelain -- dist README.md)" ]; then
+            git status --short -- dist README.md
+            echo "::error::npm run build changed dist/ or README.md. Run it and commit what it writes."
+            exit 1
+          fi
+
       - name: Pack (dry run)
         run: npm pack --dry-run
+
+      # The quality check needs its own TypeScript; the build keeps the root's.
+      - name: The checks' own tests
+        run: |
+          npm ci --prefix tools/quality --ignore-scripts --no-audit --no-fund
+          node --test tools/quality/check.test.mjs tools/lint/check.test.mjs
+
+  verify-android:
+    name: Android build and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      # android/settings.gradle builds against node_modules/@capacitor/android.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      # The committed android/local.properties names a developer's macOS SDK path; point the runner's copy at its own.
+      - run: echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+      - run: npm run verify:android
+
+  verify-ios:
+    name: iOS build (Swift package)
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: xcodebuild -version
+      # Package.swift resolves Capacitor and the Gleap iOS SDK from GitHub, at the versions it pins: a version bump
+      # stays red here until the native SDK's tag exists.
+      - run: npm run verify:ios

@@ -1,0 +1,92 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/.env*)",
+      "Bash(cat .env*)",
+      "Bash(head .env*)",
+      "Bash(tail .env*)",
+      "Bash(npm publish*)",
+      "Bash(npm version*)",
+      "Bash(npm dist-tag*)",
+      "Bash(npm unpublish*)",
+      "Bash(npm deprecate*)",
+      "Bash(git tag*)",
+      "Bash(git push --tags*)",
+      "Bash(git push origin --tags*)",
+      "Bash(gh release*)",
+      "Bash(pod trunk*)",
+      "Bash(npm run fmt*)"
+    ],
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git rev-parse*)",
+      "Bash(git merge-base*)",
+      "Bash(git fetch*)",
+      "Bash(git blame*)",
+      "Bash(ls*)",
+      "Bash(wc *)",
+      "Bash(npm ci)",
+      "Bash(npm ci --prefix tools/quality*)",
+      "Bash(npm test*)",
+      "Bash(npx jest*)",
+      "Bash(npx --no-install jest*)",
+      "Bash(npx tsc --noEmit*)",
+      "Bash(npx eslint *)",
+      "Bash(npx prettier --check *)",
+      "Bash(npm run build)",
+      "Bash(npm run docgen)",
+      "Bash(npm run verify:web)",
+      "Bash(npm run verify:android)",
+      "Bash(npm run verify:ios)",
+      "Bash(npm pack --dry-run*)",
+      "Bash(node tools/quality/check.mjs*)",
+      "Bash(node tools/lint/check.mjs*)",
+      "Bash(node --test tools/*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-edited-file.mjs",
+            "timeout": 30,
+            "statusMessage": "Checking the edited file..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-before-stop.mjs",
+            "timeout": 600,
+            "statusMessage": "Quality check, typecheck and tests..."
+          }
+        ]
+      }
+    ]
+  }
+}

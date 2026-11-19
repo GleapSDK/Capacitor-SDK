@@ -1,0 +1,8 @@
+{
+  "name": "quality-check",
+  "private": true,
+  "description": "The TypeScript the quality check parses with. The plugin's build keeps its own TypeScript in the root package.json: a newer one would change the shipped typings.",
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}
