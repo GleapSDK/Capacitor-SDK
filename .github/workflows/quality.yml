@@ -1,0 +1,68 @@
+name: Quality
+
+# Compares the changed files of a PR with their state where the branch left the base. Old code may stay as it is but
+# must not get worse; new code keeps .claude/rules/code-conventions.md. Two checks: the quality check (tools/quality),
+# and ESLint and Prettier with the plugin template's config from package.json (tools/lint).
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The PR's own commit, not the merge commit, and the history to find the fork point.
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      # ESLint, Prettier and their configs at the lockfile's versions. No install scripts: neither check builds anything.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      # The base branch's copy of the checks, with its package.json (the ESLint and Prettier config) and its TypeScript
+      # for the quality check, judges the PR, so a PR cannot switch a check off with its own edits. The first PR that
+      # adds the checks has no such copy and runs its own.
+      - name: Prepare the checks
+        id: prepare
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          gate="$GITHUB_WORKSPACE"
+          if git cat-file -e "origin/$BASE_REF:tools/quality/check.mjs" 2>/dev/null; then
+            gate="$RUNNER_TEMP/gate"
+            mkdir -p "$gate"
+            git archive "origin/$BASE_REF" tools package.json .eslintignore | tar -x -C "$gate"
+            ln -s "$GITHUB_WORKSPACE/node_modules" "$gate/node_modules"
+          fi
+          npm ci --prefix "$gate/tools/quality" --ignore-scripts --no-audit --no-fund
+          echo "GATE=$gate" >> "$GITHUB_ENV"
+          changed="$(git diff --name-only "$(git merge-base "origin/$BASE_REF" HEAD)" HEAD -- tools .claude/hooks .claude/settings.json .githooks .github/workflows/quality.yml package.json .eslintignore)"
+          if [ -n "$changed" ]; then
+            echo "::warning title=This PR changes the checks::Review these on purpose, they run only after the merge: $(echo $changed)"
+          fi
+      - name: Quality check
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: node "$GATE/tools/quality/check.mjs" --base "origin/$BASE_REF"
+      # Locally the lint check lets a push go on when it cannot run; here that is a failure.
+      - name: ESLint and Prettier
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set +e
+          output="$(node "$GATE/tools/lint/check.mjs" --base "origin/$BASE_REF" 2>&1)"
+          code=$?
+          printf '%s\n' "$output"
+          case "$output" in *"lint skipped"*) exit 1 ;; esac
+          exit "$code"
